@@ -4,11 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MLEA POS - Mobile with Database</title>
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk1MRUEgUE9TIiwKICAic2hvcnRfbmFtZSI6ICJQTFVTIiwKICAic3RhcnRfdXJsIjogIi9tbGVhLXBvcy8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmZmZmZmYiLAogICJ0aGVtZV9jb2xvciI6ICIjNjY3ZWVhIgp9">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk1MRUEgUE9TIiwKICAic2hvcnRfbmFtZSI6ICJQTFVTIiwKICAic3RhcnRfdXJsIjogIi9tbGVhLXBvcy8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMxYTFhMmEiLAogICJ0aGVtZV9jb2xvciI6ICIjN2M2ZmZmIgp9">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#667eea">
+    <meta name="theme-color" content="#1a1a2e">
     <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-card: #1e2a4a;
+            --bg-input: #0f3460;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0b0;
+            --accent: #7c6fff;
+            --accent-light: #9b8fff;
+            --success: #2ed573;
+            --danger: #ff4757;
+            --warning: #ffa502;
+            --border: #2a3a5e;
+            --shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -17,8 +33,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: #f5f5f5;
-            color: #333;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
         }
@@ -27,9 +43,9 @@
             max-width: 480px;
             margin: 0 auto;
             min-height: 100vh;
-            background: #fff;
+            background: var(--bg-secondary);
             position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
         @media (min-width: 768px) {
@@ -45,18 +61,19 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             padding: 20px;
         }
 
         .login-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: 20px;
             padding: 30px;
             width: 100%;
             max-width: 350px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             animation: slideUp 0.5s ease-out;
+            border: 1px solid var(--border);
         }
 
         @keyframes slideUp {
@@ -76,13 +93,13 @@
         }
 
         .login-logo h1 {
-            color: #667eea;
+            color: var(--accent-light);
             font-size: 2em;
             margin-bottom: 5px;
         }
 
         .login-logo p {
-            color: #666;
+            color: var(--text-secondary);
             font-size: 0.9em;
         }
 
@@ -94,8 +111,8 @@
         }
 
         .user-card {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
+            background: var(--bg-primary);
+            border: 2px solid var(--border);
             border-radius: 10px;
             padding: 15px;
             text-align: center;
@@ -104,9 +121,10 @@
         }
 
         .user-card:hover, .user-card.selected {
-            border-color: #667eea;
-            background: #f0f0ff;
+            border-color: var(--accent);
+            background: var(--bg-input);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(124, 111, 255, 0.2);
         }
 
         .user-card .avatar {
@@ -117,20 +135,8 @@
         .user-card .name {
             font-size: 0.8em;
             font-weight: 500;
-            color: #333;
+            color: var(--text-primary);
         }
-
-        .user-card .role-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7em;
-            margin-top: 5px;
-        }
-
-        .admin-badge { background: #667eea; color: white; }
-        .manager-badge { background: #2ed573; color: white; }
-        .cashier-badge { background: #ffa502; color: white; }
 
         .pin-pad {
             display: grid;
@@ -140,30 +146,30 @@
         }
 
         .pin-btn {
-            background: #f0f0f0;
-            border: none;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
             border-radius: 10px;
             padding: 20px;
             font-size: 1.5em;
             cursor: pointer;
             transition: all 0.2s;
-            color: #333;
+            color: var(--text-primary);
         }
 
         .pin-btn:active {
-            background: #667eea;
+            background: var(--accent);
             color: white;
             transform: scale(0.95);
         }
 
         .pin-btn.clear {
-            background: #ff4757;
+            background: var(--danger);
             color: white;
             font-size: 1em;
         }
 
         .pin-btn.submit {
-            background: #2ed573;
+            background: var(--success);
             color: white;
             font-size: 1em;
         }
@@ -179,17 +185,18 @@
             width: 15px;
             height: 15px;
             border-radius: 50%;
-            background: #e0e0e0;
+            background: var(--border);
             transition: all 0.3s;
         }
 
         .pin-dot.filled {
-            background: #667eea;
+            background: var(--accent);
             transform: scale(1.2);
+            box-shadow: 0 0 10px var(--accent);
         }
 
         .pin-dot.error {
-            background: #ff4757;
+            background: var(--danger);
             animation: shake 0.5s;
         }
 
@@ -200,7 +207,7 @@
         }
 
         .error-message {
-            color: #ff4757;
+            color: var(--danger);
             text-align: center;
             font-size: 0.9em;
             min-height: 20px;
@@ -208,7 +215,7 @@
         }
 
         .logout-btn {
-            background: #ff4757;
+            background: var(--danger);
             color: white;
             border: none;
             padding: 5px 15px;
@@ -219,13 +226,13 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             padding: 15px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            border-bottom: 1px solid var(--border);
         }
 
         .header-top {
@@ -238,7 +245,7 @@
         .hamburger {
             background: none;
             border: none;
-            color: white;
+            color: var(--text-primary);
             font-size: 24px;
             cursor: pointer;
             padding: 5px;
@@ -249,14 +256,26 @@
             align-items: center;
             gap: 10px;
             font-size: 0.9em;
+            color: var(--text-secondary);
         }
 
         .sync-status {
             font-size: 0.7em;
             padding: 3px 8px;
             border-radius: 10px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(124, 111, 255, 0.2);
             display: inline-block;
+            color: var(--accent-light);
+        }
+
+        .currency-selector {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 5px 10px;
+            color: var(--text-primary);
+            font-size: 0.8em;
+            cursor: pointer;
         }
 
         .dashboard-metrics {
@@ -264,33 +283,35 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             padding: 15px;
-            background: white;
+            background: var(--bg-card);
             margin: 10px;
             border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
         }
 
         .metric-card {
             text-align: center;
             padding: 10px;
-            background: #f8f9fa;
+            background: var(--bg-primary);
             border-radius: 8px;
+            border: 1px solid var(--border);
         }
 
         .metric-value {
             font-size: 1.2em;
             font-weight: bold;
-            color: #667eea;
+            color: var(--accent-light);
         }
 
         .metric-label {
             font-size: 0.7em;
-            color: #666;
+            color: var(--text-secondary);
             margin-top: 5px;
         }
 
         .low-stock-badge {
-            background: #ff4757;
+            background: var(--danger);
             color: white;
             border-radius: 50%;
             padding: 2px 8px;
@@ -302,52 +323,62 @@
             display: flex;
             overflow-x: auto;
             padding: 10px;
-            background: white;
+            background: var(--bg-card);
             margin: 10px;
             border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow);
             -webkit-overflow-scrolling: touch;
+            border: 1px solid var(--border);
         }
 
         .nav-item {
             flex: 0 0 auto;
             padding: 10px 15px;
             margin: 0 5px;
-            background: #f0f0f0;
-            border: none;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
             border-radius: 20px;
             cursor: pointer;
             white-space: nowrap;
             font-size: 0.9em;
             transition: all 0.3s;
+            color: var(--text-secondary);
         }
 
         .nav-item.active {
-            background: #667eea;
+            background: var(--accent);
             color: white;
+            border-color: var(--accent);
         }
 
         .pos-terminal {
             margin: 10px;
-            background: white;
+            background: var(--bg-card);
             border-radius: 10px;
             padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
         }
 
         .scan-input {
             width: 100%;
             padding: 15px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border);
             border-radius: 25px;
             font-size: 1em;
             margin-bottom: 15px;
             outline: none;
             transition: border-color 0.3s;
+            background: var(--bg-input);
+            color: var(--text-primary);
         }
 
         .scan-input:focus {
-            border-color: #667eea;
+            border-color: var(--accent);
+        }
+
+        .scan-input::placeholder {
+            color: var(--text-secondary);
         }
 
         .cart-item {
@@ -355,7 +386,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--border);
         }
 
         .product-grid {
@@ -366,16 +397,21 @@
         }
 
         .product-card {
-            background: white;
+            background: var(--bg-primary);
             border-radius: 10px;
             padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow);
             cursor: pointer;
             transition: transform 0.2s;
+            border: 1px solid var(--border);
         }
 
         .product-card:active {
             transform: scale(0.95);
+        }
+
+        .product-card strong {
+            color: var(--text-primary);
         }
 
         .modal {
@@ -385,7 +421,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.8);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -396,13 +432,15 @@
         }
 
         .modal-content {
-            background: white;
+            background: var(--bg-card);
             border-radius: 15px;
             padding: 20px;
             width: 90%;
             max-width: 400px;
             max-height: 80vh;
             overflow-y: auto;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
         .btn {
@@ -416,38 +454,45 @@
         }
 
         .btn-primary {
-            background: #667eea;
+            background: var(--accent);
             color: white;
         }
 
+        .btn-primary:hover {
+            background: var(--accent-light);
+        }
+
         .btn-danger {
-            background: #ff4757;
+            background: var(--danger);
             color: white;
         }
 
         .btn-success {
-            background: #2ed573;
+            background: var(--success);
             color: white;
         }
 
         .btn-warning {
-            background: #ffa502;
+            background: var(--warning);
             color: white;
         }
 
         .receipt {
-            background: white;
+            background: var(--bg-primary);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
         }
 
         .supplier-card, .expense-card, .purchase-order-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: 10px;
             padding: 15px;
             margin: 10px 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
         }
 
         .sidebar {
@@ -456,15 +501,31 @@
             top: 0;
             bottom: 0;
             width: 280px;
-            background: white;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            background: var(--bg-card);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
             transition: left 0.3s;
             z-index: 1001;
             overflow-y: auto;
+            border-right: 1px solid var(--border);
         }
 
         .sidebar.active {
             left: 0;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
         }
 
         .table-responsive {
@@ -476,12 +537,26 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85em;
+            color: var(--text-primary);
         }
 
-        th, td {
+        th {
+            background: var(--bg-input);
+            color: var(--accent-light);
             padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tr:hover td {
+            background: var(--bg-input);
         }
 
         .form-group {
@@ -491,24 +566,36 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            color: #666;
+            color: var(--text-secondary);
             font-size: 0.9em;
         }
 
         .form-group input, .form-group select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--border);
             border-radius: 25px;
             font-size: 1em;
             outline: none;
+            background: var(--bg-input);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--accent);
+        }
+
+        .form-group select option {
+            background: var(--bg-card);
+            color: var(--text-primary);
         }
 
         .qr-code {
-            background: white;
+            background: var(--bg-primary);
             padding: 20px;
             text-align: center;
             border-radius: 10px;
+            border: 1px solid var(--border);
         }
 
         .role-badge {
@@ -516,11 +603,12 @@
             border-radius: 15px;
             font-size: 0.8em;
             font-weight: 500;
+            display: inline-block;
         }
 
-        .admin-badge { background: #667eea; color: white; }
-        .manager-badge { background: #2ed573; color: white; }
-        .cashier-badge { background: #ffa502; color: white; }
+        .admin-badge { background: var(--accent); color: white; }
+        .manager-badge { background: var(--success); color: white; }
+        .cashier-badge { background: var(--warning); color: white; }
 
         .po-status {
             padding: 3px 10px;
@@ -528,27 +616,49 @@
             font-size: 0.8em;
         }
 
-        .po-draft { background: #f0f0f0; color: #666; }
-        .po-finalized { background: #2ed573; color: white; }
-        .po-received { background: #667eea; color: white; }
+        .po-draft { background: #3a3a5e; color: #a0a0b0; }
+        .po-finalized { background: var(--success); color: white; }
+        .po-received { background: var(--accent); color: white; }
 
         .db-indicator {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: #2ed573;
+            background: var(--accent);
             color: white;
             padding: 10px;
             border-radius: 50%;
             font-size: 0.8em;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
             z-index: 999;
         }
 
         .permission-denied {
             text-align: center;
             padding: 20px;
-            color: #ff4757;
+            color: var(--danger);
+        }
+
+        h3, h4 {
+            color: var(--text-primary);
+        }
+
+        hr {
+            border-color: var(--border);
+        }
+
+        /* Currency flag styles */
+        .currency-flag {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        .settings-section {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
         }
     </style>
 </head>
@@ -562,10 +672,10 @@
                     <p>Point of Sale System</p>
                 </div>
 
-                <h3 style="text-align: center; margin-bottom: 15px;">Select User</h3>
+                <h3 style="text-align: center; margin-bottom: 15px; color: var(--text-primary);">Select User</h3>
                 <div class="user-selector" id="userSelector"></div>
 
-                <h3 style="text-align: center; margin-bottom: 15px;">Enter PIN</h3>
+                <h3 style="text-align: center; margin-bottom: 15px; color: var(--text-primary);">Enter PIN</h3>
                 <div class="pin-display" id="pinDisplay">
                     <div class="pin-dot"></div>
                     <div class="pin-dot"></div>
@@ -593,11 +703,14 @@
 
         <!-- Main App (Hidden initially) -->
         <div id="mainApp" style="display: none;">
+            <!-- Sidebar Overlay -->
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+            
             <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
-                <div style="padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <div style="padding: 20px; background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); color: white; border-bottom: 1px solid var(--border);">
                     <h2>MLEA POS</h2>
-                    <p style="font-size: 0.9em;">v2.0 with DB</p>
+                    <p style="font-size: 0.9em;">v2.1 Dark Mode</p>
                     <span class="sync-status" id="dbStatus">🟢 Local DB</span>
                     <div style="margin-top: 10px;">
                         <span class="role-badge" id="sidebarRole"></span>
@@ -611,9 +724,10 @@
                     <button class="nav-item" onclick="switchView('suppliers')">🤝 Suppliers</button>
                     <button class="nav-item" onclick="switchView('purchaseOrders')">📋 Purchase Orders</button>
                     <button class="nav-item" onclick="switchView('expenses')">💸 Expenses</button>
+                    <button class="nav-item" onclick="switchView('settings')">⚙️ Settings</button>
                     <button class="nav-item" id="navUsers" onclick="switchView('users')">👥 Users</button>
                     <button class="nav-item" onclick="switchView('reports')">💾 Reports</button>
-                    <hr style="margin: 10px 0;">
+                    <hr style="margin: 10px 0; border-color: var(--border);">
                     <button class="btn btn-warning" style="width: 100%; margin-bottom: 5px;" onclick="backupDatabase()">💿 Backup Data</button>
                     <button class="btn btn-danger" style="width: 100%; margin-bottom: 5px;" onclick="logout()">🚪 Logout</button>
                     <button class="btn btn-danger" style="width: 100%;" onclick="clearDatabase()">🗑️ Clear All Data</button>
@@ -624,8 +738,9 @@
             <div class="header">
                 <div class="header-top">
                     <button class="hamburger" onclick="toggleSidebar()">☰</button>
-                    <h1>MLEA POS</h1>
+                    <h1 style="color: var(--accent-light);">MLEA POS</h1>
                     <div class="user-info">
+                        <span id="currentCurrency" style="margin-right: 10px;"></span>
                         <span id="headerUser"></span>
                         <button class="logout-btn" onclick="logout()">🚪</button>
                     </div>
@@ -648,11 +763,63 @@
     </div>
 
     <script>
+        // ==================== CURRENCY CONFIGURATION ====================
+        const currencies = {
+            USD: { symbol: '$', code: 'USD', name: 'US Dollar', flag: '🇺🇸', rate: 1 },
+            EUR: { symbol: '€', code: 'EUR', name: 'Euro', flag: '🇪🇺', rate: 0.92 },
+            GBP: { symbol: '£', code: 'GBP', name: 'British Pound', flag: '🇬🇧', rate: 0.79 },
+            JPY: { symbol: '¥', code: 'JPY', name: 'Japanese Yen', flag: '🇯🇵', rate: 149.50 },
+            PHP: { symbol: '₱', code: 'PHP', name: 'Philippine Peso', flag: '🇵🇭', rate: 55.80 },
+            INR: { symbol: '₹', code: 'INR', name: 'Indian Rupee', flag: '🇮🇳', rate: 83.12 },
+            CNY: { symbol: '¥', code: 'CNY', name: 'Chinese Yuan', flag: '🇨🇳', rate: 7.24 },
+            KRW: { symbol: '₩', code: 'KRW', name: 'South Korean Won', flag: '🇰🇷', rate: 1320.50 },
+            AUD: { symbol: 'A$', code: 'AUD', name: 'Australian Dollar', flag: '🇦🇺', rate: 1.53 },
+            CAD: { symbol: 'C$', code: 'CAD', name: 'Canadian Dollar', flag: '🇨🇦', rate: 1.36 },
+            SGD: { symbol: 'S$', code: 'SGD', name: 'Singapore Dollar', flag: '🇸🇬', rate: 1.34 },
+            MYR: { symbol: 'RM', code: 'MYR', name: 'Malaysian Ringgit', flag: '🇲🇾', rate: 4.72 },
+            IDR: { symbol: 'Rp', code: 'IDR', name: 'Indonesian Rupiah', flag: '🇮🇩', rate: 15750 },
+            THB: { symbol: '฿', code: 'THB', name: 'Thai Baht', flag: '🇹🇭', rate: 36.20 },
+            VND: { symbol: '₫', code: 'VND', name: 'Vietnamese Dong', flag: '🇻🇳', rate: 24550 },
+            BRL: { symbol: 'R$', code: 'BRL', name: 'Brazilian Real', flag: '🇧🇷', rate: 4.97 },
+            MXN: { symbol: 'Mex$', code: 'MXN', name: 'Mexican Peso', flag: '🇲🇽', rate: 17.15 },
+            AED: { symbol: 'د.إ', code: 'AED', name: 'UAE Dirham', flag: '🇦🇪', rate: 3.67 },
+            SAR: { symbol: '﷼', code: 'SAR', name: 'Saudi Riyal', flag: '🇸🇦', rate: 3.75 },
+            NGN: { symbol: '₦', code: 'NGN', name: 'Nigerian Naira', flag: '🇳🇬', rate: 1545 },
+            ZAR: { symbol: 'R', code: 'ZAR', name: 'South African Rand', flag: '🇿🇦', rate: 18.65 },
+            EGP: { symbol: 'E£', code: 'EGP', name: 'Egyptian Pound', flag: '🇪🇬', rate: 47.80 },
+            PKR: { symbol: '₨', code: 'PKR', name: 'Pakistani Rupee', flag: '🇵🇰', rate: 278.50 },
+            BDT: { symbol: '৳', code: 'BDT', name: 'Bangladeshi Taka', flag: '🇧🇩', rate: 109.50 }
+        };
+
+        let currentCurrency = 'USD';
+
+        function formatCurrency(amount) {
+            const currency = currencies[currentCurrency];
+            const converted = amount * currency.rate;
+            
+            // Handle different currency formats
+            if (['JPY', 'KRW', 'IDR', 'VND'].includes(currentCurrency)) {
+                return `${currency.symbol} ${Math.round(converted).toLocaleString()}`;
+            } else if (['PHP', 'INR', 'PKR', 'BDT', 'NGN'].includes(currentCurrency)) {
+                return `${currency.symbol}${converted.toFixed(2)}`;
+            } else {
+                return `${currency.symbol}${converted.toFixed(2)}`;
+            }
+        }
+
+        function getCurrencySymbol() {
+            return currencies[currentCurrency].symbol;
+        }
+
+        function getCurrencyFlag() {
+            return currencies[currentCurrency].flag;
+        }
+
         // ==================== DATABASE LAYER ====================
         class Database {
             constructor() {
                 this.dbName = 'MLEA_POS_DB';
-                this.dbVersion = 2;
+                this.dbVersion = 3;
                 this.db = null;
                 this.useIndexedDB = true;
                 this.init();
@@ -937,7 +1104,7 @@
             });
         }
 
-        function submitPin() {
+        async function submitPin() {
             if (!selectedUserId) {
                 document.getElementById('errorMessage').textContent = 'Please select a user first';
                 return;
@@ -951,19 +1118,17 @@
             }
 
             if (user.pin === pinEntry) {
-                // Login successful
                 currentUser = user;
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'block';
                 document.getElementById('dbIndicator').style.display = 'block';
                 
-                // Update UI with user info
                 document.getElementById('headerUser').textContent = `${user.name} (${user.role})`;
                 document.getElementById('sidebarUser').textContent = user.name;
                 document.getElementById('sidebarRole').textContent = user.role;
                 document.getElementById('sidebarRole').className = `role-badge ${user.role}-badge`;
+                document.getElementById('currentCurrency').textContent = `${getCurrencyFlag()} ${currencies[currentCurrency].code}`;
                 
-                // Show/hide admin features
                 const navUsers = document.getElementById('navUsers');
                 if (user.role !== 'admin') {
                     navUsers.style.display = 'none';
@@ -971,15 +1136,13 @@
                     navUsers.style.display = 'block';
                 }
                 
-                // Reset login state
                 pinEntry = '';
                 selectedUserId = null;
                 updatePinDisplay();
                 
-                // Initialize app
-                initAppData().then(() => {
-                    renderView();
-                });
+                await loadSettings();
+                await initAppData();
+                renderView();
             } else {
                 document.getElementById('errorMessage').textContent = 'Incorrect PIN. Try again.';
                 shakePinDisplay();
@@ -1012,13 +1175,14 @@
             document.getElementById('mainApp').style.display = 'none';
             document.getElementById('dbIndicator').style.display = 'none';
             document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('sidebarOverlay').classList.remove('active');
             
             updatePinDisplay();
             document.getElementById('errorMessage').textContent = '';
             renderLoginScreen();
         }
 
-        // Keyboard support for PIN entry
+        // Keyboard support
         document.addEventListener('keydown', function(e) {
             if (document.getElementById('loginScreen').style.display !== 'none') {
                 if (e.key >= '0' && e.key <= '9') {
@@ -1034,16 +1198,47 @@
             }
         });
 
+        // ==================== SETTINGS ====================
+        async function loadSettings() {
+            try {
+                const allSettings = await db.getAll('settings');
+                settings = {};
+                allSettings.forEach(s => {
+                    settings[s.key] = s.value;
+                });
+                
+                if (settings.currency) {
+                    currentCurrency = settings.currency;
+                }
+                if (settings.taxRate) {
+                    taxRate = parseFloat(settings.taxRate);
+                }
+                
+                document.getElementById('currentCurrency').textContent = 
+                    `${getCurrencyFlag()} ${currencies[currentCurrency].code}`;
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+        }
+
+        async function saveSetting(key, value) {
+            try {
+                const existing = (await db.getAll('settings')).find(s => s.key === key);
+                if (existing) {
+                    existing.value = value;
+                    await db.update('settings', existing);
+                } else {
+                    await db.add('settings', { key, value });
+                }
+                settings[key] = value;
+            } catch (error) {
+                console.error('Error saving setting:', error);
+            }
+        }
+
         // ==================== DATA INITIALIZATION ====================
         async function initAppData() {
             try {
-                settings = (await db.getAll('settings')).reduce((acc, s) => {
-                    acc[s.key] = s.value;
-                    return acc;
-                }, {});
-                
-                if (settings.taxRate) taxRate = parseFloat(settings.taxRate);
-
                 products = await db.getAll('products');
                 suppliers = await db.getAll('suppliers');
                 purchaseOrders = await db.getAll('purchaseOrders');
@@ -1060,7 +1255,6 @@
                 }
 
                 updateLowStockBadge();
-                
                 console.log('📊 Data loaded successfully');
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -1116,13 +1310,15 @@
 
         // ==================== UI FUNCTIONS ====================
         function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
         }
 
         async function switchView(view) {
             if (!currentUser) return;
             
-            // Check permissions
             if (view === 'users' && currentUser.role !== 'admin') {
                 alert('Access denied. Only admin can manage users.');
                 return;
@@ -1130,6 +1326,7 @@
             
             currentView = view;
             document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('sidebarOverlay').classList.remove('active');
             
             products = await db.getAll('products');
             suppliers = await db.getAll('suppliers');
@@ -1156,6 +1353,7 @@
                 case 'suppliers': renderSuppliers(main); break;
                 case 'purchaseOrders': renderPurchaseOrders(main); break;
                 case 'expenses': renderExpenses(main); break;
+                case 'settings': renderSettings(main); break;
                 case 'users': renderUsers(main); break;
                 case 'reports': renderReports(main); break;
             }
@@ -1180,36 +1378,39 @@
 
                 const metrics = main.querySelectorAll('.metric-value');
                 if (metrics.length >= 3) {
-                    metrics[0].textContent = `$${todaySales.toFixed(2)}`;
-                    metrics[1].textContent = `$${monthlySales.toFixed(2)}`;
-                    metrics[2].textContent = `$${totalTax.toFixed(2)}`;
+                    metrics[0].textContent = formatCurrency(todaySales);
+                    metrics[1].textContent = formatCurrency(monthlySales);
+                    metrics[2].textContent = formatCurrency(totalTax);
                 }
             });
 
             main.innerHTML = `
                 <div class="dashboard-metrics">
                     <div class="metric-card">
-                        <div class="metric-value">$0.00</div>
+                        <div class="metric-value">${formatCurrency(0)}</div>
                         <div class="metric-label">Today's Sales</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-value">$0.00</div>
+                        <div class="metric-value">${formatCurrency(0)}</div>
                         <div class="metric-label">Monthly Revenue</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-value">$0.00</div>
+                        <div class="metric-value">${formatCurrency(0)}</div>
                         <div class="metric-label">Tax Collected</div>
                     </div>
                 </div>
                 <div style="padding: 10px;">
                     <h3>Welcome, ${currentUser.name}!</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 10px;">
+                        Currency: ${getCurrencyFlag()} ${currencies[currentCurrency].name} (${currencies[currentCurrency].code})
+                    </p>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
                         <button class="btn btn-primary" onclick="switchView('pos')">New Sale</button>
                         <button class="btn btn-success" onclick="switchView('inventory')">Check Stock</button>
                         <button class="btn btn-warning" onclick="switchView('purchaseOrders')">Purchase Orders</button>
                         <button class="btn btn-primary" onclick="switchView('reports')">View Reports</button>
                     </div>
-                    ${lowStockCount > 0 ? `<div style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 10px;">
+                    ${lowStockCount > 0 ? `<div style="margin-top: 15px; padding: 10px; background: rgba(255, 71, 87, 0.2); border-radius: 10px; border: 1px solid var(--danger);">
                         ⚠️ ${lowStockCount} products low on stock
                     </div>` : ''}
                 </div>
@@ -1227,8 +1428,8 @@
                             ${products.filter(p => p.active).map(p => `
                                 <div class="product-card" onclick="addToCart('${p.sku}')">
                                     <strong>${p.name}</strong>
-                                    <div style="color: #667eea;">$${p.price.toFixed(2)}</div>
-                                    <small>Stock: ${p.stock}</small>
+                                    <div style="color: var(--accent-light);">${formatCurrency(p.price)}</div>
+                                    <small style="color: var(--text-secondary);">Stock: ${p.stock}</small>
                                 </div>
                             `).join('')}
                         </div>
@@ -1240,7 +1441,7 @@
                                 <div class="cart-item">
                                     <div>
                                         <strong>${item.name}</strong>
-                                        <div>$${item.price.toFixed(2)} x ${item.quantity}</div>
+                                        <div style="color: var(--text-secondary);">${formatCurrency(item.price)} x ${item.quantity}</div>
                                     </div>
                                     <div>
                                         <button class="btn btn-danger" style="padding: 5px 10px;" onclick="removeFromCart(${index})">×</button>
@@ -1248,10 +1449,10 @@
                                 </div>
                             `).join('')}
                         </div>
-                        <div style="margin-top: 10px; padding-top: 10px; border-top: 2px solid #333;">
-                            <div>Subtotal: $${calculateSubtotal().toFixed(2)}</div>
-                            <div>Tax (${(taxRate * 100).toFixed(0)}%): $${(calculateSubtotal() * taxRate).toFixed(2)}</div>
-                            <div style="font-weight: bold; font-size: 1.2em;">Total: $${calculateTotal().toFixed(2)}</div>
+                        <div style="margin-top: 10px; padding-top: 10px; border-top: 2px solid var(--border);">
+                            <div>Subtotal: ${formatCurrency(calculateSubtotal())}</div>
+                            <div>Tax (${(taxRate * 100).toFixed(0)}%): ${formatCurrency(calculateSubtotal() * taxRate)}</div>
+                            <div style="font-weight: bold; font-size: 1.2em; color: var(--accent-light);">Total: ${formatCurrency(calculateTotal())}</div>
                         </div>
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px;">
                             <button class="btn btn-success" onclick="processPayment('cash')">💵 Cash</button>
@@ -1260,6 +1461,69 @@
                     </div>
                 </div>
             `;
+        }
+
+        function renderSettings(main) {
+            main.innerHTML = `
+                <div style="padding: 10px;">
+                    <h3>⚙️ Settings</h3>
+                    
+                    <div class="settings-section">
+                        <h4>💱 Currency Settings</h4>
+                        <div class="form-group">
+                            <label>Select Currency</label>
+                            <select id="currencySelect" onchange="changeCurrency(this.value)">
+                                ${Object.entries(currencies).map(([code, curr]) => `
+                                    <option value="${code}" ${currentCurrency === code ? 'selected' : ''}>
+                                        ${curr.flag} ${curr.name} (${curr.symbol}) - ${curr.code}
+                                    </option>
+                                `).join('')}
+                            </select>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.85em;">
+                            Current: ${getCurrencyFlag()} ${currencies[currentCurrency].name}<br>
+                            Symbol: ${getCurrencySymbol()} | Code: ${currencies[currentCurrency].code}<br>
+                            Exchange Rate: 1 USD = ${currencies[currentCurrency].rate} ${currencies[currentCurrency].code}
+                        </p>
+                        <button class="btn btn-primary" onclick="applyCurrencySettings()">Apply Currency</button>
+                    </div>
+
+                    <div class="settings-section" style="margin-top: 15px;">
+                        <h4>💰 Tax Settings</h4>
+                        <div class="form-group">
+                            <label>Tax Rate (%)</label>
+                            <input type="number" id="taxRateInput" value="${taxRate * 100}" step="0.1" min="0" max="100">
+                        </div>
+                        <button class="btn btn-primary" onclick="applyTaxSettings()">Apply Tax Rate</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function changeCurrency(code) {
+            currentCurrency = code;
+            await saveSetting('currency', code);
+            document.getElementById('currentCurrency').textContent = 
+                `${getCurrencyFlag()} ${currencies[currentCurrency].code}`;
+            renderView();
+        }
+
+        async function applyCurrencySettings() {
+            const select = document.getElementById('currencySelect');
+            if (select) {
+                await changeCurrency(select.value);
+                alert(`Currency changed to ${currencies[currentCurrency].name}`);
+            }
+        }
+
+        async function applyTaxSettings() {
+            const input = document.getElementById('taxRateInput');
+            if (input) {
+                taxRate = parseFloat(input.value) / 100;
+                await saveSetting('taxRate', taxRate.toString());
+                alert(`Tax rate set to ${(taxRate * 100).toFixed(1)}%`);
+                renderView();
+            }
         }
 
         function renderInventory(main) {
@@ -1289,7 +1553,7 @@
                                     <tr>
                                         <td>${p.sku}</td>
                                         <td>${p.name}</td>
-                                        <td>$${p.price.toFixed(2)}</td>
+                                        <td>${formatCurrency(p.price)}</td>
                                         <td>${p.stock} ${p.stock < 10 ? '<span class="low-stock-badge">!</span>' : ''}</td>
                                         <td>
                                             <button class="btn btn-primary" style="padding: 5px 10px;" onclick="showBarcode('${p.barcode}')">QR</button>
@@ -1314,7 +1578,7 @@
                 <tr>
                     <td>${p.sku}</td>
                     <td>${p.name}</td>
-                    <td>$${p.price.toFixed(2)}</td>
+                    <td>${formatCurrency(p.price)}</td>
                     <td>${p.stock} ${p.stock < 10 ? '<span class="low-stock-badge">!</span>' : ''}</td>
                     <td>
                         <button class="btn btn-primary" style="padding: 5px 10px;" onclick="showBarcode('${p.barcode}')">QR</button>
@@ -1332,9 +1596,9 @@
                     ${suppliers.map(s => `
                         <div class="supplier-card">
                             <h4>${s.name}</h4>
-                            <div>📞 ${s.phone}</div>
-                            <div>📧 ${s.email}</div>
-                            <div>📍 ${s.address}</div>
+                            <div style="color: var(--text-secondary);">📞 ${s.phone}</div>
+                            <div style="color: var(--text-secondary);">📧 ${s.email}</div>
+                            <div style="color: var(--text-secondary);">📍 ${s.address}</div>
                             <button class="btn btn-primary" style="margin-top: 10px;" onclick="createPO(${s.id})">Create PO</button>
                         </div>
                     `).join('')}
@@ -1354,9 +1618,9 @@
                                     <h4>PO #${po.id}</h4>
                                     <span class="po-status po-${po.status}">${po.status}</span>
                                 </div>
-                                <div>Supplier: ${supplier ? supplier.name : 'Unknown'}</div>
-                                <div>Date: ${po.date}</div>
-                                <div>Total: $${po.total ? po.total.toFixed(2) : '0.00'}</div>
+                                <div style="color: var(--text-secondary);">Supplier: ${supplier ? supplier.name : 'Unknown'}</div>
+                                <div style="color: var(--text-secondary);">Date: ${po.date}</div>
+                                <div>Total: ${formatCurrency(po.total || 0)}</div>
                                 ${po.status === 'draft' ? `
                                     <button class="btn btn-success" onclick="finalizePO(${po.id})">Finalize</button>
                                 ` : ''}
@@ -1377,9 +1641,9 @@
                     ${expenses.map(e => `
                         <div class="expense-card">
                             <h4>${e.type}</h4>
-                            <div>💰 $${e.amount.toFixed(2)}</div>
-                            <div>📅 ${e.date}</div>
-                            <div>🏷️ ${e.category}</div>
+                            <div>💰 ${formatCurrency(e.amount)}</div>
+                            <div style="color: var(--text-secondary);">📅 ${e.date}</div>
+                            <div style="color: var(--text-secondary);">🏷️ ${e.category}</div>
                         </div>
                     `).join('')}
                 </div>
@@ -1402,7 +1666,7 @@
                                 <h4>${u.name}</h4>
                                 <span class="role-badge ${u.role}-badge">${u.role}</span>
                                 <span style="margin-left: 10px;">${u.active ? '✅ Active' : '❌ Inactive'}</span>
-                                <div><small>PIN: ${u.pin}</small></div>
+                                <div><small style="color: var(--text-secondary);">PIN: ${u.pin}</small></div>
                             </div>
                             <div>
                                 <button class="btn btn-primary" style="padding: 5px 10px;" onclick="toggleUser(${u.id})">
@@ -1475,7 +1739,8 @@
                 subtotal: calculateSubtotal(),
                 tax: calculateSubtotal() * taxRate,
                 paymentMethod: method,
-                cashierId: currentUser ? currentUser.id : null
+                cashierId: currentUser ? currentUser.id : null,
+                currency: currentCurrency
             };
 
             try {
@@ -1498,20 +1763,21 @@
 
                 const receiptHTML = `
                     <div class="receipt">
-                        <h2 style="text-align: center;">MLEA POS</h2>
-                        <p style="text-align: center;">Receipt #${saleId}</p>
-                        <p style="text-align: center;">Cashier: ${currentUser.name}</p>
+                        <h2 style="text-align: center; color: var(--accent-light);">MLEA POS</h2>
+                        <p style="text-align: center; color: var(--text-secondary);">Receipt #${saleId}</p>
+                        <p style="text-align: center; color: var(--text-secondary);">Cashier: ${currentUser.name}</p>
+                        <p style="text-align: center; color: var(--text-secondary);">Currency: ${currencies[currentCurrency].code}</p>
                         <hr>
                         ${cart.map(item => `
-                            <div>${item.name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}</div>
+                            <div style="color: var(--text-primary);">${item.name} x${item.quantity} - ${formatCurrency(item.price * item.quantity)}</div>
                         `).join('')}
                         <hr>
-                        <div>Subtotal: $${sale.subtotal.toFixed(2)}</div>
-                        <div>Tax: $${sale.tax.toFixed(2)}</div>
-                        <div><strong>Total: $${sale.total.toFixed(2)}</strong></div>
-                        <div>Payment: ${method.toUpperCase()}</div>
-                        <div>Date: ${sale.date}</div>
-                        <p style="text-align: center; margin-top: 10px;">Thank you for your purchase!</p>
+                        <div style="color: var(--text-secondary);">Subtotal: ${formatCurrency(sale.subtotal)}</div>
+                        <div style="color: var(--text-secondary);">Tax: ${formatCurrency(sale.tax)}</div>
+                        <div style="color: var(--accent-light);"><strong>Total: ${formatCurrency(sale.total)}</strong></div>
+                        <div style="color: var(--text-secondary);">Payment: ${method.toUpperCase()}</div>
+                        <div style="color: var(--text-secondary);">Date: ${sale.date}</div>
+                        <p style="text-align: center; margin-top: 10px; color: var(--accent-light);">Thank you for your purchase!</p>
                     </div>
                 `;
 
@@ -1536,7 +1802,7 @@
         // ==================== CRUD OPERATIONS ====================
         function showAddProduct() {
             document.getElementById('modalContent').innerHTML = `
-                <h3>Add Product</h3>
+                <h3 style="color: var(--text-primary);">Add Product</h3>
                 <div class="form-group">
                     <label>SKU</label>
                     <input type="text" id="productSku">
@@ -1546,7 +1812,7 @@
                     <input type="text" id="productName">
                 </div>
                 <div class="form-group">
-                    <label>Price</label>
+                    <label>Price (${currencies[currentCurrency].code})</label>
                     <input type="number" id="productPrice" step="0.01">
                 </div>
                 <div class="form-group">
@@ -1606,9 +1872,9 @@
         function showBarcode(barcode) {
             document.getElementById('modalContent').innerHTML = `
                 <div class="qr-code">
-                    <h3>Barcode: ${barcode}</h3>
+                    <h3 style="color: var(--text-primary);">Barcode: ${barcode}</h3>
                     <div style="font-size: 3em; margin: 20px;">📱</div>
-                    <p>QR Code generated for: ${barcode}</p>
+                    <p style="color: var(--text-secondary);">QR Code generated for: ${barcode}</p>
                     <button class="btn btn-primary" onclick="document.getElementById('modal').classList.remove('active')">Close</button>
                 </div>
             `;
@@ -1635,7 +1901,7 @@
             }
             
             document.getElementById('modalContent').innerHTML = `
-                <h3>Add User</h3>
+                <h3 style="color: var(--text-primary);">Add User</h3>
                 <div class="form-group">
                     <label>Name</label>
                     <input type="text" id="userName">
@@ -1684,7 +1950,7 @@
 
         function showAddSupplier() {
             document.getElementById('modalContent').innerHTML = `
-                <h3>Add Supplier</h3>
+                <h3 style="color: var(--text-primary);">Add Supplier</h3>
                 <div class="form-group">
                     <label>Name</label>
                     <input type="text" id="supplierName">
@@ -1759,13 +2025,13 @@
 
         function showAddExpense() {
             document.getElementById('modalContent').innerHTML = `
-                <h3>Add Expense</h3>
+                <h3 style="color: var(--text-primary);">Add Expense</h3>
                 <div class="form-group">
                     <label>Type</label>
                     <input type="text" id="expenseType">
                 </div>
                 <div class="form-group">
-                    <label>Amount</label>
+                    <label>Amount (${currencies[currentCurrency].code})</label>
                     <input type="number" id="expenseAmount" step="0.01">
                 </div>
                 <div class="form-group">
@@ -1799,11 +2065,12 @@
         async function exportReport(type) {
             let csv = '';
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const currCode = currencies[currentCurrency].code;
 
             switch(type) {
                 case 'sales':
                     const sales = await db.getAll('sales');
-                    csv = 'Date,Total,Subtotal,Tax,Payment Method,Cashier\n';
+                    csv = `Date,Total (${currCode}),Subtotal (${currCode}),Tax (${currCode}),Payment Method,Cashier\n`;
                     csv += sales.map(s => {
                         const cashier = users.find(u => u.id === s.cashierId);
                         return `${s.date},${s.total},${s.subtotal},${s.tax},${s.paymentMethod},${cashier ? cashier.name : 'Unknown'}`;
@@ -1811,12 +2078,12 @@
                     downloadCSV(csv, `sales_report_${timestamp}.csv`);
                     break;
                 case 'inventory':
-                    csv = 'SKU,Name,Price,Stock,Category,Barcode,Active\n';
+                    csv = `SKU,Name,Price (${currCode}),Stock,Category,Barcode,Active\n`;
                     csv += products.map(p => `${p.sku},${p.name},${p.price},${p.stock},${p.category},${p.barcode},${p.active}`).join('\n');
                     downloadCSV(csv, `inventory_report_${timestamp}.csv`);
                     break;
                 case 'expenses':
-                    csv = 'Type,Amount,Date,Category\n';
+                    csv = `Type,Amount (${currCode}),Date,Category\n`;
                     csv += expenses.map(e => `${e.type},${e.amount},${e.date},${e.category}`).join('\n');
                     downloadCSV(csv, `expenses_report_${timestamp}.csv`);
                     break;
@@ -1894,7 +2161,7 @@
         async function initApp() {
             await new Promise(resolve => setTimeout(resolve, 500));
             
-            // Load users for login screen
+            await loadSettings();
             users = await db.getAll('users');
             if (users.length === 0) {
                 await initSampleUsers();
@@ -1908,16 +2175,6 @@
         document.getElementById('modal').addEventListener('click', function(e) {
             if(e.target === this) {
                 this.classList.remove('active');
-            }
-        });
-
-        document.addEventListener('click', function(e) {
-            const sidebar = document.getElementById('sidebar');
-            const hamburger = document.querySelector('.hamburger');
-            if (sidebar && sidebar.classList.contains('active') && 
-                !sidebar.contains(e.target) && 
-                hamburger && !hamburger.contains(e.target)) {
-                sidebar.classList.remove('active');
             }
         });
 
