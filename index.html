@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MLEA POS - Mobile with Database</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk1MRUEgUE9TIiwKICAic2hvcnRfbmFtZSI6ICJQTFVTIiwKICAic3RhcnRfdXJsIjogIi9tbGVhLXBvcy8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmZmZmZmYiLAogICJ0aGVtZV9jb2xvciI6ICIjNjY3ZWVhIgp9">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
     <style>
         * {
             margin: 0;
@@ -34,6 +38,186 @@
             }
         }
 
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-logo h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .login-logo p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .user-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-card:hover, .user-card.selected {
+            border-color: #667eea;
+            background: #f0f0ff;
+            transform: translateY(-2px);
+        }
+
+        .user-card .avatar {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .user-card .name {
+            font-size: 0.8em;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .user-card .role-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            margin-top: 5px;
+        }
+
+        .admin-badge { background: #667eea; color: white; }
+        .manager-badge { background: #2ed573; color: white; }
+        .cashier-badge { background: #ffa502; color: white; }
+
+        .pin-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pin-btn {
+            background: #f0f0f0;
+            border: none;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #333;
+        }
+
+        .pin-btn:active {
+            background: #667eea;
+            color: white;
+            transform: scale(0.95);
+        }
+
+        .pin-btn.clear {
+            background: #ff4757;
+            color: white;
+            font-size: 1em;
+        }
+
+        .pin-btn.submit {
+            background: #2ed573;
+            color: white;
+            font-size: 1em;
+        }
+
+        .pin-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .pin-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .pin-dot.filled {
+            background: #667eea;
+            transform: scale(1.2);
+        }
+
+        .pin-dot.error {
+            background: #ff4757;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .error-message {
+            color: #ff4757;
+            text-align: center;
+            font-size: 0.9em;
+            min-height: 20px;
+            margin-top: 10px;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        /* Header */
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -58,6 +242,13 @@
             font-size: 24px;
             cursor: pointer;
             padding: 5px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
         }
 
         .sync-status {
@@ -353,47 +544,101 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             z-index: 999;
         }
+
+        .permission-denied {
+            text-align: center;
+            padding: 20px;
+            color: #ff4757;
+        }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div style="padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                <h2>MLEA POS</h2>
-                <p style="font-size: 0.9em;">v2.0 with DB</p>
-                <span class="sync-status" id="dbStatus">🟢 Local DB</span>
-            </div>
-            <div style="padding: 10px;">
-                <button class="nav-item" onclick="switchView('dashboard')">📊 Dashboard</button>
-                <button class="nav-item" onclick="switchView('pos')">💻 POS Terminal</button>
-                <button class="nav-item" onclick="switchView('inventory')">📦 Inventory <span class="low-stock-badge" id="sidebarLowStock">0</span></button>
-                <button class="nav-item" onclick="switchView('suppliers')">🤝 Suppliers</button>
-                <button class="nav-item" onclick="switchView('purchaseOrders')">📋 Purchase Orders</button>
-                <button class="nav-item" onclick="switchView('expenses')">💸 Expenses</button>
-                <button class="nav-item" onclick="switchView('users')">👥 Users</button>
-                <button class="nav-item" onclick="switchView('reports')">💾 Reports</button>
-                <hr style="margin: 10px 0;">
-                <button class="btn btn-warning" style="width: 100%; margin-bottom: 5px;" onclick="backupDatabase()">💿 Backup Data</button>
-                <button class="btn btn-danger" style="width: 100%;" onclick="clearDatabase()">🗑️ Clear All Data</button>
+    <div class="app-container" id="appContainer">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="login-container">
+            <div class="login-card">
+                <div class="login-logo">
+                    <h1>🏪 MLEA POS</h1>
+                    <p>Point of Sale System</p>
+                </div>
+
+                <h3 style="text-align: center; margin-bottom: 15px;">Select User</h3>
+                <div class="user-selector" id="userSelector"></div>
+
+                <h3 style="text-align: center; margin-bottom: 15px;">Enter PIN</h3>
+                <div class="pin-display" id="pinDisplay">
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                </div>
+                <div class="error-message" id="errorMessage"></div>
+
+                <div class="pin-pad">
+                    <button class="pin-btn" onclick="enterPin('1')">1</button>
+                    <button class="pin-btn" onclick="enterPin('2')">2</button>
+                    <button class="pin-btn" onclick="enterPin('3')">3</button>
+                    <button class="pin-btn" onclick="enterPin('4')">4</button>
+                    <button class="pin-btn" onclick="enterPin('5')">5</button>
+                    <button class="pin-btn" onclick="enterPin('6')">6</button>
+                    <button class="pin-btn" onclick="enterPin('7')">7</button>
+                    <button class="pin-btn" onclick="enterPin('8')">8</button>
+                    <button class="pin-btn" onclick="enterPin('9')">9</button>
+                    <button class="pin-btn clear" onclick="clearPin()">Clear</button>
+                    <button class="pin-btn" onclick="enterPin('0')">0</button>
+                    <button class="pin-btn submit" onclick="submitPin()">→</button>
+                </div>
             </div>
         </div>
 
-        <!-- Header -->
-        <div class="header">
-            <div class="header-top">
-                <button class="hamburger" onclick="toggleSidebar()">☰</button>
-                <h1>MLEA POS</h1>
-                <button class="btn btn-primary" style="padding: 5px 15px;" onclick="switchView('pos')">New Sale</button>
+        <!-- Main App (Hidden initially) -->
+        <div id="mainApp" style="display: none;">
+            <!-- Sidebar -->
+            <div class="sidebar" id="sidebar">
+                <div style="padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <h2>MLEA POS</h2>
+                    <p style="font-size: 0.9em;">v2.0 with DB</p>
+                    <span class="sync-status" id="dbStatus">🟢 Local DB</span>
+                    <div style="margin-top: 10px;">
+                        <span class="role-badge" id="sidebarRole"></span>
+                        <span style="font-size: 0.8em; margin-left: 5px;" id="sidebarUser"></span>
+                    </div>
+                </div>
+                <div style="padding: 10px;">
+                    <button class="nav-item" onclick="switchView('dashboard')">📊 Dashboard</button>
+                    <button class="nav-item" onclick="switchView('pos')">💻 POS Terminal</button>
+                    <button class="nav-item" onclick="switchView('inventory')">📦 Inventory <span class="low-stock-badge" id="sidebarLowStock">0</span></button>
+                    <button class="nav-item" onclick="switchView('suppliers')">🤝 Suppliers</button>
+                    <button class="nav-item" onclick="switchView('purchaseOrders')">📋 Purchase Orders</button>
+                    <button class="nav-item" onclick="switchView('expenses')">💸 Expenses</button>
+                    <button class="nav-item" id="navUsers" onclick="switchView('users')">👥 Users</button>
+                    <button class="nav-item" onclick="switchView('reports')">💾 Reports</button>
+                    <hr style="margin: 10px 0;">
+                    <button class="btn btn-warning" style="width: 100%; margin-bottom: 5px;" onclick="backupDatabase()">💿 Backup Data</button>
+                    <button class="btn btn-danger" style="width: 100%; margin-bottom: 5px;" onclick="logout()">🚪 Logout</button>
+                    <button class="btn btn-danger" style="width: 100%;" onclick="clearDatabase()">🗑️ Clear All Data</button>
+                </div>
             </div>
-        </div>
 
-        <!-- Main Content -->
-        <div id="mainContent"></div>
+            <!-- Header -->
+            <div class="header">
+                <div class="header-top">
+                    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+                    <h1>MLEA POS</h1>
+                    <div class="user-info">
+                        <span id="headerUser"></span>
+                        <button class="logout-btn" onclick="logout()">🚪</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div id="mainContent"></div>
+        </div>
     </div>
 
     <!-- DB Status Indicator -->
-    <div class="db-indicator" id="dbIndicator" title="Database Status">
+    <div class="db-indicator" id="dbIndicator" title="Database Status" style="display: none;">
         💾
     </div>
 
@@ -441,7 +686,6 @@
                     request.onupgradeneeded = (event) => {
                         const db = event.target.result;
                         
-                        // Products Store
                         if (!db.objectStoreNames.contains('products')) {
                             const productsStore = db.createObjectStore('products', { keyPath: 'id', autoIncrement: true });
                             productsStore.createIndex('sku', 'sku', { unique: true });
@@ -449,45 +693,38 @@
                             productsStore.createIndex('active', 'active', { unique: false });
                         }
 
-                        // Sales Store
                         if (!db.objectStoreNames.contains('sales')) {
                             const salesStore = db.createObjectStore('sales', { keyPath: 'id', autoIncrement: true });
                             salesStore.createIndex('date', 'date', { unique: false });
                             salesStore.createIndex('paymentMethod', 'paymentMethod', { unique: false });
                         }
 
-                        // Sale Items Store
                         if (!db.objectStoreNames.contains('saleItems')) {
                             const saleItemsStore = db.createObjectStore('saleItems', { keyPath: 'id', autoIncrement: true });
                             saleItemsStore.createIndex('saleId', 'saleId', { unique: false });
                             saleItemsStore.createIndex('productId', 'productId', { unique: false });
                         }
 
-                        // Suppliers Store
                         if (!db.objectStoreNames.contains('suppliers')) {
                             db.createObjectStore('suppliers', { keyPath: 'id', autoIncrement: true });
                         }
 
-                        // Purchase Orders Store
                         if (!db.objectStoreNames.contains('purchaseOrders')) {
                             const poStore = db.createObjectStore('purchaseOrders', { keyPath: 'id', autoIncrement: true });
                             poStore.createIndex('supplierId', 'supplierId', { unique: false });
                             poStore.createIndex('status', 'status', { unique: false });
                         }
 
-                        // Expenses Store
                         if (!db.objectStoreNames.contains('expenses')) {
                             const expensesStore = db.createObjectStore('expenses', { keyPath: 'id', autoIncrement: true });
                             expensesStore.createIndex('date', 'date', { unique: false });
                             expensesStore.createIndex('category', 'category', { unique: false });
                         }
 
-                        // Users Store
                         if (!db.objectStoreNames.contains('users')) {
                             db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
                         }
 
-                        // Settings Store
                         if (!db.objectStoreNames.contains('settings')) {
                             db.createObjectStore('settings', { keyPath: 'key' });
                         }
@@ -508,7 +745,6 @@
                 console.log('✅ LocalStorage initialized');
             }
 
-            // CRUD Operations
             async add(storeName, data) {
                 if (this.useIndexedDB && this.db) {
                     return new Promise((resolve, reject) => {
@@ -645,13 +881,162 @@
         let expenses = [];
         let users = [];
         let currentUser = null;
+        let selectedUserId = null;
+        let pinEntry = '';
         let taxRate = 0.1;
         let settings = {};
+
+        // ==================== AUTHENTICATION ====================
+        function renderLoginScreen() {
+            const userSelector = document.getElementById('userSelector');
+            userSelector.innerHTML = users.filter(u => u.active).map(u => `
+                <div class="user-card ${selectedUserId === u.id ? 'selected' : ''}" 
+                     onclick="selectUser(${u.id})">
+                    <div class="avatar">${u.role === 'admin' ? '👑' : u.role === 'manager' ? '👨‍💼' : '👤'}</div>
+                    <div class="name">${u.name}</div>
+                    <span class="role-badge ${u.role}-badge">${u.role}</span>
+                </div>
+            `).join('');
+        }
+
+        function selectUser(userId) {
+            selectedUserId = userId;
+            pinEntry = '';
+            updatePinDisplay();
+            document.getElementById('errorMessage').textContent = '';
+            renderLoginScreen();
+        }
+
+        function enterPin(digit) {
+            if (!selectedUserId) {
+                document.getElementById('errorMessage').textContent = 'Please select a user first';
+                return;
+            }
+            if (pinEntry.length < 4) {
+                pinEntry += digit;
+                updatePinDisplay();
+                document.getElementById('errorMessage').textContent = '';
+            }
+        }
+
+        function clearPin() {
+            pinEntry = '';
+            updatePinDisplay();
+            document.getElementById('errorMessage').textContent = '';
+        }
+
+        function updatePinDisplay() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach((dot, index) => {
+                if (index < pinEntry.length) {
+                    dot.classList.add('filled');
+                } else {
+                    dot.classList.remove('filled');
+                }
+                dot.classList.remove('error');
+            });
+        }
+
+        function submitPin() {
+            if (!selectedUserId) {
+                document.getElementById('errorMessage').textContent = 'Please select a user first';
+                return;
+            }
+
+            const user = users.find(u => u.id === selectedUserId);
+            if (!user) {
+                document.getElementById('errorMessage').textContent = 'User not found';
+                shakePinDisplay();
+                return;
+            }
+
+            if (user.pin === pinEntry) {
+                // Login successful
+                currentUser = user;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                document.getElementById('dbIndicator').style.display = 'block';
+                
+                // Update UI with user info
+                document.getElementById('headerUser').textContent = `${user.name} (${user.role})`;
+                document.getElementById('sidebarUser').textContent = user.name;
+                document.getElementById('sidebarRole').textContent = user.role;
+                document.getElementById('sidebarRole').className = `role-badge ${user.role}-badge`;
+                
+                // Show/hide admin features
+                const navUsers = document.getElementById('navUsers');
+                if (user.role !== 'admin') {
+                    navUsers.style.display = 'none';
+                } else {
+                    navUsers.style.display = 'block';
+                }
+                
+                // Reset login state
+                pinEntry = '';
+                selectedUserId = null;
+                updatePinDisplay();
+                
+                // Initialize app
+                initAppData().then(() => {
+                    renderView();
+                });
+            } else {
+                document.getElementById('errorMessage').textContent = 'Incorrect PIN. Try again.';
+                shakePinDisplay();
+                pinEntry = '';
+                updatePinDisplay();
+            }
+        }
+
+        function shakePinDisplay() {
+            const dots = document.querySelectorAll('.pin-dot');
+            dots.forEach(dot => dot.classList.add('error'));
+            setTimeout(() => {
+                dots.forEach(dot => dot.classList.remove('error', 'filled'));
+            }, 500);
+        }
+
+        function logout() {
+            if (cart.length > 0) {
+                if (!confirm('You have items in cart. Are you sure you want to logout?')) {
+                    return;
+                }
+            }
+            
+            currentUser = null;
+            selectedUserId = null;
+            pinEntry = '';
+            cart = [];
+            
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('dbIndicator').style.display = 'none';
+            document.getElementById('sidebar').classList.remove('active');
+            
+            updatePinDisplay();
+            document.getElementById('errorMessage').textContent = '';
+            renderLoginScreen();
+        }
+
+        // Keyboard support for PIN entry
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('loginScreen').style.display !== 'none') {
+                if (e.key >= '0' && e.key <= '9') {
+                    enterPin(e.key);
+                } else if (e.key === 'Enter') {
+                    submitPin();
+                } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                    pinEntry = pinEntry.slice(0, -1);
+                    updatePinDisplay();
+                } else if (e.key === 'Escape') {
+                    clearPin();
+                }
+            }
+        });
 
         // ==================== DATA INITIALIZATION ====================
         async function initAppData() {
             try {
-                // Load settings
                 settings = (await db.getAll('settings')).reduce((acc, s) => {
                     acc[s.key] = s.value;
                     return acc;
@@ -659,32 +1044,24 @@
                 
                 if (settings.taxRate) taxRate = parseFloat(settings.taxRate);
 
-                // Load data from database
                 products = await db.getAll('products');
                 suppliers = await db.getAll('suppliers');
                 purchaseOrders = await db.getAll('purchaseOrders');
                 expenses = await db.getAll('expenses');
                 users = await db.getAll('users');
 
-                // Initialize with sample data if empty
                 if (products.length === 0) {
                     await initSampleData();
                 }
 
                 if (users.length === 0) {
                     await initSampleUsers();
+                    users = await db.getAll('users');
                 }
 
-                // Set current user
-                currentUser = users.find(u => u.active) || users[0];
-
-                // Update low stock badge
                 updateLowStockBadge();
                 
                 console.log('📊 Data loaded successfully');
-                console.log(`   Products: ${products.length}`);
-                console.log(`   Sales: ${(await db.getAll('sales')).length}`);
-                console.log(`   Suppliers: ${suppliers.length}`);
             } catch (error) {
                 console.error('Error loading data:', error);
             }
@@ -743,10 +1120,17 @@
         }
 
         async function switchView(view) {
+            if (!currentUser) return;
+            
+            // Check permissions
+            if (view === 'users' && currentUser.role !== 'admin') {
+                alert('Access denied. Only admin can manage users.');
+                return;
+            }
+            
             currentView = view;
             document.getElementById('sidebar').classList.remove('active');
             
-            // Reload data from database
             products = await db.getAll('products');
             suppliers = await db.getAll('suppliers');
             purchaseOrders = await db.getAll('purchaseOrders');
@@ -780,7 +1164,6 @@
         function renderDashboard(main) {
             const lowStockCount = products.filter(p => p.stock < 10 && p.active).length;
             
-            // Calculate real metrics from database
             db.getAll('sales').then(sales => {
                 const today = new Date().toISOString().split('T')[0];
                 const todaySales = sales
@@ -795,9 +1178,12 @@
                     .filter(s => s.date.startsWith(today.substring(0, 7)))
                     .reduce((sum, s) => sum + s.tax, 0);
 
-                main.querySelector('.metric-card:nth-child(1) .metric-value').textContent = `$${todaySales.toFixed(2)}`;
-                main.querySelector('.metric-card:nth-child(2) .metric-value').textContent = `$${monthlySales.toFixed(2)}`;
-                main.querySelector('.metric-card:nth-child(3) .metric-value').textContent = `$${totalTax.toFixed(2)}`;
+                const metrics = main.querySelectorAll('.metric-value');
+                if (metrics.length >= 3) {
+                    metrics[0].textContent = `$${todaySales.toFixed(2)}`;
+                    metrics[1].textContent = `$${monthlySales.toFixed(2)}`;
+                    metrics[2].textContent = `$${totalTax.toFixed(2)}`;
+                }
             });
 
             main.innerHTML = `
@@ -816,7 +1202,7 @@
                     </div>
                 </div>
                 <div style="padding: 10px;">
-                    <h3>Quick Actions</h3>
+                    <h3>Welcome, ${currentUser.name}!</h3>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
                         <button class="btn btn-primary" onclick="switchView('pos')">New Sale</button>
                         <button class="btn btn-success" onclick="switchView('inventory')">Check Stock</button>
@@ -826,9 +1212,6 @@
                     ${lowStockCount > 0 ? `<div style="margin-top: 15px; padding: 10px; background: #fff3cd; border-radius: 10px;">
                         ⚠️ ${lowStockCount} products low on stock
                     </div>` : ''}
-                    <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 10px;">
-                        <small>💾 Data is stored locally on your device</small>
-                    </div>
                 </div>
             `;
         }
@@ -1004,14 +1387,22 @@
         }
 
         function renderUsers(main) {
+            if (currentUser.role !== 'admin') {
+                main.innerHTML = '<div class="permission-denied">🔒 Access denied. Admin only.</div>';
+                return;
+            }
+            
             main.innerHTML = `
                 <div style="padding: 10px;">
+                    <h3>User Management</h3>
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="showAddUser()">+ Add User</button>
                     ${users.map(u => `
                         <div class="supplier-card" style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <h4>${u.name}</h4>
                                 <span class="role-badge ${u.role}-badge">${u.role}</span>
                                 <span style="margin-left: 10px;">${u.active ? '✅ Active' : '❌ Inactive'}</span>
+                                <div><small>PIN: ${u.pin}</small></div>
                             </div>
                             <div>
                                 <button class="btn btn-primary" style="padding: 5px 10px;" onclick="toggleUser(${u.id})">
@@ -1090,7 +1481,6 @@
             try {
                 const saleId = await db.add('sales', sale);
                 
-                // Save sale items and update stock
                 for (const item of cart) {
                     await db.add('saleItems', {
                         saleId: saleId,
@@ -1099,7 +1489,6 @@
                         price: item.price
                     });
 
-                    // Update product stock
                     const product = products.find(p => p.id === item.id);
                     if (product) {
                         product.stock -= item.quantity;
@@ -1107,11 +1496,11 @@
                     }
                 }
 
-                // Show receipt
                 const receiptHTML = `
                     <div class="receipt">
                         <h2 style="text-align: center;">MLEA POS</h2>
                         <p style="text-align: center;">Receipt #${saleId}</p>
+                        <p style="text-align: center;">Cashier: ${currentUser.name}</p>
                         <hr>
                         ${cart.map(item => `
                             <div>${item.name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}</div>
@@ -1129,10 +1518,7 @@
                 document.getElementById('modalContent').innerHTML = receiptHTML;
                 document.getElementById('modal').classList.add('active');
 
-                // Clear cart
                 cart = [];
-                
-                // Reload products
                 products = await db.getAll('products');
                 updateLowStockBadge();
 
@@ -1230,11 +1616,70 @@
         }
 
         async function toggleUser(userId) {
+            if (currentUser.role !== 'admin') {
+                alert('Access denied');
+                return;
+            }
+            
             const user = users.find(u => u.id === userId);
             user.active = !user.active;
             await db.update('users', user);
             users = await db.getAll('users');
             renderView();
+        }
+
+        function showAddUser() {
+            if (currentUser.role !== 'admin') {
+                alert('Access denied');
+                return;
+            }
+            
+            document.getElementById('modalContent').innerHTML = `
+                <h3>Add User</h3>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="userName">
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="userRole">
+                        <option value="admin">Admin</option>
+                        <option value="manager">Manager</option>
+                        <option value="cashier" selected>Cashier</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>PIN (4 digits)</label>
+                    <input type="password" id="userPin" maxlength="4" pattern="[0-9]{4}">
+                </div>
+                <button class="btn btn-primary" onclick="addUser()">Save</button>
+                <button class="btn btn-danger" onclick="document.getElementById('modal').classList.remove('active')">Cancel</button>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        async function addUser() {
+            const name = document.getElementById('userName').value;
+            const role = document.getElementById('userRole').value;
+            const pin = document.getElementById('userPin').value;
+            
+            if (!name || !pin || pin.length !== 4) {
+                alert('Please fill all fields. PIN must be 4 digits.');
+                return;
+            }
+            
+            const user = {
+                name: name,
+                role: role,
+                active: true,
+                pin: pin
+            };
+
+            await db.add('users', user);
+            users = await db.getAll('users');
+            document.getElementById('modal').classList.remove('active');
+            renderView();
+            renderLoginScreen();
         }
 
         function showAddSupplier() {
@@ -1306,10 +1751,7 @@
             if(po && po.status === 'finalized') {
                 po.status = 'received';
                 await db.update('purchaseOrders', po);
-                
-                // Auto-stock: Add stock to products (simulated)
                 alert('Purchase Order received! Stock updated automatically.');
-                
                 purchaseOrders = await db.getAll('purchaseOrders');
                 renderView();
             }
@@ -1361,8 +1803,11 @@
             switch(type) {
                 case 'sales':
                     const sales = await db.getAll('sales');
-                    csv = 'Date,Total,Subtotal,Tax,Payment Method\n';
-                    csv += sales.map(s => `${s.date},${s.total},${s.subtotal},${s.tax},${s.paymentMethod}`).join('\n');
+                    csv = 'Date,Total,Subtotal,Tax,Payment Method,Cashier\n';
+                    csv += sales.map(s => {
+                        const cashier = users.find(u => u.id === s.cashierId);
+                        return `${s.date},${s.total},${s.subtotal},${s.tax},${s.paymentMethod},${cashier ? cashier.name : 'Unknown'}`;
+                    }).join('\n');
                     downloadCSV(csv, `sales_report_${timestamp}.csv`);
                     break;
                 case 'inventory':
@@ -1395,11 +1840,8 @@
             try {
                 const data = await db.exportAllData();
                 const backupStr = JSON.stringify(data);
-                
-                // Save to localStorage for persistence
                 localStorage.setItem('mlea_backup', backupStr);
                 
-                // Also offer download
                 const blob = new Blob([backupStr], { type: 'application/json' });
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -1418,6 +1860,11 @@
         }
 
         async function clearDatabase() {
+            if (currentUser.role !== 'admin') {
+                alert('Only admin can clear the database.');
+                return;
+            }
+            
             if(confirm('⚠️ Are you sure you want to clear ALL data? This cannot be undone!')) {
                 if(confirm('FINAL WARNING: This will delete all products, sales, suppliers, and expenses!')) {
                     const stores = ['products', 'sales', 'saleItems', 'suppliers', 'purchaseOrders', 'expenses', 'users'];
@@ -1426,7 +1873,6 @@
                         await db.clearStore(store);
                     }
                     
-                    // Reinitialize with sample data
                     await initSampleData();
                     await initSampleUsers();
                     
@@ -1438,6 +1884,7 @@
                     
                     updateLowStockBadge();
                     renderView();
+                    renderLoginScreen();
                     alert('🗑️ All data cleared and reset with sample data');
                 }
             }
@@ -1445,24 +1892,16 @@
 
         // ==================== INITIALIZATION ====================
         async function initApp() {
-            // Wait for database initialization
             await new Promise(resolve => setTimeout(resolve, 500));
-            await initAppData();
-            renderView();
-
-            // Auto-save to localStorage every 30 seconds
-            setInterval(async () => {
-                try {
-                    const data = await db.exportAllData();
-                    localStorage.setItem('mlea_autosave', JSON.stringify(data));
-                    document.getElementById('dbIndicator').style.background = '#2ed573';
-                    setTimeout(() => {
-                        document.getElementById('dbIndicator').style.background = '#667eea';
-                    }, 1000);
-                } catch (error) {
-                    console.error('Auto-save failed:', error);
-                }
-            }, 30000);
+            
+            // Load users for login screen
+            users = await db.getAll('users');
+            if (users.length === 0) {
+                await initSampleUsers();
+                users = await db.getAll('users');
+            }
+            
+            renderLoginScreen();
         }
 
         // Event Listeners
@@ -1472,13 +1911,12 @@
             }
         });
 
-        // Close sidebar on outside click
         document.addEventListener('click', function(e) {
             const sidebar = document.getElementById('sidebar');
             const hamburger = document.querySelector('.hamburger');
-            if (sidebar.classList.contains('active') && 
+            if (sidebar && sidebar.classList.contains('active') && 
                 !sidebar.contains(e.target) && 
-                !hamburger.contains(e.target)) {
+                hamburger && !hamburger.contains(e.target)) {
                 sidebar.classList.remove('active');
             }
         });
