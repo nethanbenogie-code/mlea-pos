@@ -717,21 +717,26 @@
                         <span style="font-size: 0.8em; margin-left: 5px;" id="sidebarUser"></span>
                     </div>
                 </div>
-                <div style="padding: 10px;">
-                    <button class="nav-item" onclick="switchView('dashboard')">📊 Dashboard</button>
-                    <button class="nav-item" onclick="switchView('pos')">💻 POS Terminal</button>
-                    <button class="nav-item" onclick="switchView('inventory')">📦 Inventory <span class="low-stock-badge" id="sidebarLowStock">0</span></button>
-                    <button class="nav-item" onclick="switchView('suppliers')">🤝 Suppliers</button>
-                    <button class="nav-item" onclick="switchView('purchaseOrders')">📋 Purchase Orders</button>
-                    <button class="nav-item" onclick="switchView('expenses')">💸 Expenses</button>
-                    <button class="nav-item" onclick="switchView('settings')">⚙️ Settings</button>
-                    <button class="nav-item" id="navUsers" onclick="switchView('users')">👥 Users</button>
-                    <button class="nav-item" onclick="switchView('reports')">💾 Reports</button>
-                    <hr style="margin: 10px 0; border-color: var(--border);">
-                    <button class="btn btn-warning" style="width: 100%; margin-bottom: 5px;" onclick="backupDatabase()">💿 Backup Data</button>
-                    <button class="btn btn-danger" style="width: 100%; margin-bottom: 5px;" onclick="logout()">🚪 Logout</button>
-                    <button class="btn btn-danger" style="width: 100%;" onclick="clearDatabase()">🗑️ Clear All Data</button>
-                </div>
+               // Find this section in your code (around line 900-920)
+            // Replace the sidebar buttons section with this:
+            
+            <div style="padding: 10px;">
+                <button class="nav-item" onclick="switchView('dashboard')">📊 Dashboard</button>
+                <button class="nav-item" onclick="switchView('pos')">💻 POS Terminal</button>
+                <button class="nav-item" onclick="switchView('inventory')">📦 Inventory <span class="low-stock-badge" id="sidebarLowStock">0</span></button>
+                <button class="nav-item" onclick="switchView('suppliers')">🤝 Suppliers</button>
+                <button class="nav-item" onclick="switchView('purchaseOrders')">📋 Purchase Orders</button>
+                <button class="nav-item" onclick="switchView('expenses')">💸 Expenses</button>
+                
+                <!-- ADD THIS LINE FOR SETTINGS -->
+                <button class="nav-item" onclick="switchView('settings')">⚙️ Settings</button>
+                
+                <button class="nav-item" id="navUsers" onclick="switchView('users')">👥 Users</button>
+                <button class="nav-item" onclick="switchView('reports')">💾 Reports</button>
+                <hr style="margin: 10px 0; border-color: var(--border);">
+                <button class="btn btn-warning" style="width: 100%; margin-bottom: 5px;" onclick="backupDatabase()">💿 Backup Data</button>
+                <button class="btn btn-danger" style="width: 100%; margin-bottom: 5px;" onclick="logout()">🚪 Logout</button>
+                <button class="btn btn-danger" style="width: 100%;" onclick="clearDatabase()">🗑️ Clear All Data</button>
             </div>
 
             <!-- Header -->
