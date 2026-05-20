@@ -211,15 +211,26 @@
         let currentUser = null, currentView = 'dashboard', currentCurrency = 'PHP';
         let taxRate = 0.12, discountRate = 0, discountType = 'percent';
         let cart = [], selectedUserId = null, pinEntry = '', receiptFooter = 'Thank you for your business!';
+        let adminActiveBranch = 'all'; // Smart Admin Filter State
 
         function formatCurrency(amt) {
             const c = currencies[currentCurrency] || currencies.PHP;
             return c.symbol + amt.toFixed(c.decimals);
         }
 
+        // --- CORE ISOLATION FILTER ---
         function getIsolatedData(storeKey) {
             const allItems = DB.getAll(storeKey);
-            if (!currentUser || currentUser.role === 'admin') return allItems;
+            if (!currentUser) return allItems;
+            
+            // Admin Override Logic
+            if (currentUser.role === 'admin') {
+                if (adminActiveBranch === 'all') return allItems; // Show everything
+                // Filter specifically for the selected branch (excluding the Master Admin user from disappearing)
+                return allItems.filter(item => item.branchId === parseInt(adminActiveBranch) || (storeKey === 'users' && item.role === 'admin'));
+            }
+            
+            // Standard Manager/Cashier Isolation
             return allItems.filter(item => item.branchId === currentUser.branchId);
         }
 
@@ -243,9 +254,24 @@
                 role: currentUser.role,
                 action: action,
                 details: details,
-                branchId: currentUser.branchId,
+                branchId: currentUser.role === 'admin' && adminActiveBranch !== 'all' ? parseInt(adminActiveBranch) : currentUser.branchId,
                 time: new Date().toLocaleString()
             });
+        }
+
+        // --- ADMIN WORKSPACE INJECTION COMPONENT ---
+        function renderAdminFilter() {
+            if (currentUser.role !== 'admin') return '';
+            const branches = DB.getAll('branches');
+            return `
+                <div class="card" style="background:#2a3a5e; border: 1px solid #7c6fff; margin-bottom:10px;">
+                    <label style="font-size:0.8em;color:#e0e0e0;font-weight:bold;">🔭 Admin Workspace Override</label>
+                    <select onchange="adminActiveBranch = this.value; switchView(currentView)" style="margin-top:5px;background:#0f3460;border:1px solid #7c6fff;color:#fff;">
+                        <option value="all" ${adminActiveBranch === 'all' ? 'selected' : ''}>🌐 Global View (All Branches Combined)</option>
+                        ${branches.map(b => `<option value="${b.id}" ${adminActiveBranch == b.id ? 'selected' : ''}>🏢 Isolate: ${b.name}</option>`).join('')}
+                    </select>
+                </div>
+            `;
         }
 
         // --- 3. LOGINS & ROUTING CHANNELS ---
@@ -286,8 +312,8 @@
             const user = DB.getAll('users').find(u => u.id === selectedUserId);
             if (user && user.pin === pinEntry) {
                 currentUser = user;
+                adminActiveBranch = 'all'; // Reset admin view on login
                 
-                // Track Login
                 writeLog('System Login', 'User authenticated successfully.');
                 
                 document.getElementById('loginScreen').style.display = 'none';
@@ -310,11 +336,8 @@
                 switchView('dashboard');
             } else {
                 document.getElementById('errorMessage').textContent = '⚠️ Incorrect Code/PIN!';
-                
-                // Track Failed Logins System-wide
                 const failedUser = DB.getAll('users').find(u => u.id === selectedUserId);
                 DB.add('activityLogs', { user: failedUser ? failedUser.name : 'Unknown', role: 'System', action: 'Security Error', details: 'Failed PIN attempt.', branchId: failedUser ? failedUser.branchId : 0, time: new Date().toLocaleString() });
-                
                 clearPin();
             }
         }
@@ -346,11 +369,11 @@
             const lowCount = getLowStockCount();
             const totalRev = sales.reduce((a, b) => a + b.total, 0);
             
-            // Backup Reminder Logic
             const lastBackupTime = localStorage.getItem('mlea_last_backup_time');
-            const needsBackup = !lastBackupTime || (Date.now() - parseInt(lastBackupTime) > 86400000); // 86.4M ms = 24 Hours
+            const needsBackup = !lastBackupTime || (Date.now() - parseInt(lastBackupTime) > 86400000);
 
             el.innerHTML = `
+                ${renderAdminFilter()}
                 ${needsBackup && currentUser.role !== 'cashier' ? `
                     <div class="alert alert-warning">
                         <strong>⚠️ Daily Backup Required!</strong><br>
@@ -378,6 +401,7 @@
             const total = taxable + tax;
 
             el.innerHTML = `
+                ${renderAdminFilter()}
                 <div class="card"><input type="text" id="posSearch" placeholder="🔍 Search Item/Scan Barcode..." oninput="handlePOSSearch(this.value)"></div>
                 <div class="product-grid" id="posProductGrid">
                     ${products.map(p => `
@@ -447,16 +471,16 @@
                 if (target) target.stock -= item.qty;
             });
             DB.set('products', products);
-            DB.add('sales', { items: cart, total: total, branchId: currentUser.branchId });
+            DB.add('sales', { items: cart, total: total, branchId: currentUser.role === 'admin' && adminActiveBranch !== 'all' ? parseInt(adminActiveBranch) : currentUser.branchId });
             
             writeLog('Transaction', `Processed sale total: ${formatCurrency(total)}`);
-            
             cart = []; alert("Sale Committed!"); renderPOS(document.getElementById('mainContent'));
         }
 
         function renderInventory(el) {
             const products = getIsolatedData('products');
             el.innerHTML = `
+                ${renderAdminFilter()}
                 <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
                     <h4>Store Inventory</h4>
                     <button class="btn btn-primary btn-sm" onclick="showProductModal()">+ Add Product</button>
@@ -491,7 +515,7 @@
                 price: parseFloat(document.getElementById('pPrice').value)||0,
                 stock: parseInt(document.getElementById('pStock').value)||0,
                 barcode: document.getElementById('pBarcode').value,
-                branchId: currentUser.branchId,
+                branchId: currentUser.role === 'admin' && adminActiveBranch !== 'all' ? parseInt(adminActiveBranch) : currentUser.branchId,
                 active: true
             });
             writeLog('Inventory Update', `Added/Modified item: ${name}`);
@@ -527,8 +551,9 @@
         }
 
         function renderUsers(el) {
-            const users = DB.getAll('users').filter(u => currentUser.role === 'admin' || u.branchId === currentUser.branchId);
+            const users = getIsolatedData('users');
             el.innerHTML = `
+                ${renderAdminFilter()}
                 <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
                     <h4>Staff Authorization Cluster</h4>
                     <button class="btn btn-primary btn-sm" onclick="showUserModal()">+ Assign New Member</button>
@@ -542,7 +567,7 @@
                                     <td><strong>${u.name}</strong><br><small style="color:#6a6a7a;">Branch Target: #${u.branchId}</small></td>
                                     <td><span class="role-badge ${u.role}-badge">${u.role}</span></td>
                                     <td>
-                                        ${u.role === 'admin' ? '' : `<button class="btn btn-danger btn-xs" onclick="deleteUserNode(${u.id})">Remove Access</button>`}
+                                        ${u.role === 'admin' ? '' : `<button class="btn btn-danger btn-xs" onclick="deleteUserNode(${u.id})">Remove</button>`}
                                     </td>
                                 </tr>
                             `).join('')}
@@ -568,7 +593,7 @@
                 <div class="form-group">
                     <label>Assigned Branch Link</label>
                     <select id="uBranchId" ${!isAdmin ? 'disabled' : ''}>
-                        ${isAdmin ? branches.map(b => `<option value="${b.id}">${b.name}</option>`).join('') : `<option value="${currentUser.branchId}">Current Managed Branch</option>`}
+                        ${isAdmin ? branches.map(b => `<option value="${b.id}" ${adminActiveBranch == b.id ? 'selected' : ''}>${b.name}</option>`).join('') : `<option value="${currentUser.branchId}">Current Managed Branch</option>`}
                     </select>
                 </div>
                 <div class="form-group"><label>Secure Access PIN (4 Digits)</label><input type="password" maxlength="4" id="uPin"></div>
@@ -607,9 +632,10 @@
         function renderSuppliers(el) {
             const data = getIsolatedData('suppliers');
             el.innerHTML = `
+                ${renderAdminFilter()}
                 <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
                     <h4>Vendor Logistics Channel</h4>
-                    <button class="btn btn-primary btn-sm" onclick="DB.add('suppliers',{name:'New Supplier Unit',branchId:currentUser.branchId}); switchView('suppliers');">+ Quick Add</button>
+                    <button class="btn btn-primary btn-sm" onclick="DB.add('suppliers',{name:'New Supplier Unit',branchId:currentUser.role==='admin'&&adminActiveBranch!=='all'?parseInt(adminActiveBranch):currentUser.branchId}); switchView('suppliers');">+ Quick Add</button>
                 </div>
                 <div class="card">
                     <table>
@@ -623,9 +649,10 @@
         function renderPurchaseOrders(el) {
             const data = getIsolatedData('purchaseOrders');
             el.innerHTML = `
+                ${renderAdminFilter()}
                 <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
                     <h4>Supply Procurement Orders</h4>
-                    <button class="btn btn-primary btn-sm" onclick="DB.add('purchaseOrders',{supplier:'Internal System Fulfillment',branchId:currentUser.branchId}); switchView('purchaseOrders');">+ Quick Generate</button>
+                    <button class="btn btn-primary btn-sm" onclick="DB.add('purchaseOrders',{supplier:'Internal System Fulfillment',branchId:currentUser.role==='admin'&&adminActiveBranch!=='all'?parseInt(adminActiveBranch):currentUser.branchId}); switchView('purchaseOrders');">+ Quick Generate</button>
                 </div>
                 <div class="card">
                     <table>
@@ -639,9 +666,10 @@
         function renderExpenses(el) {
             const data = getIsolatedData('expenses');
             el.innerHTML = `
+                ${renderAdminFilter()}
                 <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
                     <h4>Expense Bookkeeping Logs</h4>
-                    <button class="btn btn-primary btn-sm" onclick="DB.add('expenses',{type:'Operational Utility Cost Outflow',amount:120,branchId:currentUser.branchId}); writeLog('Financial', 'Added expense log.'); switchView('expenses');">+ Add Expense</button>
+                    <button class="btn btn-primary btn-sm" onclick="DB.add('expenses',{type:'Operational Utility Cost Outflow',amount:120,branchId:currentUser.role==='admin'&&adminActiveBranch!=='all'?parseInt(adminActiveBranch):currentUser.branchId}); writeLog('Financial', 'Added expense log.'); switchView('expenses');">+ Add Expense</button>
                 </div>
                 <div class="card">
                     <table>
@@ -676,10 +704,10 @@
         }
 
         function renderReports(el) {
-            // Fetch relevant logs based on user's branch authorization
-            let rawLogs = getIsolatedData('activityLogs').reverse().slice(0, 30); // Show last 30 actions
+            let rawLogs = getIsolatedData('activityLogs').reverse().slice(0, 30);
             
             el.innerHTML = `
+                ${renderAdminFilter()}
                 <div class="card">
                     <h4>Core Database Backups</h4>
                     <button class="btn btn-success" style="width:100%;margin-bottom:6px;" onclick="triggerSystemExport()">📥 Extract & Download JSON File</button>
@@ -712,7 +740,6 @@
             temporaryAnchor.download = `MLEA_ISOLATED_BACKUP_${new Date().toISOString().split('T')[0]}.json`;
             temporaryAnchor.click();
             
-            // Mark Backup Time
             localStorage.setItem('mlea_last_backup_time', Date.now().toString());
             writeLog('System Routine', 'Executed manual database extraction.');
         }
