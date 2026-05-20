@@ -3,39 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MLEA POS - Mobile with Database</title>
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIk1MRUEgUE9TIiwKICAic2hvcnRfbmFtZSI6ICJQTFVTIiwKICAic3RhcnRfdXJsIjogIi9tbGVhLXBvcy8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMxYTFhMmEiLAogICJ0aGVtZV9jb2xvciI6ICIjN2M2ZmZmIgp9">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#1a1a2e">
+    <title>MLEA POS</title>
     <style>
-        :root {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --bg-card: #1e2a4a;
-            --bg-input: #0f3460;
-            --text-primary: #e0e0e0;
-            --text-secondary: #a0a0b0;
-            --accent: #7c6fff;
-            --accent-light: #9b8fff;
-            --success: #2ed573;
-            --danger: #ff4757;
-            --warning: #ffa502;
-            --border: #2a3a5e;
-            --shadow: 0 2px 10px rgba(0,0,0,0.3);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -43,646 +18,381 @@
             max-width: 480px;
             margin: 0 auto;
             min-height: 100vh;
-            background: var(--bg-secondary);
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-
-        @media (min-width: 768px) {
-            .app-container {
-                max-width: 768px;
-            }
+            background: #16213e;
         }
 
         /* Login Screen */
-        .login-container {
+        #loginScreen {
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            padding: 15px;
         }
 
         .login-card {
-            background: var(--bg-card);
+            background: #1e2a4a;
             border-radius: 20px;
-            padding: 30px;
+            padding: 20px;
             width: 100%;
-            max-width: 350px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            animation: slideUp 0.5s ease-out;
-            border: 1px solid var(--border);
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            max-width: 340px;
+            border: 1px solid #2a3a5e;
         }
 
         .login-logo {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
-        .login-logo h1 {
-            color: var(--accent-light);
-            font-size: 2em;
-            margin-bottom: 5px;
-        }
-
-        .login-logo p {
-            color: var(--text-secondary);
-            font-size: 0.9em;
-        }
+        .login-logo h1 { color: #9b8fff; font-size: 1.8em; }
+        .login-logo p { color: #a0a0b0; font-size: 0.85em; }
 
         .user-selector {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
         }
 
         .user-card {
-            background: var(--bg-primary);
-            border: 2px solid var(--border);
+            background: #16213e;
+            border: 2px solid #2a3a5e;
             border-radius: 10px;
-            padding: 15px;
+            padding: 12px 8px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .user-card:hover, .user-card.selected {
-            border-color: var(--accent);
-            background: var(--bg-input);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(124, 111, 255, 0.2);
-        }
-
-        .user-card .avatar {
-            font-size: 2em;
-            margin-bottom: 5px;
-        }
-
-        .user-card .name {
-            font-size: 0.8em;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .pin-pad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .pin-btn {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 20px;
-            font-size: 1.5em;
-            cursor: pointer;
             transition: all 0.2s;
-            color: var(--text-primary);
         }
 
-        .pin-btn:active {
-            background: var(--accent);
-            color: white;
-            transform: scale(0.95);
+        .user-card.selected {
+            border-color: #7c6fff;
+            background: #0f3460;
         }
 
-        .pin-btn.clear {
-            background: var(--danger);
-            color: white;
-            font-size: 1em;
+        .user-card .avatar { font-size: 1.8em; }
+        .user-card .name { font-size: 0.7em; color: #e0e0e0; margin-top: 3px; }
+
+        .role-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.65em;
+            margin-top: 3px;
         }
 
-        .pin-btn.submit {
-            background: var(--success);
-            color: white;
-            font-size: 1em;
+        .admin-badge { background: #7c6fff; color: white; }
+        .manager-badge { background: #2ed573; color: white; }
+        .cashier-badge { background: #ffa502; color: white; }
+
+        .section-label {
+            text-align: center;
+            color: #e0e0e0;
+            font-size: 0.9em;
+            margin: 10px 0;
         }
 
         .pin-display {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
+            gap: 12px;
+            margin: 15px 0;
         }
 
         .pin-dot {
-            width: 15px;
-            height: 15px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            background: var(--border);
+            background: #2a3a5e;
             transition: all 0.3s;
         }
 
-        .pin-dot.filled {
-            background: var(--accent);
-            transform: scale(1.2);
-            box-shadow: 0 0 10px var(--accent);
-        }
+        .pin-dot.filled { background: #7c6fff; box-shadow: 0 0 8px #7c6fff; }
+        .pin-dot.error { background: #ff4757; }
 
-        .pin-dot.error {
-            background: var(--danger);
-            animation: shake 0.5s;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
-        }
-
-        .error-message {
-            color: var(--danger);
+        .error-msg {
+            color: #ff4757;
             text-align: center;
-            font-size: 0.9em;
-            min-height: 20px;
-            margin-top: 10px;
-        }
-
-        .logout-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 5px 15px;
-            border-radius: 15px;
-            cursor: pointer;
             font-size: 0.8em;
+            min-height: 18px;
+            margin: 5px 0;
         }
 
-        /* Header */
+        .pin-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .pin-btn {
+            background: #0f3460;
+            border: 1px solid #2a3a5e;
+            border-radius: 10px;
+            padding: 16px;
+            font-size: 1.3em;
+            cursor: pointer;
+            color: #e0e0e0;
+        }
+
+        .pin-btn:active { background: #7c6fff; }
+        .pin-btn.clear { background: #ff4757; color: white; font-size: 0.9em; }
+        .pin-btn.submit { background: #2ed573; color: white; font-size: 0.9em; }
+
+        /* Main App */
+        #mainApp { display: none; }
+
         .header {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            padding: 15px;
+            background: #1a1a2e;
+            padding: 12px 15px;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            border-bottom: 1px solid #2a3a5e;
+        }
+
+        .header h1 { color: #9b8fff; font-size: 1.2em; }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8em;
+            color: #a0a0b0;
+        }
+
+        .logout-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8em;
         }
 
         .hamburger {
             background: none;
             border: none;
-            color: var(--text-primary);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9em;
-            color: var(--text-secondary);
-        }
-
-        .sync-status {
-            font-size: 0.7em;
-            padding: 3px 8px;
-            border-radius: 10px;
-            background: rgba(124, 111, 255, 0.2);
-            display: inline-block;
-            color: var(--accent-light);
-        }
-
-        .currency-selector {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            padding: 5px 10px;
-            color: var(--text-primary);
-            font-size: 0.8em;
+            color: #e0e0e0;
+            font-size: 22px;
             cursor: pointer;
         }
 
-        .dashboard-metrics {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 15px;
-            background: var(--bg-card);
-            margin: 10px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-
-        .metric-card {
-            text-align: center;
-            padding: 10px;
-            background: var(--bg-primary);
-            border-radius: 8px;
-            border: 1px solid var(--border);
-        }
-
-        .metric-value {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: var(--accent-light);
-        }
-
-        .metric-label {
-            font-size: 0.7em;
-            color: var(--text-secondary);
-            margin-top: 5px;
-        }
-
-        .low-stock-badge {
-            background: var(--danger);
-            color: white;
-            border-radius: 50%;
-            padding: 2px 8px;
-            font-size: 0.8em;
-            margin-left: 5px;
-        }
-
-        .nav-menu {
+        /* Navigation */
+        .nav-bar {
             display: flex;
             overflow-x: auto;
-            padding: 10px;
-            background: var(--bg-card);
-            margin: 10px;
+            padding: 8px;
+            background: #1e2a4a;
+            margin: 8px;
             border-radius: 10px;
-            box-shadow: var(--shadow);
+            gap: 5px;
             -webkit-overflow-scrolling: touch;
-            border: 1px solid var(--border);
         }
 
-        .nav-item {
+        .nav-btn {
             flex: 0 0 auto;
-            padding: 10px 15px;
-            margin: 0 5px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
+            padding: 8px 14px;
+            background: #16213e;
+            border: 1px solid #2a3a5e;
             border-radius: 20px;
             cursor: pointer;
             white-space: nowrap;
-            font-size: 0.9em;
-            transition: all 0.3s;
-            color: var(--text-secondary);
+            font-size: 0.8em;
+            color: #a0a0b0;
         }
 
-        .nav-item.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
+        .nav-btn.active { background: #7c6fff; color: white; border-color: #7c6fff; }
+
+        /* Content Area */
+        #mainContent {
+            padding: 10px;
+            min-height: 60vh;
         }
 
-        .pos-terminal {
-            margin: 10px;
-            background: var(--bg-card);
+        .card {
+            background: #1e2a4a;
             border-radius: 10px;
             padding: 15px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
+            margin: 8px 0;
+            border: 1px solid #2a3a5e;
         }
 
-        .scan-input {
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .metric-card {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #2a3a5e;
+        }
+
+        .metric-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #9b8fff;
+        }
+
+        .metric-label {
+            font-size: 0.65em;
+            color: #a0a0b0;
+            margin-top: 4px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .product-card {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            border: 1px solid #2a3a5e;
+        }
+
+        .product-card:active { transform: scale(0.96); }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .btn-primary { background: #7c6fff; color: white; }
+        .btn-success { background: #2ed573; color: white; }
+        .btn-danger { background: #ff4757; color: white; }
+        .btn-warning { background: #ffa502; color: white; }
+
+        input, select {
             width: 100%;
-            padding: 15px;
-            border: 2px solid var(--border);
-            border-radius: 25px;
-            font-size: 1em;
-            margin-bottom: 15px;
+            padding: 10px;
+            border: 2px solid #2a3a5e;
+            border-radius: 20px;
+            font-size: 0.9em;
+            background: #0f3460;
+            color: #e0e0e0;
             outline: none;
-            transition: border-color 0.3s;
-            background: var(--bg-input);
-            color: var(--text-primary);
         }
 
-        .scan-input:focus {
-            border-color: var(--accent);
+        input:focus, select:focus { border-color: #7c6fff; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8em;
         }
 
-        .scan-input::placeholder {
-            color: var(--text-secondary);
+        th {
+            background: #0f3460;
+            color: #9b8fff;
+            padding: 8px;
+            text-align: left;
+        }
+
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #2a3a5e;
+            color: #a0a0b0;
         }
 
         .cart-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-            padding: 10px;
-        }
-
-        .product-card {
-            background: var(--bg-primary);
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: transform 0.2s;
-            border: 1px solid var(--border);
-        }
-
-        .product-card:active {
-            transform: scale(0.95);
-        }
-
-        .product-card strong {
-            color: var(--text-primary);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            border-radius: 15px;
-            padding: 20px;
-            width: 90%;
-            max-width: 400px;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 1px solid var(--border);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.9em;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-light);
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-warning {
-            background: var(--warning);
-            color: white;
-        }
-
-        .receipt {
-            background: var(--bg-primary);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-        }
-
-        .supplier-card, .expense-card, .purchase-order-card {
-            background: var(--bg-card);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
+            padding: 8px 0;
+            border-bottom: 1px solid #2a3a5e;
         }
 
         .sidebar {
             position: fixed;
-            left: -300px;
+            left: -280px;
             top: 0;
             bottom: 0;
-            width: 280px;
-            background: var(--bg-card);
-            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            width: 260px;
+            background: #1e2a4a;
+            z-index: 1000;
             transition: left 0.3s;
-            z-index: 1001;
             overflow-y: auto;
-            border-right: 1px solid var(--border);
+            border-right: 1px solid #2a3a5e;
         }
 
-        .sidebar.active {
-            left: 0;
-        }
+        .sidebar.active { left: 0; }
 
         .sidebar-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-        }
-
-        .sidebar-overlay.active {
-            display: block;
-        }
-
-        .table-responsive {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85em;
-            color: var(--text-primary);
-        }
-
-        th {
-            background: var(--bg-input);
-            color: var(--accent-light);
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-            color: var(--text-secondary);
-        }
-
-        tr:hover td {
-            background: var(--bg-input);
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--text-secondary);
-            font-size: 0.9em;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border);
-            border-radius: 25px;
-            font-size: 1em;
-            outline: none;
-            background: var(--bg-input);
-            color: var(--text-primary);
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: var(--accent);
-        }
-
-        .form-group select option {
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        .qr-code {
-            background: var(--bg-primary);
-            padding: 20px;
-            text-align: center;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
-
-        .role-badge {
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8em;
-            font-weight: 500;
-            display: inline-block;
-        }
-
-        .admin-badge { background: var(--accent); color: white; }
-        .manager-badge { background: var(--success); color: white; }
-        .cashier-badge { background: var(--warning); color: white; }
-
-        .po-status {
-            padding: 3px 10px;
-            border-radius: 10px;
-            font-size: 0.8em;
-        }
-
-        .po-draft { background: #3a3a5e; color: #a0a0b0; }
-        .po-finalized { background: var(--success); color: white; }
-        .po-received { background: var(--accent); color: white; }
-
-        .db-indicator {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--accent);
-            color: white;
-            padding: 10px;
-            border-radius: 50%;
-            font-size: 0.8em;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
             z-index: 999;
         }
 
-        .permission-denied {
-            text-align: center;
+        .sidebar-overlay.active { display: block; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: #1e2a4a;
+            border-radius: 15px;
             padding: 20px;
-            color: var(--danger);
+            width: 90%;
+            max-width: 380px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid #2a3a5e;
         }
 
-        h3, h4 {
-            color: var(--text-primary);
-        }
-
-        hr {
-            border-color: var(--border);
-        }
-
-        /* Currency flag styles */
-        .currency-flag {
-            font-size: 1.2em;
-            margin-right: 5px;
-        }
-
-        .settings-section {
-            background: var(--bg-card);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-            border: 1px solid var(--border);
+        .low-stock-badge {
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            padding: 1px 6px;
+            font-size: 0.7em;
         }
     </style>
 </head>
 <body>
-    <div class="app-container" id="appContainer">
-        <!-- Login Screen -->
-        <div id="loginScreen" class="login-container">
+    <div class="app-container">
+        <!-- LOGIN SCREEN -->
+        <div id="loginScreen">
             <div class="login-card">
                 <div class="login-logo">
                     <h1>🏪 MLEA POS</h1>
                     <p>Point of Sale System</p>
                 </div>
 
-                <h3 style="text-align: center; margin-bottom: 15px; color: var(--text-primary);">Select User</h3>
+                <div class="section-label">👤 Select User</div>
                 <div class="user-selector" id="userSelector"></div>
 
-                <h3 style="text-align: center; margin-bottom: 15px; color: var(--text-primary);">Enter PIN</h3>
+                <div class="section-label">🔢 Enter PIN</div>
                 <div class="pin-display" id="pinDisplay">
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div><div class="pin-dot"></div>
+                    <div class="pin-dot"></div><div class="pin-dot"></div>
                 </div>
-                <div class="error-message" id="errorMessage"></div>
+                <div class="error-msg" id="errorMessage"></div>
 
                 <div class="pin-pad">
                     <button class="pin-btn" onclick="enterPin('1')">1</button>
@@ -701,369 +411,174 @@
             </div>
         </div>
 
-        <!-- Main App (Hidden initially) -->
-        <div id="mainApp" style="display: none;">
-            <!-- Sidebar Overlay -->
-            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-            
+        <!-- MAIN APP -->
+        <div id="mainApp">
             <!-- Sidebar -->
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
             <div class="sidebar" id="sidebar">
-                <div style="padding: 20px; background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); color: white; border-bottom: 1px solid var(--border);">
-                    <h2>MLEA POS</h2>
-                    <p style="font-size: 0.9em;">v2.1 Dark Mode</p>
-                    <span class="sync-status" id="dbStatus">🟢 Local DB</span>
-                    <div style="margin-top: 10px;">
-                        <span class="role-badge" id="sidebarRole"></span>
-                        <span style="font-size: 0.8em; margin-left: 5px;" id="sidebarUser"></span>
-                    </div>
+                <div style="padding: 15px; background: #1a1a2e; border-bottom: 1px solid #2a3a5e;">
+                    <h3 style="color:#9b8fff;">MLEA POS</h3>
+                    <p style="font-size:0.75em;color:#a0a0b0;" id="sidebarUserInfo"></p>
                 </div>
-               // Find this section in your code (around line 900-920)
-            // Replace the sidebar buttons section with this:
-            
-            <div style="padding: 10px;">
-                <button class="nav-item" onclick="switchView('dashboard')">📊 Dashboard</button>
-                <button class="nav-item" onclick="switchView('pos')">💻 POS Terminal</button>
-                <button class="nav-item" onclick="switchView('inventory')">📦 Inventory <span class="low-stock-badge" id="sidebarLowStock">0</span></button>
-                <button class="nav-item" onclick="switchView('suppliers')">🤝 Suppliers</button>
-                <button class="nav-item" onclick="switchView('purchaseOrders')">📋 Purchase Orders</button>
-                <button class="nav-item" onclick="switchView('expenses')">💸 Expenses</button>
-                
-                <!-- ADD THIS LINE FOR SETTINGS -->
-                <button class="nav-item" onclick="switchView('settings')">⚙️ Settings</button>
-                
-                <button class="nav-item" id="navUsers" onclick="switchView('users')">👥 Users</button>
-                <button class="nav-item" onclick="switchView('reports')">💾 Reports</button>
-                <hr style="margin: 10px 0; border-color: var(--border);">
-                <button class="btn btn-warning" style="width: 100%; margin-bottom: 5px;" onclick="backupDatabase()">💿 Backup Data</button>
-                <button class="btn btn-danger" style="width: 100%; margin-bottom: 5px;" onclick="logout()">🚪 Logout</button>
-                <button class="btn btn-danger" style="width: 100%;" onclick="clearDatabase()">🗑️ Clear All Data</button>
+                <div style="padding: 10px; display: flex; flex-direction: column; gap: 5px;">
+                    <button class="nav-btn active" onclick="switchView('dashboard')">📊 Dashboard</button>
+                    <button class="nav-btn" onclick="switchView('pos')">💻 POS Terminal</button>
+                    <button class="nav-btn" onclick="switchView('inventory')">📦 Inventory</button>
+                    <button class="nav-btn" onclick="switchView('suppliers')">🤝 Suppliers</button>
+                    <button class="nav-btn" onclick="switchView('expenses')">💸 Expenses</button>
+                    <button class="nav-btn" onclick="switchView('settings')">⚙️ Settings</button>
+                    <button class="nav-btn" id="navUsers" onclick="switchView('users')">👥 Users</button>
+                    <button class="nav-btn" onclick="switchView('reports')">💾 Reports</button>
+                    <hr style="border-color:#2a3a5e; margin: 5px 0;">
+                    <button class="btn btn-danger" style="width:100%;" onclick="logout()">🚪 Logout</button>
+                </div>
             </div>
 
             <!-- Header -->
             <div class="header">
-                <div class="header-top">
-                    <button class="hamburger" onclick="toggleSidebar()">☰</button>
-                    <h1 style="color: var(--accent-light);">MLEA POS</h1>
-                    <div class="user-info">
-                        <span id="currentCurrency" style="margin-right: 10px;"></span>
-                        <span id="headerUser"></span>
-                        <button class="logout-btn" onclick="logout()">🚪</button>
-                    </div>
+                <button class="hamburger" onclick="openSidebar()">☰</button>
+                <h1>MLEA POS</h1>
+                <div class="header-right">
+                    <span id="headerCurrency"></span>
+                    <span id="headerUser"></span>
+                    <button class="logout-btn" onclick="logout()">🚪</button>
                 </div>
             </div>
 
+            <!-- Navigation Bar -->
+            <div class="nav-bar" id="navBar">
+                <button class="nav-btn active" onclick="switchView('dashboard')">📊 Dashboard</button>
+                <button class="nav-btn" onclick="switchView('pos')">💻 POS</button>
+                <button class="nav-btn" onclick="switchView('inventory')">📦 Stock</button>
+                <button class="nav-btn" onclick="switchView('settings')">⚙️ Settings</button>
+            </div>
+
             <!-- Main Content -->
-            <div id="mainContent"></div>
+            <div id="mainContent">
+                <p style="text-align:center; padding:40px; color:#a0a0b0;">Loading...</p>
+            </div>
         </div>
     </div>
 
-    <!-- DB Status Indicator -->
-    <div class="db-indicator" id="dbIndicator" title="Database Status" style="display: none;">
-        💾
-    </div>
-
-    <!-- Modal for Receipts and Forms -->
+    <!-- Modal -->
     <div class="modal" id="modal">
         <div class="modal-content" id="modalContent"></div>
     </div>
 
     <script>
-        // ==================== CURRENCY CONFIGURATION ====================
-        const currencies = {
-            USD: { symbol: '$', code: 'USD', name: 'US Dollar', flag: '🇺🇸', rate: 1 },
-            EUR: { symbol: '€', code: 'EUR', name: 'Euro', flag: '🇪🇺', rate: 0.92 },
-            GBP: { symbol: '£', code: 'GBP', name: 'British Pound', flag: '🇬🇧', rate: 0.79 },
-            JPY: { symbol: '¥', code: 'JPY', name: 'Japanese Yen', flag: '🇯🇵', rate: 149.50 },
-            PHP: { symbol: '₱', code: 'PHP', name: 'Philippine Peso', flag: '🇵🇭', rate: 55.80 },
-            INR: { symbol: '₹', code: 'INR', name: 'Indian Rupee', flag: '🇮🇳', rate: 83.12 },
-            CNY: { symbol: '¥', code: 'CNY', name: 'Chinese Yuan', flag: '🇨🇳', rate: 7.24 },
-            KRW: { symbol: '₩', code: 'KRW', name: 'South Korean Won', flag: '🇰🇷', rate: 1320.50 },
-            AUD: { symbol: 'A$', code: 'AUD', name: 'Australian Dollar', flag: '🇦🇺', rate: 1.53 },
-            CAD: { symbol: 'C$', code: 'CAD', name: 'Canadian Dollar', flag: '🇨🇦', rate: 1.36 },
-            SGD: { symbol: 'S$', code: 'SGD', name: 'Singapore Dollar', flag: '🇸🇬', rate: 1.34 },
-            MYR: { symbol: 'RM', code: 'MYR', name: 'Malaysian Ringgit', flag: '🇲🇾', rate: 4.72 },
-            IDR: { symbol: 'Rp', code: 'IDR', name: 'Indonesian Rupiah', flag: '🇮🇩', rate: 15750 },
-            THB: { symbol: '฿', code: 'THB', name: 'Thai Baht', flag: '🇹🇭', rate: 36.20 },
-            VND: { symbol: '₫', code: 'VND', name: 'Vietnamese Dong', flag: '🇻🇳', rate: 24550 },
-            BRL: { symbol: 'R$', code: 'BRL', name: 'Brazilian Real', flag: '🇧🇷', rate: 4.97 },
-            MXN: { symbol: 'Mex$', code: 'MXN', name: 'Mexican Peso', flag: '🇲🇽', rate: 17.15 },
-            AED: { symbol: 'د.إ', code: 'AED', name: 'UAE Dirham', flag: '🇦🇪', rate: 3.67 },
-            SAR: { symbol: '﷼', code: 'SAR', name: 'Saudi Riyal', flag: '🇸🇦', rate: 3.75 },
-            NGN: { symbol: '₦', code: 'NGN', name: 'Nigerian Naira', flag: '🇳🇬', rate: 1545 },
-            ZAR: { symbol: 'R', code: 'ZAR', name: 'South African Rand', flag: '🇿🇦', rate: 18.65 },
-            EGP: { symbol: 'E£', code: 'EGP', name: 'Egyptian Pound', flag: '🇪🇬', rate: 47.80 },
-            PKR: { symbol: '₨', code: 'PKR', name: 'Pakistani Rupee', flag: '🇵🇰', rate: 278.50 },
-            BDT: { symbol: '৳', code: 'BDT', name: 'Bangladeshi Taka', flag: '🇧🇩', rate: 109.50 }
+        // ==================== SIMPLE DATABASE ====================
+        const DB = {
+            get(key) {
+                return JSON.parse(localStorage.getItem('mlea_' + key) || 'null');
+            },
+            set(key, value) {
+                localStorage.setItem('mlea_' + key, JSON.stringify(value));
+            },
+            getAll(key) {
+                return JSON.parse(localStorage.getItem('mlea_' + key) || '[]');
+            },
+            add(key, item) {
+                const items = this.getAll(key);
+                item.id = items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1;
+                items.push(item);
+                this.set(key, items);
+                return item.id;
+            },
+            update(key, item) {
+                const items = this.getAll(key);
+                const index = items.findIndex(i => i.id === item.id);
+                if (index !== -1) items[index] = item;
+                this.set(key, items);
+            },
+            delete(key, id) {
+                const items = this.getAll(key).filter(i => i.id !== id);
+                this.set(key, items);
+            }
         };
 
-        let currentCurrency = 'USD';
+        // ==================== CURRENCIES ====================
+        const currencies = {
+            USD: { symbol: '$', name: 'US Dollar', flag: '🇺🇸' },
+            PHP: { symbol: '₱', name: 'Philippine Peso', flag: '🇵🇭' },
+            EUR: { symbol: '€', name: 'Euro', flag: '🇪🇺' },
+            GBP: { symbol: '£', name: 'British Pound', flag: '🇬🇧' },
+            JPY: { symbol: '¥', name: 'Japanese Yen', flag: '🇯🇵' },
+            INR: { symbol: '₹', name: 'Indian Rupee', flag: '🇮🇳' },
+            CNY: { symbol: '¥', name: 'Chinese Yuan', flag: '🇨🇳' },
+            KRW: { symbol: '₩', name: 'Korean Won', flag: '🇰🇷' },
+            AUD: { symbol: 'A$', name: 'Australian Dollar', flag: '🇦🇺' },
+            CAD: { symbol: 'C$', name: 'Canadian Dollar', flag: '🇨🇦' },
+            SGD: { symbol: 'S$', name: 'Singapore Dollar', flag: '🇸🇬' },
+            MYR: { symbol: 'RM', name: 'Malaysian Ringgit', flag: '🇲🇾' },
+            IDR: { symbol: 'Rp', name: 'Indonesian Rupiah', flag: '🇮🇩' },
+            THB: { symbol: '฿', name: 'Thai Baht', flag: '🇹🇭' },
+            AED: { symbol: 'د.إ', name: 'UAE Dirham', flag: '🇦🇪' },
+            SAR: { symbol: '﷼', name: 'Saudi Riyal', flag: '🇸🇦' }
+        };
 
-        function formatCurrency(amount) {
-            const currency = currencies[currentCurrency];
-            const converted = amount * currency.rate;
-            
-            // Handle different currency formats
-            if (['JPY', 'KRW', 'IDR', 'VND'].includes(currentCurrency)) {
-                return `${currency.symbol} ${Math.round(converted).toLocaleString()}`;
-            } else if (['PHP', 'INR', 'PKR', 'BDT', 'NGN'].includes(currentCurrency)) {
-                return `${currency.symbol}${converted.toFixed(2)}`;
-            } else {
-                return `${currency.symbol}${converted.toFixed(2)}`;
-            }
-        }
-
-        function getCurrencySymbol() {
-            return currencies[currentCurrency].symbol;
-        }
-
-        function getCurrencyFlag() {
-            return currencies[currentCurrency].flag;
-        }
-
-        // ==================== DATABASE LAYER ====================
-        class Database {
-            constructor() {
-                this.dbName = 'MLEA_POS_DB';
-                this.dbVersion = 3;
-                this.db = null;
-                this.useIndexedDB = true;
-                this.init();
-            }
-
-            async init() {
-                if (!window.indexedDB) {
-                    console.warn('IndexedDB not supported, falling back to localStorage');
-                    this.useIndexedDB = false;
-                    this.initLocalStorage();
-                    return;
-                }
-
-                return new Promise((resolve, reject) => {
-                    const request = indexedDB.open(this.dbName, this.dbVersion);
-
-                    request.onerror = (event) => {
-                        console.error('IndexedDB error:', event);
-                        this.useIndexedDB = false;
-                        this.initLocalStorage();
-                        resolve();
-                    };
-
-                    request.onsuccess = (event) => {
-                        this.db = event.target.result;
-                        console.log('✅ IndexedDB connected');
-                        this.updateDBStatus('🟢 IndexedDB');
-                        resolve();
-                    };
-
-                    request.onupgradeneeded = (event) => {
-                        const db = event.target.result;
-                        
-                        if (!db.objectStoreNames.contains('products')) {
-                            const productsStore = db.createObjectStore('products', { keyPath: 'id', autoIncrement: true });
-                            productsStore.createIndex('sku', 'sku', { unique: true });
-                            productsStore.createIndex('barcode', 'barcode', { unique: false });
-                            productsStore.createIndex('active', 'active', { unique: false });
-                        }
-
-                        if (!db.objectStoreNames.contains('sales')) {
-                            const salesStore = db.createObjectStore('sales', { keyPath: 'id', autoIncrement: true });
-                            salesStore.createIndex('date', 'date', { unique: false });
-                            salesStore.createIndex('paymentMethod', 'paymentMethod', { unique: false });
-                        }
-
-                        if (!db.objectStoreNames.contains('saleItems')) {
-                            const saleItemsStore = db.createObjectStore('saleItems', { keyPath: 'id', autoIncrement: true });
-                            saleItemsStore.createIndex('saleId', 'saleId', { unique: false });
-                            saleItemsStore.createIndex('productId', 'productId', { unique: false });
-                        }
-
-                        if (!db.objectStoreNames.contains('suppliers')) {
-                            db.createObjectStore('suppliers', { keyPath: 'id', autoIncrement: true });
-                        }
-
-                        if (!db.objectStoreNames.contains('purchaseOrders')) {
-                            const poStore = db.createObjectStore('purchaseOrders', { keyPath: 'id', autoIncrement: true });
-                            poStore.createIndex('supplierId', 'supplierId', { unique: false });
-                            poStore.createIndex('status', 'status', { unique: false });
-                        }
-
-                        if (!db.objectStoreNames.contains('expenses')) {
-                            const expensesStore = db.createObjectStore('expenses', { keyPath: 'id', autoIncrement: true });
-                            expensesStore.createIndex('date', 'date', { unique: false });
-                            expensesStore.createIndex('category', 'category', { unique: false });
-                        }
-
-                        if (!db.objectStoreNames.contains('users')) {
-                            db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
-                        }
-
-                        if (!db.objectStoreNames.contains('settings')) {
-                            db.createObjectStore('settings', { keyPath: 'key' });
-                        }
-
-                        console.log('📦 Database schema created');
-                    };
-                });
-            }
-
-            initLocalStorage() {
-                const stores = ['products', 'sales', 'saleItems', 'suppliers', 'purchaseOrders', 'expenses', 'users', 'settings'];
-                stores.forEach(store => {
-                    if (!localStorage.getItem(`mlea_${store}`)) {
-                        localStorage.setItem(`mlea_${store}`, JSON.stringify([]));
-                    }
-                });
-                this.updateDBStatus('🟡 LocalStorage');
-                console.log('✅ LocalStorage initialized');
-            }
-
-            async add(storeName, data) {
-                if (this.useIndexedDB && this.db) {
-                    return new Promise((resolve, reject) => {
-                        const transaction = this.db.transaction([storeName], 'readwrite');
-                        const store = transaction.objectStore(storeName);
-                        const request = store.add(data);
-
-                        request.onsuccess = () => resolve(request.result);
-                        request.onerror = () => reject(request.error);
-                    });
-                } else {
-                    const items = this.getLocalStore(storeName);
-                    data.id = items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1;
-                    items.push(data);
-                    this.setLocalStore(storeName, items);
-                    return data.id;
-                }
-            }
-
-            async getAll(storeName) {
-                if (this.useIndexedDB && this.db) {
-                    return new Promise((resolve, reject) => {
-                        const transaction = this.db.transaction([storeName], 'readonly');
-                        const store = transaction.objectStore(storeName);
-                        const request = store.getAll();
-
-                        request.onsuccess = () => resolve(request.result);
-                        request.onerror = () => reject(request.error);
-                    });
-                } else {
-                    return this.getLocalStore(storeName);
-                }
-            }
-
-            async update(storeName, data) {
-                if (this.useIndexedDB && this.db) {
-                    return new Promise((resolve, reject) => {
-                        const transaction = this.db.transaction([storeName], 'readwrite');
-                        const store = transaction.objectStore(storeName);
-                        const request = store.put(data);
-
-                        request.onsuccess = () => resolve(request.result);
-                        request.onerror = () => reject(request.error);
-                    });
-                } else {
-                    const items = this.getLocalStore(storeName);
-                    const index = items.findIndex(i => i.id === data.id);
-                    if (index !== -1) {
-                        items[index] = data;
-                        this.setLocalStore(storeName, items);
-                    }
-                    return data.id;
-                }
-            }
-
-            async delete(storeName, id) {
-                if (this.useIndexedDB && this.db) {
-                    return new Promise((resolve, reject) => {
-                        const transaction = this.db.transaction([storeName], 'readwrite');
-                        const store = transaction.objectStore(storeName);
-                        const request = store.delete(id);
-
-                        request.onsuccess = () => resolve();
-                        request.onerror = () => reject(request.error);
-                    });
-                } else {
-                    const items = this.getLocalStore(storeName).filter(i => i.id !== id);
-                    this.setLocalStore(storeName, items);
-                }
-            }
-
-            async clearStore(storeName) {
-                if (this.useIndexedDB && this.db) {
-                    return new Promise((resolve, reject) => {
-                        const transaction = this.db.transaction([storeName], 'readwrite');
-                        const store = transaction.objectStore(storeName);
-                        const request = store.clear();
-
-                        request.onsuccess = () => resolve();
-                        request.onerror = () => reject(request.error);
-                    });
-                } else {
-                    this.setLocalStore(storeName, []);
-                }
-            }
-
-            getLocalStore(storeName) {
-                return JSON.parse(localStorage.getItem(`mlea_${storeName}`) || '[]');
-            }
-
-            setLocalStore(storeName, data) {
-                localStorage.setItem(`mlea_${storeName}`, JSON.stringify(data));
-            }
-
-            updateDBStatus(status) {
-                const statusEl = document.getElementById('dbStatus');
-                const indicator = document.getElementById('dbIndicator');
-                if (statusEl) statusEl.textContent = status;
-                if (indicator) {
-                    indicator.style.background = status.includes('🟢') ? '#2ed573' : '#ffa502';
-                }
-            }
-
-            async exportAllData() {
-                const stores = ['products', 'sales', 'saleItems', 'suppliers', 'purchaseOrders', 'expenses', 'users', 'settings'];
-                const backup = {};
-                
-                for (const store of stores) {
-                    backup[store] = await this.getAll(store);
-                }
-                
-                return backup;
-            }
-
-            async importAllData(data) {
-                for (const [store, items] of Object.entries(data)) {
-                    await this.clearStore(store);
-                    for (const item of items) {
-                        await this.add(store, item);
-                    }
-                }
-            }
-        }
-
-        // Initialize Database
-        const db = new Database();
-
-        // App State
-        let currentView = 'dashboard';
-        let cart = [];
-        let products = [];
-        let suppliers = [];
-        let purchaseOrders = [];
-        let expenses = [];
-        let users = [];
+        // ==================== APP STATE ====================
         let currentUser = null;
+        let currentView = 'dashboard';
+        let currentCurrency = 'USD';
+        let taxRate = 0.1;
+        let cart = [];
         let selectedUserId = null;
         let pinEntry = '';
-        let taxRate = 0.1;
-        let settings = {};
+        let products = [];
+        let users = [];
 
-        // ==================== AUTHENTICATION ====================
+        function formatCurrency(amount) {
+            const c = currencies[currentCurrency];
+            if (['JPY', 'KRW', 'IDR'].includes(currentCurrency)) {
+                return c.symbol + ' ' + Math.round(amount).toLocaleString();
+            }
+            return c.symbol + amount.toFixed(2);
+        }
+
+        // ==================== INIT ====================
+        function initApp() {
+            // Load users
+            users = DB.getAll('users');
+            if (users.length === 0) {
+                users = [
+                    { id: 1, name: 'Admin User', role: 'admin', active: true, pin: '1234' },
+                    { id: 2, name: 'Manager', role: 'manager', active: true, pin: '5678' },
+                    { id: 3, name: 'Cashier', role: 'cashier', active: true, pin: '9012' }
+                ];
+                users.forEach(u => DB.add('users', u));
+                users = DB.getAll('users');
+            }
+
+            // Load products
+            products = DB.getAll('products');
+            if (products.length === 0) {
+                const sampleProducts = [
+                    { sku: 'SKU001', name: 'Product A', price: 29.99, stock: 50, category: 'Electronics', active: true, barcode: '123456789' },
+                    { sku: 'SKU002', name: 'Product B', price: 49.99, stock: 5, category: 'Clothing', active: true, barcode: '987654321' },
+                    { sku: 'SKU003', name: 'Product C', price: 19.99, stock: 0, category: 'Food', active: false, barcode: '456789123' },
+                    { sku: 'SKU004', name: 'Product D', price: 99.99, stock: 20, category: 'Electronics', active: true, barcode: '789123456' }
+                ];
+                sampleProducts.forEach(p => DB.add('products', p));
+                products = DB.getAll('products');
+            }
+
+            // Load settings
+            const savedCurrency = DB.get('currency');
+            if (savedCurrency) currentCurrency = savedCurrency;
+            const savedTax = DB.get('taxRate');
+            if (savedTax) taxRate = parseFloat(savedTax);
+
+            renderLoginScreen();
+        }
+
+        // ==================== LOGIN ====================
         function renderLoginScreen() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
+            
             const userSelector = document.getElementById('userSelector');
             userSelector.innerHTML = users.filter(u => u.active).map(u => `
-                <div class="user-card ${selectedUserId === u.id ? 'selected' : ''}" 
-                     onclick="selectUser(${u.id})">
+                <div class="user-card ${selectedUserId === u.id ? 'selected' : ''}" onclick="selectUser(${u.id})">
                     <div class="avatar">${u.role === 'admin' ? '👑' : u.role === 'manager' ? '👨‍💼' : '👤'}</div>
                     <div class="name">${u.name}</div>
                     <span class="role-badge ${u.role}-badge">${u.role}</span>
@@ -1081,7 +596,7 @@
 
         function enterPin(digit) {
             if (!selectedUserId) {
-                document.getElementById('errorMessage').textContent = 'Please select a user first';
+                document.getElementById('errorMessage').textContent = 'Select a user first';
                 return;
             }
             if (pinEntry.length < 4) {
@@ -1099,1091 +614,563 @@
 
         function updatePinDisplay() {
             const dots = document.querySelectorAll('.pin-dot');
-            dots.forEach((dot, index) => {
-                if (index < pinEntry.length) {
-                    dot.classList.add('filled');
-                } else {
-                    dot.classList.remove('filled');
-                }
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('filled', i < pinEntry.length);
                 dot.classList.remove('error');
             });
         }
 
-        async function submitPin() {
+        function submitPin() {
             if (!selectedUserId) {
-                document.getElementById('errorMessage').textContent = 'Please select a user first';
+                document.getElementById('errorMessage').textContent = 'Select a user first';
                 return;
             }
 
             const user = users.find(u => u.id === selectedUserId);
-            if (!user) {
-                document.getElementById('errorMessage').textContent = 'User not found';
-                shakePinDisplay();
-                return;
-            }
-
-            if (user.pin === pinEntry) {
+            if (user && user.pin === pinEntry) {
+                // SUCCESSFUL LOGIN
                 currentUser = user;
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'block';
-                document.getElementById('dbIndicator').style.display = 'block';
                 
-                document.getElementById('headerUser').textContent = `${user.name} (${user.role})`;
-                document.getElementById('sidebarUser').textContent = user.name;
-                document.getElementById('sidebarRole').textContent = user.role;
-                document.getElementById('sidebarRole').className = `role-badge ${user.role}-badge`;
-                document.getElementById('currentCurrency').textContent = `${getCurrencyFlag()} ${currencies[currentCurrency].code}`;
+                document.getElementById('headerUser').textContent = user.name;
+                document.getElementById('headerCurrency').textContent = currencies[currentCurrency].flag + ' ' + currentCurrency;
+                document.getElementById('sidebarUserInfo').textContent = user.name + ' (' + user.role + ')';
                 
+                // Show/hide users nav
                 const navUsers = document.getElementById('navUsers');
-                if (user.role !== 'admin') {
-                    navUsers.style.display = 'none';
-                } else {
-                    navUsers.style.display = 'block';
-                }
+                if (navUsers) navUsers.style.display = user.role === 'admin' ? 'block' : 'none';
                 
+                // Reset
                 pinEntry = '';
                 selectedUserId = null;
                 updatePinDisplay();
                 
-                await loadSettings();
-                await initAppData();
-                renderView();
+                // RENDER DASHBOARD
+                switchView('dashboard');
             } else {
-                document.getElementById('errorMessage').textContent = 'Incorrect PIN. Try again.';
-                shakePinDisplay();
+                document.getElementById('errorMessage').textContent = 'Wrong PIN!';
                 pinEntry = '';
                 updatePinDisplay();
+                // Shake
+                const dots = document.querySelectorAll('.pin-dot');
+                dots.forEach(d => d.classList.add('error'));
+                setTimeout(() => dots.forEach(d => d.classList.remove('error')), 400);
             }
-        }
-
-        function shakePinDisplay() {
-            const dots = document.querySelectorAll('.pin-dot');
-            dots.forEach(dot => dot.classList.add('error'));
-            setTimeout(() => {
-                dots.forEach(dot => dot.classList.remove('error', 'filled'));
-            }, 500);
         }
 
         function logout() {
-            if (cart.length > 0) {
-                if (!confirm('You have items in cart. Are you sure you want to logout?')) {
-                    return;
-                }
-            }
-            
             currentUser = null;
-            selectedUserId = null;
-            pinEntry = '';
             cart = [];
-            
-            document.getElementById('loginScreen').style.display = 'flex';
             document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('dbIndicator').style.display = 'none';
-            document.getElementById('sidebar').classList.remove('active');
-            document.getElementById('sidebarOverlay').classList.remove('active');
-            
-            updatePinDisplay();
-            document.getElementById('errorMessage').textContent = '';
+            closeSidebar();
             renderLoginScreen();
         }
 
-        // Keyboard support
-        document.addEventListener('keydown', function(e) {
-            if (document.getElementById('loginScreen').style.display !== 'none') {
-                if (e.key >= '0' && e.key <= '9') {
-                    enterPin(e.key);
-                } else if (e.key === 'Enter') {
-                    submitPin();
-                } else if (e.key === 'Backspace' || e.key === 'Delete') {
-                    pinEntry = pinEntry.slice(0, -1);
-                    updatePinDisplay();
-                } else if (e.key === 'Escape') {
-                    clearPin();
-                }
-            }
-        });
-
-        // ==================== SETTINGS ====================
-        async function loadSettings() {
-            try {
-                const allSettings = await db.getAll('settings');
-                settings = {};
-                allSettings.forEach(s => {
-                    settings[s.key] = s.value;
-                });
-                
-                if (settings.currency) {
-                    currentCurrency = settings.currency;
-                }
-                if (settings.taxRate) {
-                    taxRate = parseFloat(settings.taxRate);
-                }
-                
-                document.getElementById('currentCurrency').textContent = 
-                    `${getCurrencyFlag()} ${currencies[currentCurrency].code}`;
-            } catch (error) {
-                console.error('Error loading settings:', error);
-            }
+        // ==================== NAVIGATION ====================
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('active');
+            document.getElementById('sidebarOverlay').classList.add('active');
         }
 
-        async function saveSetting(key, value) {
-            try {
-                const existing = (await db.getAll('settings')).find(s => s.key === key);
-                if (existing) {
-                    existing.value = value;
-                    await db.update('settings', existing);
-                } else {
-                    await db.add('settings', { key, value });
-                }
-                settings[key] = value;
-            } catch (error) {
-                console.error('Error saving setting:', error);
-            }
-        }
-
-        // ==================== DATA INITIALIZATION ====================
-        async function initAppData() {
-            try {
-                products = await db.getAll('products');
-                suppliers = await db.getAll('suppliers');
-                purchaseOrders = await db.getAll('purchaseOrders');
-                expenses = await db.getAll('expenses');
-                users = await db.getAll('users');
-
-                if (products.length === 0) {
-                    await initSampleData();
-                }
-
-                if (users.length === 0) {
-                    await initSampleUsers();
-                    users = await db.getAll('users');
-                }
-
-                updateLowStockBadge();
-                console.log('📊 Data loaded successfully');
-            } catch (error) {
-                console.error('Error loading data:', error);
-            }
-        }
-
-        async function initSampleData() {
-            const sampleProducts = [
-                { sku: 'SKU001', name: 'Product A', price: 29.99, stock: 50, category: 'Electronics', active: true, barcode: '123456789' },
-                { sku: 'SKU002', name: 'Product B', price: 49.99, stock: 5, category: 'Clothing', active: true, barcode: '987654321' },
-                { sku: 'SKU003', name: 'Product C', price: 19.99, stock: 0, category: 'Food', active: false, barcode: '456789123' },
-                { sku: 'SKU004', name: 'Product D', price: 99.99, stock: 20, category: 'Electronics', active: true, barcode: '789123456' }
-            ];
-
-            for (const product of sampleProducts) {
-                await db.add('products', product);
-            }
-            products = await db.getAll('products');
-
-            const sampleSuppliers = [
-                { name: 'Supplier X', phone: '555-0100', email: 'x@supplier.com', address: '123 Main St' },
-                { name: 'Supplier Y', phone: '555-0200', email: 'y@supplier.com', address: '456 Oak Ave' }
-            ];
-
-            for (const supplier of sampleSuppliers) {
-                await db.add('suppliers', supplier);
-            }
-            suppliers = await db.getAll('suppliers');
-
-            const sampleExpenses = [
-                { type: 'Rent', amount: 2000, date: '2024-01-01', category: 'Fixed' },
-                { type: 'Utilities', amount: 500, date: '2024-01-15', category: 'Variable' }
-            ];
-
-            for (const expense of sampleExpenses) {
-                await db.add('expenses', expense);
-            }
-            expenses = await db.getAll('expenses');
-        }
-
-        async function initSampleUsers() {
-            const sampleUsers = [
-                { name: 'Admin User', role: 'admin', active: true, pin: '1234' },
-                { name: 'Manager User', role: 'manager', active: true, pin: '5678' },
-                { name: 'Cashier User', role: 'cashier', active: true, pin: '9012' }
-            ];
-
-            for (const user of sampleUsers) {
-                await db.add('users', user);
-            }
-            users = await db.getAll('users');
-        }
-
-        // ==================== UI FUNCTIONS ====================
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
-
-        async function switchView(view) {
-            if (!currentUser) return;
-            
-            if (view === 'users' && currentUser.role !== 'admin') {
-                alert('Access denied. Only admin can manage users.');
-                return;
-            }
-            
-            currentView = view;
+        function closeSidebar() {
             document.getElementById('sidebar').classList.remove('active');
             document.getElementById('sidebarOverlay').classList.remove('active');
-            
-            products = await db.getAll('products');
-            suppliers = await db.getAll('suppliers');
-            purchaseOrders = await db.getAll('purchaseOrders');
-            expenses = await db.getAll('expenses');
-            users = await db.getAll('users');
-            
-            updateLowStockBadge();
-            renderView();
         }
 
-        function updateLowStockBadge() {
-            const lowStockCount = products.filter(p => p.stock < 10 && p.active).length;
-            const badge = document.getElementById('sidebarLowStock');
-            if (badge) badge.textContent = lowStockCount;
-        }
-
-        function renderView() {
-            const main = document.getElementById('mainContent');
-            switch(currentView) {
-                case 'dashboard': renderDashboard(main); break;
-                case 'pos': renderPOS(main); break;
-                case 'inventory': renderInventory(main); break;
-                case 'suppliers': renderSuppliers(main); break;
-                case 'purchaseOrders': renderPurchaseOrders(main); break;
-                case 'expenses': renderExpenses(main); break;
-                case 'settings': renderSettings(main); break;
-                case 'users': renderUsers(main); break;
-                case 'reports': renderReports(main); break;
+        function switchView(view) {
+            currentView = view;
+            closeSidebar();
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            // Render the view
+            const content = document.getElementById('mainContent');
+            
+            switch(view) {
+                case 'dashboard': renderDashboard(content); break;
+                case 'pos': renderPOS(content); break;
+                case 'inventory': renderInventory(content); break;
+                case 'suppliers': renderSuppliers(content); break;
+                case 'expenses': renderExpenses(content); break;
+                case 'settings': renderSettings(content); break;
+                case 'users': renderUsers(content); break;
+                case 'reports': renderReports(content); break;
+                default: renderDashboard(content);
             }
         }
 
-        function renderDashboard(main) {
-            const lowStockCount = products.filter(p => p.stock < 10 && p.active).length;
-            
-            db.getAll('sales').then(sales => {
-                const today = new Date().toISOString().split('T')[0];
-                const todaySales = sales
-                    .filter(s => s.date === today)
-                    .reduce((sum, s) => sum + s.total, 0);
-                
-                const monthlySales = sales
-                    .filter(s => s.date.startsWith(today.substring(0, 7)))
-                    .reduce((sum, s) => sum + s.total, 0);
-                
-                const totalTax = sales
-                    .filter(s => s.date.startsWith(today.substring(0, 7)))
-                    .reduce((sum, s) => sum + s.tax, 0);
+        // ==================== VIEWS ====================
+        function renderDashboard(el) {
+            products = DB.getAll('products');
+            const sales = DB.getAll('sales') || [];
+            const today = new Date().toISOString().split('T')[0];
+            const todaySales = sales.filter(s => s.date === today).reduce((sum, s) => sum + s.total, 0);
+            const monthSales = sales.filter(s => s.date.startsWith(today.substring(0,7))).reduce((sum, s) => sum + s.total, 0);
+            const lowStock = products.filter(p => p.stock < 10 && p.active).length;
 
-                const metrics = main.querySelectorAll('.metric-value');
-                if (metrics.length >= 3) {
-                    metrics[0].textContent = formatCurrency(todaySales);
-                    metrics[1].textContent = formatCurrency(monthlySales);
-                    metrics[2].textContent = formatCurrency(totalTax);
-                }
-            });
-
-            main.innerHTML = `
-                <div class="dashboard-metrics">
+            el.innerHTML = `
+                <div class="metrics">
                     <div class="metric-card">
-                        <div class="metric-value">${formatCurrency(0)}</div>
+                        <div class="metric-value">${formatCurrency(todaySales)}</div>
                         <div class="metric-label">Today's Sales</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-value">${formatCurrency(0)}</div>
+                        <div class="metric-value">${formatCurrency(monthSales)}</div>
                         <div class="metric-label">Monthly Revenue</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-value">${formatCurrency(0)}</div>
-                        <div class="metric-label">Tax Collected</div>
+                        <div class="metric-value">${lowStock}</div>
+                        <div class="metric-label">Low Stock Items</div>
                     </div>
                 </div>
-                <div style="padding: 10px;">
-                    <h3>Welcome, ${currentUser.name}!</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 10px;">
-                        Currency: ${getCurrencyFlag()} ${currencies[currentCurrency].name} (${currencies[currentCurrency].code})
-                    </p>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
-                        <button class="btn btn-primary" onclick="switchView('pos')">New Sale</button>
-                        <button class="btn btn-success" onclick="switchView('inventory')">Check Stock</button>
-                        <button class="btn btn-warning" onclick="switchView('purchaseOrders')">Purchase Orders</button>
-                        <button class="btn btn-primary" onclick="switchView('reports')">View Reports</button>
-                    </div>
-                    ${lowStockCount > 0 ? `<div style="margin-top: 15px; padding: 10px; background: rgba(255, 71, 87, 0.2); border-radius: 10px; border: 1px solid var(--danger);">
-                        ⚠️ ${lowStockCount} products low on stock
-                    </div>` : ''}
+                <div class="card">
+                    <h4>Welcome, ${currentUser.name}! 👋</h4>
+                    <p style="color:#a0a0b0;font-size:0.8em;">Role: ${currentUser.role} | Currency: ${currencies[currentCurrency].flag} ${currentCurrency}</p>
                 </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
+                    <button class="btn btn-primary" onclick="switchView('pos')">🛒 New Sale</button>
+                    <button class="btn btn-success" onclick="switchView('inventory')">📦 Inventory</button>
+                    <button class="btn btn-warning" onclick="switchView('settings')">⚙️ Settings</button>
+                    <button class="btn btn-primary" onclick="switchView('reports')">📊 Reports</button>
+                </div>
+                ${lowStock > 0 ? `<div class="card" style="background:rgba(255,71,87,0.15);border-color:#ff4757;">
+                    ⚠️ ${lowStock} products are low on stock!
+                </div>` : ''}
             `;
         }
 
-        function renderPOS(main) {
-            main.innerHTML = `
-                <div class="pos-terminal">
-                    <input type="text" class="scan-input" id="scanInput" placeholder="🔍 Scan barcode or search product..." 
-                           onkeypress="if(event.key==='Enter') addToCart(event.target.value)">
-                    <div style="margin-top: 15px;">
-                        <h4>Quick Add</h4>
-                        <div class="product-grid" style="max-height: 200px; overflow-y: auto;">
-                            ${products.filter(p => p.active).map(p => `
-                                <div class="product-card" onclick="addToCart('${p.sku}')">
-                                    <strong>${p.name}</strong>
-                                    <div style="color: var(--accent-light);">${formatCurrency(p.price)}</div>
-                                    <small style="color: var(--text-secondary);">Stock: ${p.stock}</small>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    <div style="margin-top: 15px;">
-                        <h4>Cart (${cart.length} items)</h4>
-                        <div id="cartItems">
-                            ${cart.map((item, index) => `
-                                <div class="cart-item">
-                                    <div>
-                                        <strong>${item.name}</strong>
-                                        <div style="color: var(--text-secondary);">${formatCurrency(item.price)} x ${item.quantity}</div>
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-danger" style="padding: 5px 10px;" onclick="removeFromCart(${index})">×</button>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div style="margin-top: 10px; padding-top: 10px; border-top: 2px solid var(--border);">
-                            <div>Subtotal: ${formatCurrency(calculateSubtotal())}</div>
-                            <div>Tax (${(taxRate * 100).toFixed(0)}%): ${formatCurrency(calculateSubtotal() * taxRate)}</div>
-                            <div style="font-weight: bold; font-size: 1.2em; color: var(--accent-light);">Total: ${formatCurrency(calculateTotal())}</div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px;">
-                            <button class="btn btn-success" onclick="processPayment('cash')">💵 Cash</button>
-                            <button class="btn btn-primary" onclick="processPayment('card')">💳 Card</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
+        function renderPOS(el) {
+            products = DB.getAll('products');
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const tax = subtotal * taxRate;
+            const total = subtotal + tax;
 
-        function renderSettings(main) {
-            main.innerHTML = `
-                <div style="padding: 10px;">
-                    <h3>⚙️ Settings</h3>
+            el.innerHTML = `
+                <input type="text" placeholder="🔍 Scan barcode or search..." style="margin-bottom:10px;" 
+                       onkeypress="if(event.key==='Enter'){addToCart(event.target.value);event.target.value='';}">
+                
+                <div class="product-grid">
+                    ${products.filter(p => p.active).slice(0, 6).map(p => `
+                        <div class="product-card" onclick="addToCart('${p.sku}')">
+                            <strong>${p.name}</strong>
+                            <div style="color:#9b8fff;">${formatCurrency(p.price)}</div>
+                            <small style="color:#a0a0b0;">Stock: ${p.stock}</small>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="card" style="margin-top:10px;">
+                    <h4>🛒 Cart (${cart.length} items)</h4>
+                    ${cart.map((item, i) => `
+                        <div class="cart-item">
+                            <span>${item.name} x${item.quantity}</span>
+                            <span>${formatCurrency(item.price * item.quantity)}</span>
+                            <button class="btn btn-danger" style="padding:3px 8px;font-size:0.7em;" onclick="removeFromCart(${i})">✕</button>
+                        </div>
+                    `).join('')}
+                    ${cart.length === 0 ? '<p style="color:#a0a0b0;text-align:center;">Cart is empty</p>' : ''}
                     
-                    <div class="settings-section">
-                        <h4>💱 Currency Settings</h4>
-                        <div class="form-group">
-                            <label>Select Currency</label>
-                            <select id="currencySelect" onchange="changeCurrency(this.value)">
-                                ${Object.entries(currencies).map(([code, curr]) => `
-                                    <option value="${code}" ${currentCurrency === code ? 'selected' : ''}>
-                                        ${curr.flag} ${curr.name} (${curr.symbol}) - ${curr.code}
-                                    </option>
-                                `).join('')}
-                            </select>
-                        </div>
-                        <p style="color: var(--text-secondary); font-size: 0.85em;">
-                            Current: ${getCurrencyFlag()} ${currencies[currentCurrency].name}<br>
-                            Symbol: ${getCurrencySymbol()} | Code: ${currencies[currentCurrency].code}<br>
-                            Exchange Rate: 1 USD = ${currencies[currentCurrency].rate} ${currencies[currentCurrency].code}
-                        </p>
-                        <button class="btn btn-primary" onclick="applyCurrencySettings()">Apply Currency</button>
-                    </div>
-
-                    <div class="settings-section" style="margin-top: 15px;">
-                        <h4>💰 Tax Settings</h4>
-                        <div class="form-group">
-                            <label>Tax Rate (%)</label>
-                            <input type="number" id="taxRateInput" value="${taxRate * 100}" step="0.1" min="0" max="100">
-                        </div>
-                        <button class="btn btn-primary" onclick="applyTaxSettings()">Apply Tax Rate</button>
+                    <hr style="border-color:#2a3a5e;margin:10px 0;">
+                    <div>Subtotal: ${formatCurrency(subtotal)}</div>
+                    <div>Tax (${(taxRate*100).toFixed(0)}%): ${formatCurrency(tax)}</div>
+                    <div style="font-size:1.2em;color:#9b8fff;"><strong>Total: ${formatCurrency(total)}</strong></div>
+                    
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+                        <button class="btn btn-success" onclick="processPayment('cash')">💵 Cash</button>
+                        <button class="btn btn-primary" onclick="processPayment('card')">💳 Card</button>
                     </div>
                 </div>
             `;
         }
 
-        async function changeCurrency(code) {
-            currentCurrency = code;
-            await saveSetting('currency', code);
-            document.getElementById('currentCurrency').textContent = 
-                `${getCurrencyFlag()} ${currencies[currentCurrency].code}`;
-            renderView();
-        }
-
-        async function applyCurrencySettings() {
-            const select = document.getElementById('currencySelect');
-            if (select) {
-                await changeCurrency(select.value);
-                alert(`Currency changed to ${currencies[currentCurrency].name}`);
-            }
-        }
-
-        async function applyTaxSettings() {
-            const input = document.getElementById('taxRateInput');
-            if (input) {
-                taxRate = parseFloat(input.value) / 100;
-                await saveSetting('taxRate', taxRate.toString());
-                alert(`Tax rate set to ${(taxRate * 100).toFixed(1)}%`);
-                renderView();
-            }
-        }
-
-        function renderInventory(main) {
-            main.innerHTML = `
-                <div style="padding: 10px;">
-                    <div class="nav-menu">
-                        <button class="nav-item active" onclick="filterInventory('all')">All</button>
-                        <button class="nav-item" onclick="filterInventory('low')">
-                            Low Stock (${products.filter(p => p.stock < 10 && p.active).length})
-                        </button>
-                        <button class="nav-item" onclick="filterInventory('inactive')">Inactive</button>
-                    </div>
-                    <button class="btn btn-primary" style="width: 100%; margin: 10px 0;" onclick="showAddProduct()">+ Add Product</button>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
+        function renderInventory(el) {
+            products = DB.getAll('products');
+            el.innerHTML = `
+                <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="showAddProduct()">+ Add Product</button>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>Name</th><th>Price</th><th>Stock</th><th>Act</th></tr></thead>
+                        <tbody>
+                            ${products.map(p => `
                                 <tr>
-                                    <th>SKU</th>
-                                    <th>Name</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                    <th>Actions</th>
+                                    <td>${p.name}</td>
+                                    <td>${formatCurrency(p.price)}</td>
+                                    <td>${p.stock} ${p.stock < 10 ? '<span class="low-stock-badge">!</span>' : ''}</td>
+                                    <td>
+                                        <button class="btn btn-success" style="padding:3px 6px;font-size:0.7em;" onclick="adjustStock(${p.id})">+</button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody id="inventoryTable">
-                                ${products.filter(p => p.active).map(p => `
-                                    <tr>
-                                        <td>${p.sku}</td>
-                                        <td>${p.name}</td>
-                                        <td>${formatCurrency(p.price)}</td>
-                                        <td>${p.stock} ${p.stock < 10 ? '<span class="low-stock-badge">!</span>' : ''}</td>
-                                        <td>
-                                            <button class="btn btn-primary" style="padding: 5px 10px;" onclick="showBarcode('${p.barcode}')">QR</button>
-                                            <button class="btn btn-success" style="padding: 5px 10px;" onclick="adjustStock(${p.id})">+</button>
-                                            <button class="btn btn-danger" style="padding: 5px 10px;" onclick="deleteProduct(${p.id})">×</button>
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderSettings(el) {
+            el.innerHTML = `
+                <div class="card">
+                    <h4>💱 Currency</h4>
+                    <select id="currencySelect" onchange="changeCurrency(this.value)">
+                        ${Object.entries(currencies).map(([code, c]) => `
+                            <option value="${code}" ${currentCurrency === code ? 'selected' : ''}>${c.flag} ${c.name} (${c.symbol})</option>
+                        `).join('')}
+                    </select>
+                    <p style="color:#a0a0b0;font-size:0.8em;margin-top:5px;">
+                        Current: ${currencies[currentCurrency].flag} ${currencies[currentCurrency].name}
+                    </p>
+                </div>
+                <div class="card" style="margin-top:10px;">
+                    <h4>💰 Tax Rate</h4>
+                    <input type="number" id="taxInput" value="${taxRate * 100}" step="0.1" min="0" max="100">
+                    <p style="color:#a0a0b0;font-size:0.8em;">Current: ${(taxRate * 100).toFixed(1)}%</p>
+                    <button class="btn btn-primary" style="margin-top:8px;" onclick="saveTax()">Save Tax Rate</button>
+                </div>
+            `;
+        }
+
+        function renderSuppliers(el) {
+            const suppliers = DB.getAll('suppliers');
+            el.innerHTML = `
+                <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="showAddSupplier()">+ Add Supplier</button>
+                ${suppliers.map(s => `
+                    <div class="card">
+                        <h4>${s.name}</h4>
+                        <p style="color:#a0a0b0;font-size:0.8em;">📞 ${s.phone} | 📧 ${s.email}</p>
                     </div>
-                </div>
+                `).join('')}
+                ${suppliers.length === 0 ? '<p style="text-align:center;color:#a0a0b0;">No suppliers yet</p>' : ''}
             `;
         }
 
-        function filterInventory(filter) {
-            let filtered = products;
-            if(filter === 'low') filtered = products.filter(p => p.stock < 10 && p.active);
-            if(filter === 'inactive') filtered = products.filter(p => !p.active);
-            
-            document.getElementById('inventoryTable').innerHTML = filtered.map(p => `
-                <tr>
-                    <td>${p.sku}</td>
-                    <td>${p.name}</td>
-                    <td>${formatCurrency(p.price)}</td>
-                    <td>${p.stock} ${p.stock < 10 ? '<span class="low-stock-badge">!</span>' : ''}</td>
-                    <td>
-                        <button class="btn btn-primary" style="padding: 5px 10px;" onclick="showBarcode('${p.barcode}')">QR</button>
-                        <button class="btn btn-success" style="padding: 5px 10px;" onclick="adjustStock(${p.id})">+</button>
-                        <button class="btn btn-danger" style="padding: 5px 10px;" onclick="deleteProduct(${p.id})">×</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function renderSuppliers(main) {
-            main.innerHTML = `
-                <div style="padding: 10px;">
-                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="showAddSupplier()">+ Add Supplier</button>
-                    ${suppliers.map(s => `
-                        <div class="supplier-card">
-                            <h4>${s.name}</h4>
-                            <div style="color: var(--text-secondary);">📞 ${s.phone}</div>
-                            <div style="color: var(--text-secondary);">📧 ${s.email}</div>
-                            <div style="color: var(--text-secondary);">📍 ${s.address}</div>
-                            <button class="btn btn-primary" style="margin-top: 10px;" onclick="createPO(${s.id})">Create PO</button>
-                        </div>
-                    `).join('')}
-                </div>
+        function renderExpenses(el) {
+            const expenses = DB.getAll('expenses');
+            el.innerHTML = `
+                <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="showAddExpense()">+ Add Expense</button>
+                ${expenses.map(e => `
+                    <div class="card">
+                        <h4>${e.type}</h4>
+                        <p style="color:#a0a0b0;">💰 ${formatCurrency(e.amount)} | 📅 ${e.date}</p>
+                    </div>
+                `).join('')}
+                ${expenses.length === 0 ? '<p style="text-align:center;color:#a0a0b0;">No expenses yet</p>' : ''}
             `;
         }
 
-        function renderPurchaseOrders(main) {
-            main.innerHTML = `
-                <div style="padding: 10px;">
-                    <h3>Purchase Orders</h3>
-                    ${purchaseOrders.map(po => {
-                        const supplier = suppliers.find(s => s.id === po.supplierId);
-                        return `
-                            <div class="purchase-order-card">
-                                <div style="display: flex; justify-content: space-between;">
-                                    <h4>PO #${po.id}</h4>
-                                    <span class="po-status po-${po.status}">${po.status}</span>
-                                </div>
-                                <div style="color: var(--text-secondary);">Supplier: ${supplier ? supplier.name : 'Unknown'}</div>
-                                <div style="color: var(--text-secondary);">Date: ${po.date}</div>
-                                <div>Total: ${formatCurrency(po.total || 0)}</div>
-                                ${po.status === 'draft' ? `
-                                    <button class="btn btn-success" onclick="finalizePO(${po.id})">Finalize</button>
-                                ` : ''}
-                                ${po.status === 'finalized' ? `
-                                    <button class="btn btn-primary" onclick="receivePO(${po.id})">Receive Stock</button>
-                                ` : ''}
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            `;
-        }
-
-        function renderExpenses(main) {
-            main.innerHTML = `
-                <div style="padding: 10px;">
-                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="showAddExpense()">+ Add Expense</button>
-                    ${expenses.map(e => `
-                        <div class="expense-card">
-                            <h4>${e.type}</h4>
-                            <div>💰 ${formatCurrency(e.amount)}</div>
-                            <div style="color: var(--text-secondary);">📅 ${e.date}</div>
-                            <div style="color: var(--text-secondary);">🏷️ ${e.category}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        function renderUsers(main) {
+        function renderUsers(el) {
             if (currentUser.role !== 'admin') {
-                main.innerHTML = '<div class="permission-denied">🔒 Access denied. Admin only.</div>';
+                el.innerHTML = '<p style="text-align:center;color:#ff4757;">🔒 Admin access required</p>';
                 return;
             }
-            
-            main.innerHTML = `
-                <div style="padding: 10px;">
-                    <h3>User Management</h3>
-                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="showAddUser()">+ Add User</button>
-                    ${users.map(u => `
-                        <div class="supplier-card" style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <h4>${u.name}</h4>
-                                <span class="role-badge ${u.role}-badge">${u.role}</span>
-                                <span style="margin-left: 10px;">${u.active ? '✅ Active' : '❌ Inactive'}</span>
-                                <div><small style="color: var(--text-secondary);">PIN: ${u.pin}</small></div>
-                            </div>
-                            <div>
-                                <button class="btn btn-primary" style="padding: 5px 10px;" onclick="toggleUser(${u.id})">
-                                    ${u.active ? 'Deactivate' : 'Activate'}
-                                </button>
-                            </div>
+            users = DB.getAll('users');
+            el.innerHTML = `
+                <button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="showAddUser()">+ Add User</button>
+                ${users.map(u => `
+                    <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
+                        <div>
+                            <strong>${u.name}</strong>
+                            <span class="role-badge ${u.role}-badge">${u.role}</span>
+                            <span style="font-size:0.7em;">${u.active ? '✅' : '❌'}</span>
                         </div>
-                    `).join('')}
-                </div>
+                        <button class="btn btn-primary" style="padding:5px 10px;font-size:0.7em;" onclick="toggleUser(${u.id})">Toggle</button>
+                    </div>
+                `).join('')}
             `;
         }
 
-        function renderReports(main) {
-            main.innerHTML = `
-                <div style="padding: 10px;">
-                    <div style="display: grid; gap: 10px;">
-                        <button class="btn btn-primary" onclick="exportReport('sales')">📊 Export Sales Report (CSV)</button>
-                        <button class="btn btn-success" onclick="exportReport('inventory')">📦 Export Inventory Report (CSV)</button>
-                        <button class="btn btn-primary" onclick="exportReport('expenses')">💸 Export Expenses Report (CSV)</button>
-                        <button class="btn btn-success" onclick="window.print()">🖨️ Print Current View</button>
-                    </div>
+        function renderReports(el) {
+            el.innerHTML = `
+                <div style="display:grid;gap:8px;">
+                    <button class="btn btn-primary" onclick="exportCSV('sales')">📊 Sales Report (CSV)</button>
+                    <button class="btn btn-success" onclick="exportCSV('inventory')">📦 Inventory Report (CSV)</button>
+                    <button class="btn btn-primary" onclick="exportCSV('expenses')">💸 Expenses Report (CSV)</button>
+                    <button class="btn btn-warning" onclick="window.print()">🖨️ Print</button>
                 </div>
             `;
         }
 
         // ==================== CART FUNCTIONS ====================
-        async function addToCart(sku) {
+        function addToCart(sku) {
             const product = products.find(p => (p.sku === sku || p.barcode === sku) && p.active);
-            if(product && product.stock > 0) {
-                const existing = cart.find(item => item.sku === product.sku);
-                if(existing) {
-                    if(existing.quantity < product.stock) {
-                        existing.quantity++;
-                    } else {
-                        alert('Insufficient stock!');
-                        return;
-                    }
+            if (product && product.stock > 0) {
+                const existing = cart.find(i => i.sku === product.sku);
+                if (existing) {
+                    existing.quantity++;
                 } else {
-                    cart.push({...product, quantity: 1});
+                    cart.push({ ...product, quantity: 1 });
                 }
-                renderView();
+                switchView('pos');
             } else {
                 alert('Product not found or out of stock!');
             }
         }
 
-        async function removeFromCart(index) {
+        function removeFromCart(index) {
             cart.splice(index, 1);
-            renderView();
+            switchView('pos');
         }
 
-        function calculateSubtotal() {
-            return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        }
-
-        function calculateTotal() {
-            const subtotal = calculateSubtotal();
-            return subtotal + (subtotal * taxRate);
-        }
-
-        async function processPayment(method) {
-            if(cart.length === 0) {
+        function processPayment(method) {
+            if (cart.length === 0) {
                 alert('Cart is empty!');
                 return;
             }
 
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const sale = {
                 date: new Date().toISOString().split('T')[0],
-                total: calculateTotal(),
-                subtotal: calculateSubtotal(),
-                tax: calculateSubtotal() * taxRate,
+                total: subtotal + (subtotal * taxRate),
+                subtotal: subtotal,
+                tax: subtotal * taxRate,
                 paymentMethod: method,
-                cashierId: currentUser ? currentUser.id : null,
+                cashierId: currentUser.id,
                 currency: currentCurrency
             };
 
-            try {
-                const saleId = await db.add('sales', sale);
-                
-                for (const item of cart) {
-                    await db.add('saleItems', {
-                        saleId: saleId,
-                        productId: item.id,
-                        quantity: item.quantity,
-                        price: item.price
-                    });
+            DB.add('sales', sale);
 
-                    const product = products.find(p => p.id === item.id);
-                    if (product) {
-                        product.stock -= item.quantity;
-                        await db.update('products', product);
-                    }
+            // Update stock
+            cart.forEach(item => {
+                const product = products.find(p => p.id === item.id);
+                if (product) {
+                    product.stock -= item.quantity;
+                    DB.update('products', product);
                 }
+            });
 
-                const receiptHTML = `
-                    <div class="receipt">
-                        <h2 style="text-align: center; color: var(--accent-light);">MLEA POS</h2>
-                        <p style="text-align: center; color: var(--text-secondary);">Receipt #${saleId}</p>
-                        <p style="text-align: center; color: var(--text-secondary);">Cashier: ${currentUser.name}</p>
-                        <p style="text-align: center; color: var(--text-secondary);">Currency: ${currencies[currentCurrency].code}</p>
-                        <hr>
-                        ${cart.map(item => `
-                            <div style="color: var(--text-primary);">${item.name} x${item.quantity} - ${formatCurrency(item.price * item.quantity)}</div>
-                        `).join('')}
-                        <hr>
-                        <div style="color: var(--text-secondary);">Subtotal: ${formatCurrency(sale.subtotal)}</div>
-                        <div style="color: var(--text-secondary);">Tax: ${formatCurrency(sale.tax)}</div>
-                        <div style="color: var(--accent-light);"><strong>Total: ${formatCurrency(sale.total)}</strong></div>
-                        <div style="color: var(--text-secondary);">Payment: ${method.toUpperCase()}</div>
-                        <div style="color: var(--text-secondary);">Date: ${sale.date}</div>
-                        <p style="text-align: center; margin-top: 10px; color: var(--accent-light);">Thank you for your purchase!</p>
-                    </div>
-                `;
+            // Show receipt
+            const receiptHTML = `
+                <div style="text-align:center;">
+                    <h3>MLEA POS</h3>
+                    <p style="color:#a0a0b0;">Receipt</p>
+                    <hr style="border-color:#2a3a5e;">
+                    ${cart.map(i => `<p>${i.name} x${i.quantity} - ${formatCurrency(i.price * i.quantity)}</p>`).join('')}
+                    <hr style="border-color:#2a3a5e;">
+                    <h3>Total: ${formatCurrency(sale.total)}</h3>
+                    <p style="color:#a0a0b0;">Payment: ${method.toUpperCase()}</p>
+                    <p style="color:#2ed573;">Thank you! 🎉</p>
+                </div>
+            `;
 
-                document.getElementById('modalContent').innerHTML = receiptHTML;
-                document.getElementById('modal').classList.add('active');
+            document.getElementById('modalContent').innerHTML = receiptHTML;
+            document.getElementById('modal').classList.add('active');
 
-                cart = [];
-                products = await db.getAll('products');
-                updateLowStockBadge();
+            cart = [];
+            products = DB.getAll('products');
 
-                setTimeout(() => {
-                    document.getElementById('modal').classList.remove('active');
-                    renderView();
-                }, 3000);
+            setTimeout(() => {
+                document.getElementById('modal').classList.remove('active');
+                switchView('dashboard');
+            }, 2500);
+        }
 
-            } catch (error) {
-                console.error('Error processing payment:', error);
-                alert('Error processing payment. Please try again.');
+        // ==================== SETTINGS ====================
+        function changeCurrency(code) {
+            currentCurrency = code;
+            DB.set('currency', code);
+            document.getElementById('headerCurrency').textContent = currencies[code].flag + ' ' + code;
+            switchView('settings');
+        }
+
+        function saveTax() {
+            const val = parseFloat(document.getElementById('taxInput').value);
+            if (!isNaN(val) && val >= 0 && val <= 100) {
+                taxRate = val / 100;
+                DB.set('taxRate', taxRate.toString());
+                alert('Tax rate saved!');
             }
         }
 
-        // ==================== CRUD OPERATIONS ====================
+        // ==================== MODALS ====================
         function showAddProduct() {
             document.getElementById('modalContent').innerHTML = `
-                <h3 style="color: var(--text-primary);">Add Product</h3>
-                <div class="form-group">
-                    <label>SKU</label>
-                    <input type="text" id="productSku">
+                <h4>Add Product</h4>
+                <input type="text" id="pName" placeholder="Name" style="margin:5px 0;"><br>
+                <input type="number" id="pPrice" placeholder="Price" step="0.01" style="margin:5px 0;"><br>
+                <input type="number" id="pStock" placeholder="Stock" style="margin:5px 0;"><br>
+                <input type="text" id="pSku" placeholder="SKU" style="margin:5px 0;"><br>
+                <div style="margin-top:10px;">
+                    <button class="btn btn-primary" onclick="addProduct()">Save</button>
+                    <button class="btn btn-danger" onclick="closeModal()">Cancel</button>
                 </div>
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" id="productName">
-                </div>
-                <div class="form-group">
-                    <label>Price (${currencies[currentCurrency].code})</label>
-                    <input type="number" id="productPrice" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label>Stock</label>
-                    <input type="number" id="productStock">
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <input type="text" id="productCategory">
-                </div>
-                <div class="form-group">
-                    <label>Barcode</label>
-                    <input type="text" id="productBarcode">
-                </div>
-                <button class="btn btn-primary" onclick="addProduct()">Save</button>
-                <button class="btn btn-danger" onclick="document.getElementById('modal').classList.remove('active')">Cancel</button>
             `;
             document.getElementById('modal').classList.add('active');
         }
 
-        async function addProduct() {
+        function addProduct() {
             const product = {
-                sku: document.getElementById('productSku').value,
-                name: document.getElementById('productName').value,
-                price: parseFloat(document.getElementById('productPrice').value),
-                stock: parseInt(document.getElementById('productStock').value),
-                category: document.getElementById('productCategory').value,
-                barcode: document.getElementById('productBarcode').value,
-                active: true
-            };
-
-            await db.add('products', product);
-            products = await db.getAll('products');
-            document.getElementById('modal').classList.remove('active');
-            renderView();
-        }
-
-        async function deleteProduct(id) {
-            if(confirm('Are you sure you want to delete this product?')) {
-                await db.delete('products', id);
-                products = await db.getAll('products');
-                renderView();
-            }
-        }
-
-        async function adjustStock(productId) {
-            const product = products.find(p => p.id === productId);
-            const newStock = prompt(`Adjust stock for ${product.name}. Current: ${product.stock}`, product.stock + 10);
-            if(newStock && !isNaN(newStock)) {
-                product.stock = parseInt(newStock);
-                await db.update('products', product);
-                products = await db.getAll('products');
-                renderView();
-            }
-        }
-
-        function showBarcode(barcode) {
-            document.getElementById('modalContent').innerHTML = `
-                <div class="qr-code">
-                    <h3 style="color: var(--text-primary);">Barcode: ${barcode}</h3>
-                    <div style="font-size: 3em; margin: 20px;">📱</div>
-                    <p style="color: var(--text-secondary);">QR Code generated for: ${barcode}</p>
-                    <button class="btn btn-primary" onclick="document.getElementById('modal').classList.remove('active')">Close</button>
-                </div>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        async function toggleUser(userId) {
-            if (currentUser.role !== 'admin') {
-                alert('Access denied');
-                return;
-            }
-            
-            const user = users.find(u => u.id === userId);
-            user.active = !user.active;
-            await db.update('users', user);
-            users = await db.getAll('users');
-            renderView();
-        }
-
-        function showAddUser() {
-            if (currentUser.role !== 'admin') {
-                alert('Access denied');
-                return;
-            }
-            
-            document.getElementById('modalContent').innerHTML = `
-                <h3 style="color: var(--text-primary);">Add User</h3>
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" id="userName">
-                </div>
-                <div class="form-group">
-                    <label>Role</label>
-                    <select id="userRole">
-                        <option value="admin">Admin</option>
-                        <option value="manager">Manager</option>
-                        <option value="cashier" selected>Cashier</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>PIN (4 digits)</label>
-                    <input type="password" id="userPin" maxlength="4" pattern="[0-9]{4}">
-                </div>
-                <button class="btn btn-primary" onclick="addUser()">Save</button>
-                <button class="btn btn-danger" onclick="document.getElementById('modal').classList.remove('active')">Cancel</button>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        async function addUser() {
-            const name = document.getElementById('userName').value;
-            const role = document.getElementById('userRole').value;
-            const pin = document.getElementById('userPin').value;
-            
-            if (!name || !pin || pin.length !== 4) {
-                alert('Please fill all fields. PIN must be 4 digits.');
-                return;
-            }
-            
-            const user = {
-                name: name,
-                role: role,
+                sku: document.getElementById('pSku').value || 'SKU' + Date.now(),
+                name: document.getElementById('pName').value,
+                price: parseFloat(document.getElementById('pPrice').value) || 0,
+                stock: parseInt(document.getElementById('pStock').value) || 0,
+                category: 'General',
                 active: true,
-                pin: pin
+                barcode: Math.random().toString(36).substring(7)
             };
-
-            await db.add('users', user);
-            users = await db.getAll('users');
-            document.getElementById('modal').classList.remove('active');
-            renderView();
-            renderLoginScreen();
+            DB.add('products', product);
+            products = DB.getAll('products');
+            closeModal();
+            switchView('inventory');
         }
 
         function showAddSupplier() {
             document.getElementById('modalContent').innerHTML = `
-                <h3 style="color: var(--text-primary);">Add Supplier</h3>
-                <div class="form-group">
-                    <label>Name</label>
-                    <input type="text" id="supplierName">
+                <h4>Add Supplier</h4>
+                <input type="text" id="sName" placeholder="Name" style="margin:5px 0;"><br>
+                <input type="text" id="sPhone" placeholder="Phone" style="margin:5px 0;"><br>
+                <input type="email" id="sEmail" placeholder="Email" style="margin:5px 0;"><br>
+                <div style="margin-top:10px;">
+                    <button class="btn btn-primary" onclick="addSupplier()">Save</button>
+                    <button class="btn btn-danger" onclick="closeModal()">Cancel</button>
                 </div>
-                <div class="form-group">
-                    <label>Phone</label>
-                    <input type="tel" id="supplierPhone">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="supplierEmail">
-                </div>
-                <div class="form-group">
-                    <label>Address</label>
-                    <input type="text" id="supplierAddress">
-                </div>
-                <button class="btn btn-primary" onclick="addSupplier()">Save</button>
-                <button class="btn btn-danger" onclick="document.getElementById('modal').classList.remove('active')">Cancel</button>
             `;
             document.getElementById('modal').classList.add('active');
         }
 
-        async function addSupplier() {
+        function addSupplier() {
             const supplier = {
-                name: document.getElementById('supplierName').value,
-                phone: document.getElementById('supplierPhone').value,
-                email: document.getElementById('supplierEmail').value,
-                address: document.getElementById('supplierAddress').value
+                name: document.getElementById('sName').value,
+                phone: document.getElementById('sPhone').value,
+                email: document.getElementById('sEmail').value,
+                address: ''
             };
-
-            await db.add('suppliers', supplier);
-            suppliers = await db.getAll('suppliers');
-            document.getElementById('modal').classList.remove('active');
-            renderView();
-        }
-
-        async function createPO(supplierId) {
-            const po = {
-                supplierId: supplierId,
-                date: new Date().toISOString().split('T')[0],
-                status: 'draft',
-                items: [],
-                total: 0
-            };
-
-            await db.add('purchaseOrders', po);
-            purchaseOrders = await db.getAll('purchaseOrders');
-            alert('Purchase Order created!');
-            switchView('purchaseOrders');
-        }
-
-        async function finalizePO(poId) {
-            const po = purchaseOrders.find(p => p.id === poId);
-            if(po) {
-                po.status = 'finalized';
-                await db.update('purchaseOrders', po);
-                purchaseOrders = await db.getAll('purchaseOrders');
-                renderView();
-            }
-        }
-
-        async function receivePO(poId) {
-            const po = purchaseOrders.find(p => p.id === poId);
-            if(po && po.status === 'finalized') {
-                po.status = 'received';
-                await db.update('purchaseOrders', po);
-                alert('Purchase Order received! Stock updated automatically.');
-                purchaseOrders = await db.getAll('purchaseOrders');
-                renderView();
-            }
+            DB.add('suppliers', supplier);
+            closeModal();
+            switchView('suppliers');
         }
 
         function showAddExpense() {
             document.getElementById('modalContent').innerHTML = `
-                <h3 style="color: var(--text-primary);">Add Expense</h3>
-                <div class="form-group">
-                    <label>Type</label>
-                    <input type="text" id="expenseType">
+                <h4>Add Expense</h4>
+                <input type="text" id="eType" placeholder="Type" style="margin:5px 0;"><br>
+                <input type="number" id="eAmount" placeholder="Amount" step="0.01" style="margin:5px 0;"><br>
+                <div style="margin-top:10px;">
+                    <button class="btn btn-primary" onclick="addExpense()">Save</button>
+                    <button class="btn btn-danger" onclick="closeModal()">Cancel</button>
                 </div>
-                <div class="form-group">
-                    <label>Amount (${currencies[currentCurrency].code})</label>
-                    <input type="number" id="expenseAmount" step="0.01">
-                </div>
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="expenseCategory">
-                        <option>Fixed</option>
-                        <option>Variable</option>
-                    </select>
-                </div>
-                <button class="btn btn-primary" onclick="addExpense()">Save</button>
-                <button class="btn btn-danger" onclick="document.getElementById('modal').classList.remove('active')">Cancel</button>
             `;
             document.getElementById('modal').classList.add('active');
         }
 
-        async function addExpense() {
+        function addExpense() {
             const expense = {
-                type: document.getElementById('expenseType').value,
-                amount: parseFloat(document.getElementById('expenseAmount').value),
+                type: document.getElementById('eType').value,
+                amount: parseFloat(document.getElementById('eAmount').value) || 0,
                 date: new Date().toISOString().split('T')[0],
-                category: document.getElementById('expenseCategory').value
+                category: 'General'
             };
-
-            await db.add('expenses', expense);
-            expenses = await db.getAll('expenses');
-            document.getElementById('modal').classList.remove('active');
-            renderView();
+            DB.add('expenses', expense);
+            closeModal();
+            switchView('expenses');
         }
 
-        // ==================== REPORTING & EXPORT ====================
-        async function exportReport(type) {
-            let csv = '';
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const currCode = currencies[currentCurrency].code;
-
-            switch(type) {
-                case 'sales':
-                    const sales = await db.getAll('sales');
-                    csv = `Date,Total (${currCode}),Subtotal (${currCode}),Tax (${currCode}),Payment Method,Cashier\n`;
-                    csv += sales.map(s => {
-                        const cashier = users.find(u => u.id === s.cashierId);
-                        return `${s.date},${s.total},${s.subtotal},${s.tax},${s.paymentMethod},${cashier ? cashier.name : 'Unknown'}`;
-                    }).join('\n');
-                    downloadCSV(csv, `sales_report_${timestamp}.csv`);
-                    break;
-                case 'inventory':
-                    csv = `SKU,Name,Price (${currCode}),Stock,Category,Barcode,Active\n`;
-                    csv += products.map(p => `${p.sku},${p.name},${p.price},${p.stock},${p.category},${p.barcode},${p.active}`).join('\n');
-                    downloadCSV(csv, `inventory_report_${timestamp}.csv`);
-                    break;
-                case 'expenses':
-                    csv = `Type,Amount (${currCode}),Date,Category\n`;
-                    csv += expenses.map(e => `${e.type},${e.amount},${e.date},${e.category}`).join('\n');
-                    downloadCSV(csv, `expenses_report_${timestamp}.csv`);
-                    break;
-            }
+        function showAddUser() {
+            document.getElementById('modalContent').innerHTML = `
+                <h4>Add User</h4>
+                <input type="text" id="uName" placeholder="Name" style="margin:5px 0;"><br>
+                <select id="uRole" style="margin:5px 0;">
+                    <option value="cashier">Cashier</option>
+                    <option value="manager">Manager</option>
+                    <option value="admin">Admin</option>
+                </select><br>
+                <input type="password" id="uPin" placeholder="4-digit PIN" maxlength="4" style="margin:5px 0;"><br>
+                <div style="margin-top:10px;">
+                    <button class="btn btn-primary" onclick="addUser()">Save</button>
+                    <button class="btn btn-danger" onclick="closeModal()">Cancel</button>
+                </div>
+            `;
+            document.getElementById('modal').classList.add('active');
         }
 
-        function downloadCSV(csv, filename) {
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }
-
-        // ==================== DATABASE BACKUP/RESTORE ====================
-        async function backupDatabase() {
-            try {
-                const data = await db.exportAllData();
-                const backupStr = JSON.stringify(data);
-                localStorage.setItem('mlea_backup', backupStr);
-                
-                const blob = new Blob([backupStr], { type: 'application/json' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `mlea_backup_${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-                
-                alert('✅ Database backup created and downloaded!');
-            } catch (error) {
-                console.error('Backup failed:', error);
-                alert('❌ Backup failed!');
-            }
-        }
-
-        async function clearDatabase() {
-            if (currentUser.role !== 'admin') {
-                alert('Only admin can clear the database.');
+        function addUser() {
+            const name = document.getElementById('uName').value;
+            const pin = document.getElementById('uPin').value;
+            if (!name || pin.length !== 4) {
+                alert('Name required and PIN must be 4 digits');
                 return;
             }
-            
-            if(confirm('⚠️ Are you sure you want to clear ALL data? This cannot be undone!')) {
-                if(confirm('FINAL WARNING: This will delete all products, sales, suppliers, and expenses!')) {
-                    const stores = ['products', 'sales', 'saleItems', 'suppliers', 'purchaseOrders', 'expenses', 'users'];
-                    
-                    for (const store of stores) {
-                        await db.clearStore(store);
-                    }
-                    
-                    await initSampleData();
-                    await initSampleUsers();
-                    
-                    products = await db.getAll('products');
-                    suppliers = await db.getAll('suppliers');
-                    purchaseOrders = await db.getAll('purchaseOrders');
-                    expenses = await db.getAll('expenses');
-                    users = await db.getAll('users');
-                    
-                    updateLowStockBadge();
-                    renderView();
-                    renderLoginScreen();
-                    alert('🗑️ All data cleared and reset with sample data');
-                }
-            }
-        }
-
-        // ==================== INITIALIZATION ====================
-        async function initApp() {
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            await loadSettings();
-            users = await db.getAll('users');
-            if (users.length === 0) {
-                await initSampleUsers();
-                users = await db.getAll('users');
-            }
-            
+            const user = {
+                name: name,
+                role: document.getElementById('uRole').value,
+                active: true,
+                pin: pin
+            };
+            DB.add('users', user);
+            users = DB.getAll('users');
+            closeModal();
+            switchView('users');
             renderLoginScreen();
         }
 
-        // Event Listeners
+        function adjustStock(productId) {
+            const product = products.find(p => p.id === productId);
+            const newStock = prompt(`Adjust stock for ${product.name}. Current: ${product.stock}`, product.stock + 10);
+            if (newStock && !isNaN(newStock)) {
+                product.stock = parseInt(newStock);
+                DB.update('products', product);
+                products = DB.getAll('products');
+                switchView('inventory');
+            }
+        }
+
+        function toggleUser(userId) {
+            const user = users.find(u => u.id === userId);
+            user.active = !user.active;
+            DB.update('users', user);
+            users = DB.getAll('users');
+            switchView('users');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // ==================== EXPORT ====================
+        function exportCSV(type) {
+            let csv = '';
+            if (type === 'sales') {
+                const sales = DB.getAll('sales');
+                csv = 'Date,Total,Payment,Cashier\n';
+                sales.forEach(s => {
+                    csv += `${s.date},${s.total},${s.paymentMethod},${s.cashierId}\n`;
+                });
+            } else if (type === 'inventory') {
+                csv = 'Name,Price,Stock,SKU\n';
+                products.forEach(p => {
+                    csv += `${p.name},${p.price},${p.stock},${p.sku}\n`;
+                });
+            } else if (type === 'expenses') {
+                const expenses = DB.getAll('expenses');
+                csv = 'Type,Amount,Date\n';
+                expenses.forEach(e => {
+                    csv += `${e.type},${e.amount},${e.date}\n`;
+                });
+            }
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${type}_report.csv`;
+            a.click();
+        }
+
+        // Close modal on outside click
         document.getElementById('modal').addEventListener('click', function(e) {
-            if(e.target === this) {
-                this.classList.remove('active');
+            if (e.target === this) closeModal();
+        });
+
+        // Keyboard support for login
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('loginScreen').style.display !== 'none') {
+                if (e.key >= '0' && e.key <= '9') enterPin(e.key);
+                else if (e.key === 'Enter') submitPin();
+                else if (e.key === 'Backspace') { pinEntry = pinEntry.slice(0, -1); updatePinDisplay(); }
             }
         });
 
-        // Start the app
+        // START APP
         initApp();
     </script>
 </body>
