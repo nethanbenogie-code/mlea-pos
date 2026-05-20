@@ -1,827 +1,1128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MLEA POS - Multi-Branch</title>
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22MLEA%20POS%22%2C%22short_name%22%3A%22MLEAPOS%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a1a2e%22%2C%22theme_color%22%3A%22%231a1a2e%22%2C%22orientation%22%3A%22portrait%22%7D">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#1a1a2e">
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#1a1a2e;color:#e0e0e0;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
-        .app-container{max-width:480px;margin:0 auto;min-height:100vh;background:#16213e;position:relative}
-        @media(min-width:768px){.app-container{max-width:768px}}
-        #loginScreen{min-height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460);padding:15px}
-        .login-card{background:#1e2a4a;border-radius:20px;padding:20px;width:100%;max-width:340px;border:1px solid #2a3a5e}
-        .login-logo{text-align:center;margin-bottom:20px}
-        .login-logo h1{color:#9b8fff;font-size:1.8em}
-        .login-logo p{color:#a0a0b0;font-size:.85em}
-        .user-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px}
-        .user-card{background:#16213e;border:2px solid #2a3a5e;border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s}
-        .user-card.selected{border-color:#7c6fff;background:#0f3460}
-        .user-card .avatar{font-size:1.8em}
-        .user-card .name{font-size:.7em;color:#e0e0e0;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .role-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.65em;margin-top:3px}
-        .admin-badge{background:#7c6fff;color:#fff}.manager-badge{background:#2ed573;color:#fff}.cashier-badge{background:#ffa502;color:#fff}
-        .section-label{text-align:center;color:#e0e0e0;font-size:.9em;margin:10px 0}
-        .pin-display{display:flex;justify-content:center;gap:12px;margin:15px 0}
-        .pin-dot{width:14px;height:14px;border-radius:50%;background:#2a3a5e;transition:all .3s}
-        .pin-dot.filled{background:#7c6fff;box-shadow:0 0 8px #7c6fff}
-        .pin-dot.error{background:#ff4757}
-        .error-msg{color:#ff4757;text-align:center;font-size:.8em;min-height:18px;margin:5px 0}
-        .pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-        .pin-btn{background:#0f3460;border:1px solid #2a3a5e;border-radius:10px;padding:16px;font-size:1.3em;cursor:pointer;color:#e0e0e0}
-        .pin-btn:active{background:#7c6fff}.pin-btn.clear{background:#ff4757;color:#fff;font-size:.9em}.pin-btn.submit{background:#2ed573;color:#fff;font-size:.9em}
-        #mainApp{display:none}
-        .header{background:#1a1a2e;padding:12px 15px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #2a3a5e}
-        .header h1{color:#9b8fff;font-size:1.2em}
-        .header-right{display:flex;align-items:center;gap:10px;font-size:.8em;color:#a0a0b0}
-        .logout-btn{background:#ff4757;color:#fff;border:none;padding:6px 12px;border-radius:15px;cursor:pointer;font-size:.8em}
-        .hamburger{background:none;border:none;color:#e0e0e0;font-size:22px;cursor:pointer}
-        .nav-bar{display:flex;overflow-x:auto;padding:8px;background:#1e2a4a;margin:8px;border-radius:10px;gap:5px;-webkit-overflow-scrolling:touch}
-        .nav-btn{flex:0 0 auto;padding:8px 14px;background:#16213e;border:1px solid #2a3a5e;border-radius:20px;cursor:pointer;white-space:nowrap;font-size:.8em;color:#a0a0b0;position:relative}
-        .nav-btn.active{background:#7c6fff;color:#fff;border-color:#7c6fff}
-        .nav-btn .badge{position:absolute;top:-5px;right:-5px;background:#ff4757;color:#fff;border-radius:50%;padding:1px 6px;font-size:.65em;min-width:18px;text-align:center}
-        #mainContent{padding:10px;min-height:60vh}
-        .card{background:#1e2a4a;border-radius:10px;padding:15px;margin:8px 0;border:1px solid #2a3a5e}
-        .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-        .metric-card{background:#16213e;border-radius:8px;padding:12px;text-align:center;border:1px solid #2a3a5e}
-        .metric-value{font-size:1.1em;font-weight:bold;color:#9b8fff}
-        .metric-label{font-size:.65em;color:#a0a0b0;margin-top:4px}
-        .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-        .product-card{background:#16213e;border-radius:8px;padding:12px;cursor:pointer;border:1px solid #2a3a5e;transition:all .2s}
-        .product-card:active{transform:scale(.96)}.product-card .stock-low{color:#ff4757;font-weight:bold}
-        .btn{padding:10px 20px;border:none;border-radius:20px;cursor:pointer;font-size:.85em;font-weight:500;transition:all .2s}
-        .btn:active{transform:scale(.95)}.btn-primary{background:#7c6fff;color:#fff}.btn-success{background:#2ed573;color:#fff}.btn-danger{background:#ff4757;color:#fff}.btn-warning{background:#ffa502;color:#fff}
-        .btn-sm{padding:5px 10px;font-size:.7em}.btn-xs{padding:3px 8px;font-size:.65em}
-        input,select,textarea{width:100%;padding:10px;border:2px solid #2a3a5e;border-radius:20px;font-size:.9em;background:#0f3460;color:#e0e0e0;outline:none;font-family:inherit}
-        input:focus,select:focus,textarea:focus{border-color:#7c6fff}input::placeholder{color:#6a6a7a}select option{background:#1e2a4a;color:#e0e0e0}
-        table{width:100%;border-collapse:collapse;font-size:.8em}
-        th{background:#0f3460;color:#9b8fff;padding:8px;text-align:left;position:sticky;top:0}
-        td{padding:8px;border-bottom:1px solid #2a3a5e;color:#a0a0b0}tr:hover td{background:rgba(124,111,255,0.05)}
-        .cart-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a3a5e;gap:10px}
-        .cart-item-info{flex:1;min-width:0}.cart-item-name{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .cart-item-price{color:#9b8fff;font-size:.85em}
-        .cart-item-qty{display:flex;align-items:center;gap:5px}
-        .qty-btn{background:#0f3460;border:1px solid #2a3a5e;color:#e0e0e0;width:25px;height:25px;border-radius:50%;cursor:pointer;font-size:.8em;display:flex;align-items:center;justify-content:center}
-        .sidebar{position:fixed;left:-280px;top:0;bottom:0;width:260px;background:#1e2a4a;z-index:1000;transition:left .3s;overflow-y:auto;border-right:1px solid #2a3a5e}
-        .sidebar.active{left:0}.sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:999}.sidebar-overlay.active{display:block}
-        .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:2000;justify-content:center;align-items:center;padding:15px}
-        .modal.active{display:flex}
-        .modal-content{background:#1e2a4a;border-radius:15px;padding:20px;width:100%;max-width:400px;max-height:85vh;overflow-y:auto;border:1px solid #2a3a5e}
-        .branch-tag{display:inline-block;padding:3px 8px;border-radius:10px;font-size:.7em;background:rgba(124,111,255,0.2);color:#9b8fff;margin-left:5px}
-        .alert{background:rgba(255,71,87,.15);border:1px solid #ff4757;border-radius:8px;padding:10px;margin:8px 0}
-        .alert-warning{background:rgba(255,165,2,.15);border-color:#ffa502}
-        .discount-row {display:flex;align-items:center;gap:8px;margin:5px 0}
-        .discount-row select, .discount-row input {flex:1}
-        .log-row{font-size:0.75em;padding:5px 0;border-bottom:1px solid #2a3a5e;color:#a0a0b0;}
-        .log-row strong{color:#e0e0e0;}
-        @media print{body{background:#fff}.header,.nav-bar,.sidebar,.modal,#loginScreen,.btn,.logout-btn,.hamburger{display:none!important}#mainApp{display:block!important}#mainContent{background:#fff;color:#000}.card,.metric-card{background:#fff;border:1px solid #ddd;color:#000}}
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MLEA POS – Buy Now</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0e1a;
+      --surface: #11152a;
+      --card: #161c32;
+      --border: #1e2640;
+      --purple: #8876ff;
+      --purple-light: #a899ff;
+      --teal: #38d9c0;
+      --amber: #f5a623;
+      --red: #ff5e6d;
+      --text: #dde1f5;
+      --muted: #5c6280;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      overflow-x: hidden;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(136,118,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(136,118,255,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(11,14,26,0.75);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 1.1em;
+      font-weight: 800;
+      color: var(--purple-light);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-cta {
+      background: var(--purple);
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-size: 0.82em;
+      font-weight: 700;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 80px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+    }
+
+    .orb1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(136,118,255,0.14), transparent 70%);
+      top: -100px; left: 50%;
+      transform: translateX(-50%);
+      animation: drift 8s ease-in-out infinite;
+    }
+
+    .orb2 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(56,217,192,0.08), transparent 70%);
+      bottom: 0; right: -80px;
+      animation: drift 10s ease-in-out infinite reverse;
+    }
+
+    @keyframes drift {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-20px); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(136,118,255,0.1);
+      border: 1px solid rgba(136,118,255,0.25);
+      color: var(--purple-light);
+      padding: 7px 18px;
+      border-radius: 999px;
+      font-size: 0.7em;
+      font-family: var(--mono);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .pulse-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(56,217,192,0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(56,217,192,0); }
+    }
+
+    h1 {
+      font-size: clamp(2.4em, 8vw, 5em);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      max-width: 720px;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(120deg, var(--purple-light) 0%, var(--teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: clamp(0.88em, 2vw, 1.05em);
+      max-width: 500px;
+      line-height: 1.75;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .price-block {
+      margin-top: 40px;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+
+    .price-amount {
+      font-size: clamp(3em, 11vw, 5.5em);
+      font-weight: 800;
+      color: var(--teal);
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .price-sub {
+      color: var(--muted);
+      font-size: 0.78em;
+      font-family: var(--mono);
+      margin-top: 8px;
+    }
+
+    .hero-btns {
+      margin-top: 38px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple), #6a5be8);
+      color: #fff;
+      padding: 15px 34px;
+      border-radius: 14px;
+      font-size: 0.95em;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 28px rgba(136,118,255,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: var(--font);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(136,118,255,0.45); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      padding: 15px 28px;
+      border-radius: 14px;
+      font-size: 0.95em;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: border-color 0.2s, background 0.2s;
+      cursor: pointer;
+      font-family: var(--font);
+    }
+    .btn-outline:hover { border-color: var(--purple); background: rgba(136,118,255,0.06); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      position: relative; z-index: 1;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      padding: 28px 24px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82em;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    .trust-item span:first-child { font-size: 1.2em; }
+
+    /* ── ACTIVATION SECTION ── */
+    .activation-section {
+      position: relative; z-index: 1;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 32px;
+      background: var(--card);
+      border: 2px solid var(--purple);
+      border-radius: 20px;
+      text-align: center;
+    }
+
+    .activation-section h3 {
+      font-size: 1.3em;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--purple-light);
+    }
+
+    .activation-section p {
+      color: var(--muted);
+      font-size: 0.82em;
+      margin-bottom: 20px;
+      font-family: var(--mono);
+    }
+
+    .license-input-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .license-input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-family: var(--mono);
+      font-size: 0.9em;
+      letter-spacing: 2px;
+      text-align: center;
+      width: 280px;
+      transition: border-color 0.3s;
+    }
+
+    .license-input:focus {
+      outline: none;
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(136,118,255,0.1);
+    }
+
+    .license-input::placeholder {
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .license-input:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .btn-activate {
+      background: var(--teal);
+      color: #0b1a18;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9em;
+      cursor: pointer;
+      border: none;
+      font-family: var(--font);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-activate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(56,217,192,0.3);
+    }
+    .btn-activate:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .activation-status {
+      margin-top: 16px;
+      font-family: var(--mono);
+      font-size: 0.78em;
+      min-height: 20px;
+      transition: all 0.3s;
+    }
+
+    .activation-status.success { color: var(--teal); }
+    .activation-status.error { color: var(--red); }
+    .activation-status.loading { color: var(--amber); }
+
+    .feature-lock {
+      position: relative;
+    }
+
+    .feature-lock::before {
+      content: '🔒';
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 1.2em;
+      opacity: 0.6;
+      z-index: 2;
+    }
+
+    .feature-lock.unlocked::before {
+      content: '🔓';
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      position: relative; z-index: 1;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 90px 24px;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.7em;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: clamp(1.7em, 5vw, 2.6em);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      font-size: 0.88em;
+      margin-bottom: 44px;
+      line-height: 1.7;
+    }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .feat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+
+    .feat::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(136,118,255,0.06), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feat:hover { border-color: rgba(136,118,255,0.35); transform: translateY(-3px); }
+    .feat:hover::after { opacity: 1; }
+
+    .feat-icon { font-size: 2em; margin-bottom: 14px; }
+    .feat-title { font-size: 0.95em; font-weight: 700; margin-bottom: 8px; }
+    .feat-desc { font-size: 0.78em; color: var(--muted); line-height: 1.65; font-family: var(--mono); }
+
+    /* ── ROLES ── */
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .role-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 22px;
+      text-align: center;
+      transition: transform 0.2s;
+      position: relative;
+    }
+    .role-card:hover { transform: translateY(-3px); }
+
+    .role-icon { font-size: 2.6em; margin-bottom: 12px; }
+    .role-name { font-weight: 800; font-size: 1em; margin-bottom: 8px; }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 999px;
+      font-size: 0.65em;
+      font-family: var(--mono);
+      margin-bottom: 12px;
+    }
+    .pill-admin   { background: rgba(136,118,255,0.15); color: var(--purple-light); }
+    .pill-manager { background: rgba(56,217,192,0.15);  color: var(--teal); }
+    .pill-cashier { background: rgba(245,166,35,0.15);  color: var(--amber); }
+
+    .role-desc { font-size: 0.78em; color: var(--muted); line-height: 1.6; font-family: var(--mono); }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .faq-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .faq-q {
+      padding: 18px 22px;
+      font-weight: 700;
+      font-size: 0.9em;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--purple-light); }
+
+    .faq-arrow { font-size: 0.8em; transition: transform 0.3s; color: var(--muted); }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s;
+      font-size: 0.82em;
+      color: var(--muted);
+      font-family: var(--mono);
+      line-height: 1.7;
+      padding: 0 22px;
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 22px 18px; }
+
+    /* ── HOW TO BUY ── */
+    .steps { display: flex; flex-direction: column; gap: 14px; }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 26px;
+      transition: border-color 0.3s;
+    }
+    .step:hover { border-color: rgba(136,118,255,0.3); }
+
+    .step-num {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), #6a5be8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1em;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(136,118,255,0.3);
+    }
+
+    .step h3 { font-size: 0.95em; font-weight: 700; margin-bottom: 5px; }
+    .step p  { font-size: 0.78em; color: var(--muted); font-family: var(--mono); line-height: 1.65; }
+
+    /* ── PAYMENT CHIPS ── */
+    .payment-methods {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .pay-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 0.75em;
+      font-family: var(--mono);
+      cursor: pointer;
+      user-select: all;
+      transition: opacity 0.2s;
+    }
+    .pay-chip:hover { opacity: 0.8; }
+
+    .chip-paypal {
+      background: rgba(0,112,243,0.12);
+      border: 1px solid rgba(0,112,243,0.25);
+      color: #6ab0ff;
+    }
+
+    .chip-gcash {
+      background: rgba(0,163,255,0.12);
+      border: 1px solid rgba(0,163,255,0.25);
+      color: #4dc8ff;
+    }
+
+    .chip-name {
+      background: rgba(56,217,192,0.1);
+      border: 1px solid rgba(56,217,192,0.2);
+      color: var(--teal);
+      cursor: default;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      max-width: 920px;
+      margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+
+    /* ── BOTTOM CTA ── */
+    .bottom-cta {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 90px 24px 110px;
+      overflow: hidden;
+    }
+
+    .bottom-cta-glow {
+      position: absolute;
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(136,118,255,0.1), transparent 70%);
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .bottom-cta h2 {
+      font-size: clamp(1.8em, 6vw, 3.2em);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+    }
+
+    .bottom-cta p {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.84em;
+      margin-bottom: 36px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 26px 24px;
+      text-align: center;
+      font-size: 0.74em;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+    footer em { color: var(--purple-light); font-style: normal; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--teal);
+      color: #0b1a18;
+      padding: 11px 26px;
+      border-radius: 999px;
+      font-size: 0.85em;
+      font-weight: 700;
+      z-index: 9999;
+      transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
 </head>
 <body>
-    <div class="app-container">
-        <div id="loginScreen">
-            <div class="login-card">
-                <div class="login-logo">
-                    <h1>🏪 MLEA POS</h1>
-                    <p>Multi-Branch Logic Network</p>
-                </div>
-                <div class="section-label">👤 Select User Profile</div>
-                <div class="user-selector" id="userSelector"></div>
-                <div class="section-label">🔢 Enter Secure PIN</div>
-                <div class="pin-display" id="pinDisplay">
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                </div>
-                <div class="error-msg" id="errorMessage"></div>
-                <div class="pin-pad">
-                    <button class="pin-btn" onclick="enterPin('1')">1</button>
-                    <button class="pin-btn" onclick="enterPin('2')">2</button>
-                    <button class="pin-btn" onclick="enterPin('3')">3</button>
-                    <button class="pin-btn" onclick="enterPin('4')">4</button>
-                    <button class="pin-btn" onclick="enterPin('5')">5</button>
-                    <button class="pin-btn" onclick="enterPin('6')">6</button>
-                    <button class="pin-btn" onclick="enterPin('7')">7</button>
-                    <button class="pin-btn" onclick="enterPin('8')">8</button>
-                    <button class="pin-btn" onclick="enterPin('9')">9</button>
-                    <button class="pin-btn clear" onclick="clearPin()">Clear</button>
-                    <button class="pin-btn" onclick="enterPin('0')">0</button>
-                    <button class="pin-btn submit" onclick="submitPin()">→</button>
-                </div>
-            </div>
-        </div>
 
-        <div id="mainApp">
-            <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-            <div class="sidebar" id="sidebar">
-                <div style="padding:15px;background:#1a1a2e;border-bottom:1px solid #2a3a5e;">
-                    <h3 style="color:#9b8fff;">MLEA POS</h3>
-                    <p style="font-size:.75em;color:#a0a0b0;" id="sidebarUserInfo"></p>
-                    <span class="role-badge" id="sidebarRole"></span>
-                    <span class="branch-tag" id="sidebarBranch"></span>
-                </div>
-                <div style="padding:10px;display:flex;flex-direction:column;gap:3px;">
-                    <button class="nav-btn" onclick="switchView('dashboard')">📊 Dashboard</button>
-                    <button class="nav-btn" onclick="switchView('pos')">💻 POS Terminal</button>
-                    <button class="nav-btn" onclick="switchView('inventory')">📦 Inventory <span class="badge" id="sidebarLowStock" style="display:none;">0</span></button>
-                    <button class="nav-btn" id="navBranches" onclick="switchView('branches')">🏢 Branches</button>
-                    <button class="nav-btn" onclick="switchView('suppliers')">🤝 Suppliers</button>
-                    <button class="nav-btn" onclick="switchView('purchaseOrders')">📋 Purchase Orders</button>
-                    <button class="nav-btn" onclick="switchView('expenses')">💸 Expenses</button>
-                    <button class="nav-btn" onclick="switchView('settings')">⚙️ Settings</button>
-                    <button class="nav-btn" id="navUsers" onclick="switchView('users')">👥 Users / Staff</button>
-                    <button class="nav-btn" onclick="switchView('reports')">💾 Backup Panel</button>
-                </div>
-            </div>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">🏪 MLEA POS</div>
+    <a href="#how-to-buy" class="nav-cta">Buy Now — ₱1,500</a>
+  </nav>
 
-            <div class="header">
-                <button class="hamburger" onclick="openSidebar()">☰</button>
-                <h1 id="headerBranchTitle">MLEA POS</h1>
-                <div class="header-right">
-                    <span id="headerCurrency"></span>
-                    <span id="headerUser"></span>
-                    <button class="logout-btn" onclick="logout()">🚪</button>
-                </div>
-            </div>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-orb orb1"></div>
+    <div class="hero-orb orb2"></div>
+    <div class="hero-badge"><span class="pulse-dot"></span> Multi-Branch System v2.2</div>
+    <h1>The POS System Your<br>Business <em>Actually Needs</em></h1>
+    <p class="hero-desc">Manage sales, inventory, staff, and multiple branches — all from your browser. No subscriptions, no complicated setup.</p>
 
-            <div class="nav-bar" id="navBar">
-                <button class="nav-btn active" onclick="switchView('dashboard')">📊 Dashboard</button>
-                <button class="nav-btn" onclick="switchView('pos')">💻 POS</button>
-                <button class="nav-btn" onclick="switchView('inventory')">📦 Stock <span class="badge" id="navLowStock" style="display:none;">0</span></button>
-                <button class="nav-btn" onclick="switchView('settings')">⚙️</button>
-            </div>
-
-            <div id="mainContent">
-                <p style="text-align:center;padding:40px;color:#a0a0b0;">Loading Workspace Channels...</p>
-            </div>
-        </div>
+    <div class="price-block">
+      <div class="price-amount">₱1,500</div>
+      <div class="price-sub">one-time · no monthly fees · license key delivered after payment</div>
     </div>
 
-    <div class="modal" id="modal">
-        <div class="modal-content" id="modalContent"></div>
+    <div class="hero-btns">
+      <a href="#how-to-buy" class="btn-primary">🛒 Buy Now</a>
+      <button class="btn-outline" onclick="scrollToActivation()">🔑 Activate License</button>
     </div>
+  </div>
 
-    <script>
-        // --- 1. LOCAL DATA ROUTER INTERFACES ---
-        const DB = {
-            stores: ['products', 'sales', 'suppliers', 'purchaseOrders', 'expenses', 'users', 'settings', 'branches', 'activityLogs'],
-            init() {
-                this.stores.forEach(s => {
-                    if (!localStorage.getItem('mlea_' + s)) localStorage.setItem('mlea_' + s, '[]');
-                });
-            },
-            getAll(key) { return JSON.parse(localStorage.getItem('mlea_' + key) || '[]'); },
-            set(key, data) { localStorage.setItem('mlea_' + key, JSON.stringify(data)); },
-            add(key, item) {
-                const items = this.getAll(key);
-                item.id = items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1;
-                if (!item.branchId && currentUser && currentUser.role !== 'admin') {
-                    item.branchId = currentUser.branchId;
-                }
-                item.createdAt = new Date().toISOString();
-                items.push(item);
-                this.set(key, items);
-                return item.id;
-            },
-            update(key, item) {
-                const items = this.getAll(key);
-                const idx = items.findIndex(i => i.id === item.id);
-                if (idx !== -1) {
-                    item.updatedAt = new Date().toISOString();
-                    items[idx] = item;
-                }
-                this.set(key, items);
-            },
-            delete(key, id) { this.set(key, this.getAll(key).filter(i => i.id !== id)); }
-        };
-        DB.init();
+  <!-- ACTIVATION SECTION -->
+  <div class="activation-section reveal" id="activation">
+    <h3>🔐 Already Purchased?</h3>
+    <p>Enter the license key Gieo sent you to unlock all features.</p>
+    <div class="license-input-group">
+      <input 
+        type="text" 
+        class="license-input" 
+        id="licenseInput" 
+        placeholder="XXXX-XXXX-XXXX-XXXX" 
+        maxlength="19"
+        oninput="formatLicense(this)"
+      >
+      <button class="btn-activate" id="activateBtn" onclick="handleActivation()">Activate</button>
+    </div>
+    <div class="activation-status" id="activationStatus"></div>
+  </div>
 
-        const currencies = {
-            USD: { symbol: '$', flag: '🇺🇸', decimals: 2 },
-            PHP: { symbol: '₱', flag: '🇵🇭', decimals: 2 },
-            EUR: { symbol: '€', flag: '🇪🇺', decimals: 2 }
-        };
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-item"><span>✅</span> One-time payment</div>
+    <div class="trust-item"><span>📱</span> Works on any device</div>
+    <div class="trust-item"><span>🏢</span> Multi-branch ready</div>
+    <div class="trust-item"><span>🔐</span> PIN-based login</div>
+    <div class="trust-item"><span>💱</span> Multi-currency support</div>
+  </div>
 
-        // --- 2. STATES CONTROL LAYERS ---
-        let currentUser = null, currentView = 'dashboard', currentCurrency = 'PHP';
-        let taxRate = 0.12, discountRate = 0, discountType = 'percent';
-        let cart = [], selectedUserId = null, pinEntry = '', receiptFooter = 'Thank you for your business!';
-        let adminActiveBranch = 'all'; 
+  <!-- FEATURES -->
+  <div class="section">
+    <div class="section-label reveal">Features</div>
+    <div class="section-title reveal">Built for real businesses</div>
+    <p class="section-sub reveal">Everything you need to run daily operations, right out of the box. <em style="color: var(--amber);">Locked features require license activation.</em></p>
+    <div class="features-grid">
+      <div class="feat reveal feature-lock" data-feature="multi-branch"><div class="feat-icon">🏢</div><div class="feat-title">Multi-Branch Support</div><p class="feat-desc">Run multiple store locations from one system. Each branch has its own data and staff.</p></div>
+      <div class="feat reveal feature-lock" data-feature="pin-login"><div class="feat-icon">🔐</div><div class="feat-title">PIN-Based Login</div><p class="feat-desc">Fast 4-digit PIN login for staff. No forgotten passwords, no delays at checkout.</p></div>
+      <div class="feat reveal feature-lock" data-feature="inventory"><div class="feat-icon">📦</div><div class="feat-title">Inventory Tracking</div><p class="feat-desc">Real-time stock levels with low-stock alerts across all your branches.</p></div>
+      <div class="feat reveal feature-lock" data-feature="sales"><div class="feat-icon">💰</div><div class="feat-title">Sales & Receipts</div><p class="feat-desc">Cart system with discounts, 12% VAT, and instant printable mini receipts.</p></div>
+      <div class="feat reveal feature-lock" data-feature="reports"><div class="feat-icon">📊</div><div class="feat-title">Reports & Analytics</div><p class="feat-desc">Daily and historical sales reports. Track revenue, expenses, and performance.</p></div>
+      <div class="feat reveal feature-lock" data-feature="currency"><div class="feat-icon">🌍</div><div class="feat-title">Multi-Currency</div><p class="feat-desc">Supports PHP, USD, EUR, GBP, JPY, SGD, AED and more. Switch anytime in settings.</p></div>
+      <div class="feat reveal feature-lock" data-feature="supplier"><div class="feat-icon">🚚</div><div class="feat-title">Supplier Management</div><p class="feat-desc">Track suppliers and purchases to keep your supply chain smooth and organized.</p></div>
+      <div class="feat reveal feature-lock" data-feature="mobile"><div class="feat-icon">📱</div><div class="feat-title">Mobile-Ready</div><p class="feat-desc">Works on phones, tablets, and desktops. No app needed — runs in any browser.</p></div>
+    </div>
+  </div>
 
-        function formatCurrency(amt) {
-            const c = currencies[currentCurrency] || currencies.PHP;
-            return c.symbol + amt.toFixed(c.decimals);
+  <div class="divider"></div>
+
+  <!-- ROLES -->
+  <div class="section">
+    <div class="section-label reveal">Access Control</div>
+    <div class="section-title reveal">The right access for every role</div>
+    <p class="section-sub reveal">Keep your team organized with role-based permissions.</p>
+    <div class="roles-grid">
+      <div class="role-card reveal feature-lock" data-feature="role-admin">
+        <div class="role-icon">👑</div>
+        <div class="role-name">Admin</div>
+        <span class="pill pill-admin">Full Access</span>
+        <p class="role-desc">Full control over all branches, users, settings, products, and reports.</p>
+      </div>
+      <div class="role-card reveal feature-lock" data-feature="role-manager">
+        <div class="role-icon">👨‍💼</div>
+        <div class="role-name">Manager</div>
+        <span class="pill pill-manager">Branch Access</span>
+        <p class="role-desc">Manages their assigned branch — products, staff, and branch-level reports.</p>
+      </div>
+      <div class="role-card reveal feature-lock" data-feature="role-cashier">
+        <div class="role-icon">👤</div>
+        <div class="role-name">Cashier</div>
+        <span class="pill pill-cashier">POS Only</span>
+        <p class="role-desc">Handles sales transactions, issues receipts, and manages the cart.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <div class="section-label reveal">FAQ</div>
+    <div class="section-title reveal">Common questions</div>
+    <p class="section-sub reveal">Got questions? Here are the answers.</p>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">Do I need to install anything? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">No. MLEA POS runs entirely in your browser. Just open the link and you're ready to go — works on any device.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">Is this a subscription? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">No subscriptions ever. You pay ₱1,500 once and the system is yours. No monthly fees, no hidden charges.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I use it for multiple branches? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Yes! MLEA POS is built with multi-branch support from the ground up. Each branch has its own data and staff.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">What currencies does it support? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">It supports PHP, USD, EUR, GBP, JPY, INR, CNY, AUD, SGD, MYR, and AED. You can switch currencies anytime from settings.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">How fast will I get access after paying? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Just message Gieo after sending your payment. Once confirmed, you'll receive your unique license key — usually within a few minutes.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">How does the license key work? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">After payment, you get a unique license key. Enter it in the activation box above to unlock all features. The key is tied to your device — one key per installation.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- HOW TO BUY -->
+  <div class="section" id="how-to-buy">
+    <div class="section-label reveal">Purchase</div>
+    <div class="section-title reveal">How to buy</div>
+    <p class="section-sub reveal">Simple steps, no accounts needed. Pay and get your license key fast.</p>
+    <div class="steps">
+
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Send ₱1,500 via PayPal or GCash</h3>
+          <p>Choose your preferred payment method and send the exact amount.</p>
+          <div class="payment-methods">
+            <div class="pay-chip chip-paypal" onclick="copyText('ogie613@hotmail.com', 'PayPal email copied!')">📧 ogie613@hotmail.com</div>
+            <div class="pay-chip chip-gcash" onclick="copyText('09350840375', 'GCash number copied!')">📱 09350840375</div>
+            <div class="pay-chip chip-name">👤 R***** TR C*******A</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Message Gieo with your payment proof</h3>
+          <p>Send a screenshot or confirmation of your payment so Gieo can verify it and generate your unique license key.</p>
+        </div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Receive & activate your license key</h3>
+          <p>Gieo sends you a unique license key. Enter it in the activation box above to unlock all features instantly.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BOTTOM CTA -->
+  <div class="bottom-cta">
+    <div class="bottom-cta-glow"></div>
+    <h2 class="reveal">Ready to level up<br>your business?</h2>
+    <p class="reveal">One payment. Lifetime access. No strings attached.</p>
+    <a href="#how-to-buy" class="btn-primary reveal" style="display:inline-flex;">🛒 Get MLEA POS — ₱1,500</a>
+  </div>
+
+  <footer>
+    Made by <em>Gieo</em> · MLEA POS Multi-Branch System v2.2 · All rights reserved · License required for full access
+  </footer>
+
+  <div class="toast" id="toast">Copied!</div>
+
+  <script>
+    // ═══════════════════════════════════════════
+    // LICENSE ACTIVATION SYSTEM
+    // ═══════════════════════════════════════════
+
+    const LICENSE_SERVER = 'https://script.google.com/macros/s/AKfycby1QlCg9jzpXmxtE1N-5w7b4CuGa0TT5gcfwYrx-0yetL4iI5s86ZX8NyLhDwo4tLJX/exec';
+    const DEMO_KEY = 'MLEA-DEMO-UNLOCK-KEY1';
+
+    // Generate device fingerprint
+    function getDeviceId() {
+      const components = [
+        navigator.userAgent.replace(/\s/g, '').slice(-20),
+        screen.width + 'x' + screen.height,
+        navigator.language,
+        new Date().getTimezoneOffset()
+      ];
+      return btoa(components.join('|')).replace(/[^a-zA-Z0-9]/g, '').slice(0, 16);
+    }
+
+    // Format license key input
+    function formatLicense(input) {
+      let value = input.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      if (value.length > 16) value = value.slice(0, 16);
+      const parts = [];
+      for (let i = 0; i < value.length; i += 4) {
+        parts.push(value.slice(i, i + 4));
+      }
+      input.value = parts.join('-');
+    }
+
+    // Check if already activated
+    function isActivated() {
+      return localStorage.getItem('mlea_pos_activated') === 'true';
+    }
+
+    function getStoredLicense() {
+      return localStorage.getItem('mlea_pos_license') || '';
+    }
+
+    function setActivated(licenseKey) {
+      localStorage.setItem('mlea_pos_activated', 'true');
+      localStorage.setItem('mlea_pos_license', licenseKey);
+      updateUIForActivation();
+    }
+
+    function clearActivation() {
+      localStorage.removeItem('mlea_pos_activated');
+      localStorage.removeItem('mlea_pos_license');
+      updateUIForActivation();
+    }
+
+    // Update UI based on activation state
+    function updateUIForActivation() {
+      const activated = isActivated();
+      const licenseKey = getStoredLicense();
+      const input = document.getElementById('licenseInput');
+      const btn = document.getElementById('activateBtn');
+      const statusEl = document.getElementById('activationStatus');
+
+      // Update lock icons
+      document.querySelectorAll('.feature-lock').forEach(el => {
+        if (activated) {
+          el.classList.add('unlocked');
+        } else {
+          el.classList.remove('unlocked');
         }
+      });
 
-        // --- CORE ISOLATION FILTER ---
-        function getIsolatedData(storeKey) {
-            const allItems = DB.getAll(storeKey);
-            if (!currentUser) return allItems;
-            
-            // Admin Override Logic
-            if (currentUser.role === 'admin') {
-                if (adminActiveBranch === 'all') return allItems; 
-                return allItems.filter(item => item.branchId === parseInt(adminActiveBranch) || (storeKey === 'users' && item.role === 'admin'));
-            }
-            
-            // Standard Manager/Cashier Isolation
-            return allItems.filter(item => item.branchId === currentUser.branchId);
+      if (activated) {
+        input.value = licenseKey;
+        input.disabled = true;
+        btn.textContent = 'Deactivate';
+        btn.style.background = 'var(--red)';
+        btn.style.color = '#fff';
+        btn.onclick = handleDeactivation;
+        statusEl.textContent = '✅ System activated — all features unlocked';
+        statusEl.className = 'activation-status success';
+      } else {
+        input.value = '';
+        input.disabled = false;
+        btn.textContent = 'Activate';
+        btn.style.background = 'var(--teal)';
+        btn.style.color = '#0b1a18';
+        btn.onclick = handleActivation;
+        statusEl.textContent = '';
+        statusEl.className = 'activation-status';
+      }
+    }
+
+    // Handle activation button click
+        // Handle activation button click
+     async function handleActivation() {
+  const input = document.getElementById('licenseInput');
+  const statusEl = document.getElementById('activationStatus');
+  const btn = document.getElementById('activateBtn');
+  const key = input.value.trim();
+
+  if (!key) {
+    statusEl.textContent = '⚠️ Please enter your license key';
+    statusEl.className = 'activation-status error';
+    return;
+  }
+
+  btn.disabled = true;
+  statusEl.textContent = '⏳ Connecting to license server...';
+  statusEl.className = 'activation-status loading';
+
+  const deviceId = getDeviceId();
+
+  // Use GET method (more reliable than POST for Apps Script)
+  const url = LICENSE_SERVER + '?action=activate&licenseKey=' + encodeURIComponent(key) + '&deviceId=' + encodeURIComponent(deviceId);
+  
+  try {
+    const response = await fetch(url);
+    const text = await response.text();
+    
+    console.log('Server response:', text);
+    
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch (e) {
+      statusEl.textContent = '❌ Invalid server response: ' + text;
+      statusEl.className = 'activation-status error';
+      btn.disabled = false;
+      return;
+    }
+
+    if (result.success) {
+      setActivated(key);
+      statusEl.textContent = '✅ ' + result.message;
+      statusEl.className = 'activation-status success';
+      showToast('🎉 License activated! All features unlocked.');
+    } else {
+      statusEl.textContent = '❌ ' + result.message;
+      statusEl.className = 'activation-status error';
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    
+    // Offline fallback for demo key
+    if (key === DEMO_KEY) {
+      setActivated(key);
+      statusEl.textContent = '⚠️ Offline mode — demo activated';
+      statusEl.className = 'activation-status success';
+      showToast('📡 Offline mode');
+    } else {
+      statusEl.textContent = '❌ Cannot reach server. Check your internet connection.';
+      statusEl.className = 'activation-status error';
+    }
+  }
+
+  btn.disabled = false;
+}
+
+    function handleActivationResult(result, key) {
+      const statusEl = document.getElementById('activationStatus');
+      
+      if (result.success) {
+        setActivated(key);
+        statusEl.textContent = '✅ ' + result.message + ' Welcome, ' + (result.customer || 'User') + '!';
+        statusEl.className = 'activation-status success';
+        showToast('🎉 License activated! All features unlocked.');
+      } else {
+        statusEl.textContent = '❌ ' + result.message;
+        statusEl.className = 'activation-status error';
+      }
+    }
+
+    // Handle deactivation
+    async function handleDeactivation() {
+      if (!confirm('Are you sure you want to deactivate? All premium features will be locked.')) {
+        return;
+      }
+
+      const licenseKey = getStoredLicense();
+      const statusEl = document.getElementById('activationStatus');
+      const btn = document.getElementById('activateBtn');
+      const deviceId = getDeviceId();
+
+      btn.disabled = true;
+      statusEl.textContent = '⏳ Deactivating...';
+      statusEl.className = 'activation-status loading';
+
+      try {
+        await fetch(LICENSE_SERVER, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'deactivate',
+            licenseKey: licenseKey,
+            deviceId: deviceId
+          })
+        });
+      } catch (e) {
+        // Proceed even if server unreachable
+      }
+
+      clearActivation();
+      statusEl.textContent = '🔒 License deactivated. Features locked.';
+      statusEl.className = 'activation-status error';
+      showToast('🔒 License deactivated');
+      btn.disabled = false;
+    }
+
+    // Scroll to activation section
+    function scrollToActivation() {
+      document.getElementById('activation').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        document.getElementById('licenseInput').focus();
+      }, 500);
+    }
+
+    // ═══════════════════════════════════════════
+    // UTILITY FUNCTIONS
+    // ═══════════════════════════════════════════
+
+    function copyText(text, msg) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('✅ ' + msg);
+      });
+    }
+
+    function showToast(message) {
+      const t = document.getElementById('toast');
+      t.textContent = message;
+      t.classList.add('show');
+      clearTimeout(t._timeout);
+      t._timeout = setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    function toggleFaq(el) {
+      const item = el.parentElement;
+      item.classList.toggle('open');
+    }
+
+    // ═══════════════════════════════════════════
+    // SCROLL REVEAL ANIMATION
+    // ═══════════════════════════════════════════
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
         }
+      });
+    }, { threshold: 0.1 });
 
-        function getLowStockCount() {
-            return getIsolatedData('products').filter(p => p.active && p.stock < 10).length;
-        }
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        function updateBadges() {
-            const c = getLowStockCount();
-            ['sidebarLowStock', 'navLowStock'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) { el.textContent = c; el.style.display = c > 0 ? 'inline' : 'none'; }
-            });
-        }
+    // ═══════════════════════════════════════════
+    // INITIALIZATION
+    // ═══════════════════════════════════════════
 
-        // --- LOGGING ENGINE ---
-        function writeLog(action, details) {
-            if (!currentUser) return;
-            DB.add('activityLogs', {
-                user: currentUser.name,
-                role: currentUser.role,
-                action: action,
-                details: details,
-                branchId: currentUser.role === 'admin' && adminActiveBranch !== 'all' ? parseInt(adminActiveBranch) : currentUser.branchId,
-                time: new Date().toLocaleString()
-            });
-        }
+    updateUIForActivation();
 
-        // --- ADMIN WORKSPACE INJECTION COMPONENT ---
-        function renderAdminFilter() {
-            if (currentUser.role !== 'admin') return '';
-            const branches = DB.getAll('branches');
-            return `
-                <div class="card" style="background:#2a3a5e; border: 1px solid #7c6fff; margin-bottom:10px;">
-                    <label style="font-size:0.8em;color:#e0e0e0;font-weight:bold;">🔭 Admin Workspace Override</label>
-                    <select onchange="adminActiveBranch = this.value; switchView(currentView)" style="margin-top:5px;background:#0f3460;border:1px solid #7c6fff;color:#fff;">
-                        <option value="all" ${adminActiveBranch === 'all' ? 'selected' : ''}>🌐 Global View (All Branches Combined)</option>
-                        ${branches.map(b => `<option value="${b.id}" ${adminActiveBranch == b.id ? 'selected' : ''}>🏢 Isolate: ${b.name}</option>`).join('')}
-                    </select>
-                </div>
-            `;
-        }
-
-        // --- 3. LOGINS & ROUTING CHANNELS ---
-        function initApp() {
-            let users = DB.getAll('users');
-            if (users.length === 0) {
-                DB.add('users', { name: 'Super Admin', role: 'admin', active: true, pin: '1234', branchId: 0 });
-            }
-            const savedSettings = DB.getAll('settings');
-            const sc = savedSettings.find(s => s.key === 'currency'); if (sc) currentCurrency = sc.value;
-            const st = savedSettings.find(s => s.key === 'taxRate'); if (st) taxRate = parseFloat(st.value);
-            
-            updateBadges();
-            renderLoginScreen();
-        }
-
-        function renderLoginScreen() {
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('mainApp').style.display = 'none';
-            const users = DB.getAll('users').filter(u => u.active);
-            document.getElementById('userSelector').innerHTML = users.map(u => `
-                <div class="user-card ${selectedUserId === u.id ? 'selected' : ''}" onclick="selectUser(${u.id})">
-                    <div class="avatar">${u.role === 'admin' ? '👑' : u.role === 'manager' ? '👨‍💼' : '👤'}</div>
-                    <div class="name">${u.name}</div>
-                    <span class="role-badge ${u.role}-badge">${u.role}</span>
-                </div>
-            `).join('');
-        }
-
-        function selectUser(id) { selectedUserId = id; pinEntry = ''; updatePinDisplay(); renderLoginScreen(); }
-        function enterPin(d) { if (!selectedUserId) return; if (pinEntry.length < 4) { pinEntry += d; updatePinDisplay(); } }
-        function clearPin() { pinEntry = ''; updatePinDisplay(); }
-        function updatePinDisplay() {
-            document.querySelectorAll('.pin-dot').forEach((d, i) => d.classList.toggle('filled', i < pinEntry.length));
-        }
-
-        function submitPin() {
-            const user = DB.getAll('users').find(u => u.id === selectedUserId);
-            if (user && user.pin === pinEntry) {
-                currentUser = user;
-                adminActiveBranch = 'all'; // Reset admin view on login
-                
-                writeLog('System Login', 'User authenticated successfully.');
-                
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainApp').style.display = 'block';
-                document.getElementById('headerUser').textContent = user.name;
-                document.getElementById('headerCurrency').textContent = (currencies[currentCurrency]?.flag || '') + ' ' + currentCurrency;
-                
-                const branches = DB.getAll('branches');
-                const bMatch = branches.find(b => b.id === user.branchId);
-                document.getElementById('headerBranchTitle').textContent = bMatch ? `MLEA - ${bMatch.name}` : 'MLEA HQ Admin';
-                
-                document.getElementById('sidebarUserInfo').textContent = `${user.name} (${user.role})`;
-                document.getElementById('sidebarRole').textContent = user.role;
-                document.getElementById('sidebarRole').className = `role-badge ${user.role}-badge`;
-                document.getElementById('sidebarBranch').textContent = bMatch ? bMatch.name : 'All Zones';
-                
-                document.getElementById('navBranches').style.display = user.role === 'admin' ? 'block' : 'none';
-                document.getElementById('navUsers').style.display = (user.role === 'admin' || user.role === 'manager') ? 'block' : 'none';
-                
-                switchView('dashboard');
-            } else {
-                document.getElementById('errorMessage').textContent = '⚠️ Incorrect Code/PIN!';
-                const failedUser = DB.getAll('users').find(u => u.id === selectedUserId);
-                DB.add('activityLogs', { user: failedUser ? failedUser.name : 'Unknown', role: 'System', action: 'Security Error', details: 'Failed PIN attempt.', branchId: failedUser ? failedUser.branchId : 0, time: new Date().toLocaleString() });
-                clearPin();
-            }
-        }
-
-        function logout() { 
-            writeLog('System Logout', 'Session ended.'); 
-            cart = []; 
-            adminActiveBranch = 'all';
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('loginScreen').style.display = 'flex';
-            currentUser = null; 
-            selectedUserId = null;
-            pinEntry = '';
-            updatePinDisplay();
-            renderLoginScreen(); 
-        }
-
-        function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('sidebarOverlay').classList.add('active'); }
-        function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebarOverlay').classList.remove('active'); }
-        function closeModal() { document.getElementById('modal').classList.remove('active'); }
-
-        function switchView(view) {
-            currentView = view; closeSidebar(); updateBadges();
-            const container = document.getElementById('mainContent');
-            
-            if (view === 'dashboard') renderDashboard(container);
-            else if (view === 'pos') renderPOS(container);
-            else if (view === 'inventory') renderInventory(container);
-            else if (view === 'branches') renderBranches(container);
-            else if (view === 'suppliers') renderSuppliers(container);
-            else if (view === 'purchaseOrders') renderPurchaseOrders(container);
-            else if (view === 'expenses') renderExpenses(container);
-            else if (view === 'settings') renderSettings(container);
-            else if (view === 'users') renderUsers(container);
-            else if (view === 'reports') renderReports(container);
-        }
-
-        // --- 4. VIEW RENDERING FRAMEWORK INTERFACES ---
-        function renderDashboard(el) {
-            const sales = getIsolatedData('sales');
-            const lowCount = getLowStockCount();
-            const totalRev = sales.reduce((a, b) => a + b.total, 0);
-            
-            const lastBackupTime = localStorage.getItem('mlea_last_backup_time');
-            const needsBackup = !lastBackupTime || (Date.now() - parseInt(lastBackupTime) > 86400000);
-
-            el.innerHTML = `
-                ${renderAdminFilter()}
-                ${needsBackup && currentUser.role !== 'cashier' ? `
-                    <div class="alert alert-warning">
-                        <strong>⚠️ Daily Backup Required!</strong><br>
-                        It has been over 24 hours since your last manual system extract. Please go to the <b>Backup Panel</b> to download your latest data snapshot.
-                    </div>
-                ` : ''}
-                <div class="metrics">
-                    <div class="metric-card"><div class="metric-value">${sales.length}</div><div class="metric-label">Sales Count</div></div>
-                    <div class="metric-card"><div class="metric-value">${formatCurrency(totalRev)}</div><div class="metric-label">Revenue Pool</div></div>
-                    <div class="metric-card"><div class="metric-value">${lowCount}</div><div class="metric-label">Low Stock Items</div></div>
-                </div>
-                <div class="card">
-                    <h4>Security Isolation Matrix Enabled</h4>
-                    <p style="font-size:0.8em;color:#a0a0b0;margin-top:4px;">Operational limits verified. Your user profile node has active read-write pathways to current localized storage layers. Note: Background auto-saves run every 5 minutes internally.</p>
-                </div>
-            `;
-        }
-
-        function renderPOS(el) {
-            const products = getIsolatedData('products').filter(p => p.active);
-            const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-            const disc = discountType === 'percent' ? subtotal * (discountRate / 100) : discountRate;
-            const taxable = Math.max(0, subtotal - disc);
-            const tax = taxable * taxRate;
-            const total = taxable + tax;
-
-            el.innerHTML = `
-                ${renderAdminFilter()}
-                <div class="card"><input type="text" id="posSearch" placeholder="🔍 Search Item/Scan Barcode..." oninput="handlePOSSearch(this.value)"></div>
-                <div class="product-grid" id="posProductGrid">
-                    ${products.map(p => `
-                        <div class="product-card" onclick="addToCart(${p.id})">
-                            <strong>${p.name}</strong><br><span style="color:#9b8fff;">${formatCurrency(p.price)}</span><br>
-                            <small class="${p.stock < 10 ? 'stock-low' : ''}">Stock: ${p.stock}</small>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="card">
-                    <h4>Active Cart Terminal</h4>
-                    ${cart.map((item, idx) => `
-                        <div class="cart-item">
-                            <div class="cart-item-info"><strong>${item.name}</strong></div>
-                            <div class="cart-item-qty">
-                                <button class="qty-btn" onclick="adjustCartQty(${idx}, -1)">-</button>
-                                <span>${item.qty}</span>
-                                <button class="qty-btn" onclick="adjustCartQty(${idx}, 1)">+</button>
-                            </div>
-                        </div>
-                    `).join('')}
-                    
-                    <div class="discount-row" style="margin-top:15px;">
-                        <select style="flex:1;" onchange="discountType=this.value; renderPOS(document.getElementById('mainContent'))">
-                            <option value="percent" ${discountType === 'percent' ? 'selected' : ''}>Discount (%)</option>
-                            <option value="flat" ${discountType === 'flat' ? 'selected' : ''}>Discount (Flat)</option>
-                        </select>
-                        <input type="number" style="flex:1;" placeholder="0" value="${discountRate}" onchange="discountRate=parseFloat(this.value)||0; renderPOS(document.getElementById('mainContent'))">
-                    </div>
-                    <div class="discount-row" style="margin-top:5px;">
-                        <label style="flex:1; font-size:0.85em; color:#a0a0b0; padding-left:5px;">Tax Rate (%)</label>
-                        <input type="number" style="flex:1;" placeholder="Tax %" value="${+(taxRate * 100).toFixed(2)}" step="0.1" onchange="taxRate=parseFloat(this.value)/100||0; renderPOS(document.getElementById('mainContent'))">
-                    </div>
-
-                    <div style="text-align:right;margin-top:10px;font-size:0.85em;color:#a0a0b0;">
-                        <div>Subtotal: ${formatCurrency(subtotal)}</div>
-                        <div>Discount: -${formatCurrency(disc)}</div>
-                        <div>Tax (${+(taxRate * 100).toFixed(2)}%): +${formatCurrency(tax)}</div>
-                        <div style="font-size:1.2em;color:#2ed573;font-weight:bold;margin-top:5px;">Grand Total: ${formatCurrency(total)}</div>
-                    </div>
-                    <button class="btn btn-success" style="width:100%;margin-top:10px;" onclick="processCheckout(${total})">Complete Checkout</button>
-                </div>
-            `;
-        }
-
-        function handlePOSSearch(val) {
-            const grid = document.getElementById('posProductGrid');
-            const matched = getIsolatedData('products').filter(p => p.active && (p.name.toLowerCase().includes(val.toLowerCase()) || p.barcode === val));
-            grid.innerHTML = matched.map(p => `
-                <div class="product-card" onclick="addToCart(${p.id})">
-                    <strong>${p.name}</strong><br><span style="color:#9b8fff;">${formatCurrency(p.price)}</span>
-                </div>
-            `).join('');
-        }
-
-        function addToCart(id) {
-            const p = DB.getAll('products').find(x => x.id === id);
-            if (!p || p.stock <= 0) return alert("Out of stock!");
-            const existing = cart.find(i => i.id === id);
-            if (existing) { existing.qty++; } else { cart.push({ id: p.id, name: p.name, price: p.price, qty: 1 }); }
-            renderPOS(document.getElementById('mainContent'));
-        }
-
-        function adjustCartQty(idx, amt) {
-            cart[idx].qty += amt; if (cart[idx].qty <= 0) cart.splice(idx, 1);
-            renderPOS(document.getElementById('mainContent'));
-        }
-
-        function processCheckout(total) {
-            if (cart.length === 0) return;
-            const products = DB.getAll('products');
-            cart.forEach(item => {
-                const target = products.find(p => p.id === item.id);
-                if (target) target.stock -= item.qty;
-            });
-            DB.set('products', products);
-            DB.add('sales', { items: cart, total: total, branchId: currentUser.role === 'admin' && adminActiveBranch !== 'all' ? parseInt(adminActiveBranch) : currentUser.branchId });
-            
-            writeLog('Transaction', `Processed sale total: ${formatCurrency(total)}`);
-            cart = []; alert("Sale Committed!"); renderPOS(document.getElementById('mainContent'));
-        }
-
-        function renderInventory(el) {
-            const products = getIsolatedData('products');
-            el.innerHTML = `
-                ${renderAdminFilter()}
-                <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
-                    <h4>Store Inventory</h4>
-                    <button class="btn btn-primary btn-sm" onclick="showProductModal()">+ Add Product</button>
-                </div>
-                <div class="card">
-                    <table>
-                        <thead><tr><th>Name</th><th>Stock</th><th>Price</th></tr></thead>
-                        <tbody>
-                            ${products.map(p => `<tr><td><strong>${p.name}</strong></td><td>${p.stock} units</td><td>${formatCurrency(p.price)}</td></tr>`).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function showProductModal() {
-            document.getElementById('modalContent').innerHTML = `
-                <h4>Add Isolated Product Node</h4>
-                <div class="form-group"><label>Product Title</label><input type="text" id="pName"></div>
-                <div class="form-group"><label>Retail Price</label><input type="number" id="pPrice"></div>
-                <div class="form-group"><label>Baseline Stock</label><input type="number" id="pStock"></div>
-                <div class="form-group"><label>Barcode String</label><input type="text" id="pBarcode"></div>
-                <button class="btn btn-success" style="width:100%;" onclick="saveProduct()">Save Product Blueprint</button>
-                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        function saveProduct() {
-            const name = document.getElementById('pName').value;
-            DB.add('products', {
-                name: name,
-                price: parseFloat(document.getElementById('pPrice').value)||0,
-                stock: parseInt(document.getElementById('pStock').value)||0,
-                barcode: document.getElementById('pBarcode').value,
-                branchId: currentUser.role === 'admin' && adminActiveBranch !== 'all' ? parseInt(adminActiveBranch) : currentUser.branchId,
-                active: true
-            });
-            writeLog('Inventory Update', `Added/Modified item: ${name}`);
-            closeModal(); switchView('inventory');
-        }
-
-        function renderBranches(el) {
-            if (currentUser.role !== 'admin') { el.innerHTML = `<div class="alert">Restricted View.</div>`; return; }
-            const branches = DB.getAll('branches');
-            el.innerHTML = `
-                <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
-                    <h4>System Business Branches</h4>
-                    <button class="btn btn-primary btn-sm" onclick="showBranchModal()">+ Add New Branch</button>
-                </div>
-                <div class="card">
-                    <table>
-                        <thead><tr><th>Branch ID</th><th>Location Label</th><th>Actions</th></tr></thead>
-                        <tbody>
-                            ${branches.map(b => `<tr><td>#${b.id}</td><td><strong>${b.name}</strong></td><td><button class="btn btn-danger btn-xs" onclick="DB.delete('branches',${b.id}); switchView('branches');">Delete</button></td></tr>`).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function showBranchModal() {
-            document.getElementById('modalContent').innerHTML = `
-                <h4>Add Corporate Location Branch Node</h4>
-                <div class="form-group"><label>Branch Name</label><input type="text" id="bName"></div>
-                <button class="btn btn-success" style="width:100%;" onclick="DB.add('branches',{name:document.getElementById('bName').value}); closeModal(); switchView('branches');">Save Location</button>
-                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        function renderUsers(el) {
-            const users = getIsolatedData('users');
-            el.innerHTML = `
-                ${renderAdminFilter()}
-                <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
-                    <h4>Staff Authorization Cluster</h4>
-                    <button class="btn btn-primary btn-sm" onclick="showUserModal()">+ Assign New Member</button>
-                </div>
-                <div class="card">
-                    <table>
-                        <thead><tr><th>Name</th><th>Role</th><th>Actions</th></tr></thead>
-                        <tbody>
-                            ${users.map(u => `
-                                <tr>
-                                    <td><strong>${u.name}</strong><br><small style="color:#6a6a7a;">Branch Target: #${u.branchId}</small></td>
-                                    <td><span class="role-badge ${u.role}-badge">${u.role}</span></td>
-                                    <td>
-                                        <button class="btn btn-warning btn-xs" onclick="showUserModal(${u.id})">Edit</button>
-                                        ${u.role === 'admin' ? '' : `<button class="btn btn-danger btn-xs" onclick="deleteUserNode(${u.id})">Remove</button>`}
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function showUserModal(id = null) {
-            const branches = DB.getAll('branches');
-            const isAdmin = currentUser.role === 'admin';
-            const editUser = id ? DB.getAll('users').find(u => u.id === id) : null;
-            
-            document.getElementById('modalContent').innerHTML = `
-                <h4>${editUser ? 'Edit System Profile' : 'Authorize System Profile'}</h4>
-                <div class="form-group"><label>Alias Display Name</label><input type="text" id="uName" value="${editUser ? editUser.name : ''}"></div>
-                <div class="form-group">
-                    <label>Designated Operational Role</label>
-                    <select id="uRole">
-                        ${isAdmin ? `<option value="manager" ${editUser && editUser.role === 'manager' ? 'selected' : ''}>Branch Manager Node</option>` : ''}
-                        <option value="cashier" ${editUser && editUser.role === 'cashier' ? 'selected' : (!editUser ? 'selected' : '')}>Cashier Desk Terminal</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Assigned Branch Link</label>
-                    <select id="uBranchId" ${!isAdmin ? 'disabled' : ''}>
-                        ${isAdmin ? branches.map(b => `<option value="${b.id}" ${editUser && editUser.branchId == b.id ? 'selected' : (adminActiveBranch == b.id ? 'selected' : '')}>${b.name}</option>`).join('') : `<option value="${currentUser.branchId}">Current Managed Branch</option>`}
-                    </select>
-                </div>
-                <div class="form-group"><label>Secure Access PIN (4 Digits)</label><input type="password" maxlength="4" id="uPin" value="${editUser ? editUser.pin : ''}"></div>
-                <button class="btn btn-success" style="width:100%;" onclick="commitUserNode(${id || 'null'})">${editUser ? 'Update Profile' : 'Authorize Member Access'}</button>
-                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        function commitUserNode(id) {
-            const pin = document.getElementById('uPin').value;
-            const name = document.getElementById('uName').value;
-            const role = document.getElementById('uRole').value;
-            if (pin.length !== 4) return alert("PIN must be exactly 4 digits.");
-            
-            if (id) {
-                const existing = DB.getAll('users').find(u => u.id === id);
-                if(existing) {
-                    existing.name = name;
-                    existing.role = role;
-                    existing.branchId = parseInt(document.getElementById('uBranchId').value) || currentUser.branchId;
-                    existing.pin = pin;
-                    DB.update('users', existing);
-                    writeLog('Security Update', `Updated user identity: ${name}`);
-                }
-            } else {
-                DB.add('users', {
-                    name: name,
-                    role: role,
-                    branchId: parseInt(document.getElementById('uBranchId').value) || currentUser.branchId,
-                    pin: pin,
-                    active: true
-                });
-                writeLog('Security Update', `Created new user identity: ${name} (${role})`);
-            }
-            closeModal(); switchView('users');
-        }
-
-        function deleteUserNode(id) {
-            const target = DB.getAll('users').find(u => u.id === id);
-            if (!target) return;
-            if (currentUser.role === 'manager' && target.role === 'manager') return alert("Access Restriction Error.");
-            if (confirm("Revoke user privileges?")) { 
-                writeLog('Security Revoked', `Deleted user account: ${target.name}`);
-                DB.delete('users', id); 
-                switchView('users'); 
-            }
-        }
-
-        function renderSuppliers(el) {
-            const data = getIsolatedData('suppliers');
-            el.innerHTML = `
-                ${renderAdminFilter()}
-                <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
-                    <h4>Vendor Logistics Channel</h4>
-                    <button class="btn btn-primary btn-sm" onclick="DB.add('suppliers',{name:'New Supplier Unit',branchId:currentUser.role==='admin'&&adminActiveBranch!=='all'?parseInt(adminActiveBranch):currentUser.branchId}); switchView('suppliers');">+ Quick Add</button>
-                </div>
-                <div class="card">
-                    <table>
-                        <thead><tr><th>Registered Vendor Label</th></tr></thead>
-                        <tbody>${data.map(s=>`<tr><td><strong>${s.name}</strong></td></tr>`).join('')}</tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function renderPurchaseOrders(el) {
-            const data = getIsolatedData('purchaseOrders');
-            el.innerHTML = `
-                ${renderAdminFilter()}
-                <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
-                    <h4>Supply Procurement Orders</h4>
-                    <button class="btn btn-primary btn-sm" onclick="DB.add('purchaseOrders',{supplier:'Internal System Fulfillment',branchId:currentUser.role==='admin'&&adminActiveBranch!=='all'?parseInt(adminActiveBranch):currentUser.branchId}); switchView('purchaseOrders');">+ Quick Generate</button>
-                </div>
-                <div class="card">
-                    <table>
-                        <thead><tr><th>Order Tag</th></tr></thead>
-                        <tbody>${data.map(p=>`<tr><td>Order Requisition Registry ID #${p.id}</td></tr>`).join('')}</tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function renderExpenses(el) {
-            const data = getIsolatedData('expenses');
-            el.innerHTML = `
-                ${renderAdminFilter()}
-                <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
-                    <h4>Expense Bookkeeping Logs</h4>
-                    <button class="btn btn-primary btn-sm" onclick="DB.add('expenses',{type:'Operational Utility Cost Outflow',amount:120,branchId:currentUser.role==='admin'&&adminActiveBranch!=='all'?parseInt(adminActiveBranch):currentUser.branchId}); writeLog('Financial', 'Added expense log.'); switchView('expenses');">+ Add Expense</button>
-                </div>
-                <div class="card">
-                    <table>
-                        <thead><tr><th>Expense Description Class</th><th>Allocated Cost</th></tr></thead>
-                        <tbody>${data.map(e=>`<tr><td><strong>${e.type}</strong></td><td>${formatCurrency(e.amount)}</td></tr>`).join('')}</tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function renderSettings(el) {
-            el.innerHTML = `
-                <div class="card">
-                    <h4>Global Parameters Configuration Matrix</h4>
-                    <div class="form-group" style="margin-top:10px;">
-                        <label>Active Currency Base Selection</label>
-                        <select onchange="saveGlobalOption('currency', this.value)">
-                            <option value="USD" ${currentCurrency==='USD'?'selected':''}>🇺🇸 USD ($)</option>
-                            <option value="PHP" ${currentCurrency==='PHP'?'selected':''}>🇵🇭 PHP (₱)</option>
-                            <option value="EUR" ${currentCurrency==='EUR'?'selected':''}>🇪🇺 EUR (€)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Default Tax Rate (%)</label>
-                        <input type="number" step="0.1" value="${+(taxRate * 100).toFixed(2)}" onchange="saveGlobalOption('taxRate', parseFloat(this.value)/100 || 0)">
-                    </div>
-                </div>
-            `;
-        }
-
-        function saveGlobalOption(key, val) {
-            const sets = DB.getAll('settings'); const match = sets.find(s => s.key === key);
-            if (match) match.value = val; else sets.push({ key: key, value: val });
-            DB.set('settings', sets); 
-            if (key === 'currency') currentCurrency = val;
-            if (key === 'taxRate') taxRate = val;
-            document.getElementById('headerCurrency').textContent = (currencies[currentCurrency]?.flag || '') + ' ' + currentCurrency;
-        }
-
-        function renderReports(el) {
-            let rawLogs = getIsolatedData('activityLogs').reverse().slice(0, 30);
-            
-            el.innerHTML = `
-                ${renderAdminFilter()}
-                <div class="card">
-                    <h4>Core Database Backups</h4>
-                    <button class="btn btn-success" style="width:100%;margin-bottom:6px;" onclick="triggerSystemExport()">📥 Extract & Download JSON File</button>
-                    <button class="btn btn-warning" style="width:100%;" onclick="triggerRestorePortal()">📤 Re-inject JSON Storage Blueprint</button>
-                </div>
-                
-                <div class="card">
-                    <h4>📋 System Activity & Error Log</h4>
-                    <div style="max-height: 250px; overflow-y: auto; margin-top: 10px;">
-                        ${rawLogs.length === 0 ? '<p style="font-size:0.8em;color:#a0a0b0;">No activity tracked yet.</p>' : ''}
-                        ${rawLogs.map(l => `
-                            <div class="log-row">
-                                <div style="display:flex; justify-content:space-between;">
-                                    <strong>${l.user}</strong> <span>${l.time}</span>
-                                </div>
-                                <div style="color:${l.action.includes('Error') ? '#ff4757' : '#2ed573'}; font-weight:bold;">[${l.action}]</div>
-                                <div>${l.details}</div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function triggerSystemExport() {
-            const archive = {}; DB.stores.forEach(s => archive[s] = DB.getAll(s));
-            const contentBlob = new Blob([JSON.stringify(archive, null, 2)], { type: 'application/json' });
-            const temporaryAnchor = document.createElement('a');
-            temporaryAnchor.href = URL.createObjectURL(contentBlob);
-            temporaryAnchor.download = `MLEA_ISOLATED_BACKUP_${new Date().toISOString().split('T')[0]}.json`;
-            temporaryAnchor.click();
-            
-            localStorage.setItem('mlea_last_backup_time', Date.now().toString());
-            writeLog('System Routine', 'Executed manual database extraction.');
-        }
-
-        function triggerRestorePortal() {
-            document.getElementById('modalContent').innerHTML = `
-                <h4>Upload System Archive JSON Backup File</h4>
-                <div class="form-group" style="margin-top:10px;"><input type="file" id="importPayload" accept=".json"></div>
-                <button class="btn btn-success" style="width:100%;margin-top:10px;" onclick="processImportStream()">Execute System Restore</button>
-                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        function processImportStream() {
-            const selector = document.getElementById('importPayload').files[0]; if (!selector) return;
-            const browserStreamReader = new FileReader();
-            browserStreamReader.onload = function(e) {
-                try {
-                    const compiled = JSON.parse(e.target.result);
-                    DB.stores.forEach(s => { if (compiled[s]) DB.set(s, compiled[s]); });
-                    writeLog('System Override', 'Injected external JSON restore file.');
-                    alert("Database injection finished!"); window.location.reload();
-                } catch(err) { 
-                    writeLog('System Error', 'Failed JSON file import protocol.');
-                    alert("Invalid File Format"); 
-                }
-            };
-            browserStreamReader.readAsText(selector);
-        }
-
-        // --- BACKGROUND SILENT 5-MIN AUTO-SAVE ENGINE ---
-        setInterval(() => {
-            const packagePayload = {};
-            DB.stores.forEach(s => packagePayload[s] = DB.getAll(s));
-            localStorage.setItem('mlea_auto_checkpoint_backup', JSON.stringify(packagePayload));
-        }, 5 * 60 * 1000);
-
-        window.onload = initApp;
-    </script>
+    console.log('%c🔐 MLEA POS License System %cReady',
+      'color: #a899ff; font-size: 1.2em; font-weight: bold;',
+      'color: #38d9c0;');
+    console.log('%c💡 Demo Key: %c' + DEMO_KEY,
+      'color: #f5a623;',
+      'color: #dde1f5; font-family: monospace;');
+  </script>
 </body>
 </html>
