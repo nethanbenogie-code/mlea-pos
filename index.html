@@ -76,6 +76,8 @@
         .alert-warning{background:rgba(255,165,2,.15);border-color:#ffa502}
         .discount-row {display:flex;align-items:center;gap:8px;margin:5px 0}
         .discount-row select, .discount-row input {flex:1}
+        .log-row{font-size:0.75em;padding:5px 0;border-bottom:1px solid #2a3a5e;color:#a0a0b0;}
+        .log-row strong{color:#e0e0e0;}
         @media print{body{background:#fff}.header,.nav-bar,.sidebar,.modal,#loginScreen,.btn,.logout-btn,.hamburger{display:none!important}#mainApp{display:block!important}#mainContent{background:#fff;color:#000}.card,.metric-card{background:#fff;border:1px solid #ddd;color:#000}}
     </style>
 </head>
@@ -167,7 +169,7 @@
     <script>
         // --- 1. LOCAL DATA ROUTER INTERFACES ---
         const DB = {
-            stores: ['products', 'sales', 'suppliers', 'purchaseOrders', 'expenses', 'users', 'settings', 'branches'],
+            stores: ['products', 'sales', 'suppliers', 'purchaseOrders', 'expenses', 'users', 'settings', 'branches', 'activityLogs'],
             init() {
                 this.stores.forEach(s => {
                     if (!localStorage.getItem('mlea_' + s)) localStorage.setItem('mlea_' + s, '[]');
@@ -206,12 +208,12 @@
         };
 
         // --- 2. STATES CONTROL LAYERS ---
-        let currentUser = null, currentView = 'dashboard', currentCurrency = 'USD';
+        let currentUser = null, currentView = 'dashboard', currentCurrency = 'PHP';
         let taxRate = 0.12, discountRate = 0, discountType = 'percent';
         let cart = [], selectedUserId = null, pinEntry = '', receiptFooter = 'Thank you for your business!';
 
         function formatCurrency(amt) {
-            const c = currencies[currentCurrency] || currencies.USD;
+            const c = currencies[currentCurrency] || currencies.PHP;
             return c.symbol + amt.toFixed(c.decimals);
         }
 
@@ -230,6 +232,19 @@
             ['sidebarLowStock', 'navLowStock'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) { el.textContent = c; el.style.display = c > 0 ? 'inline' : 'none'; }
+            });
+        }
+
+        // --- LOGGING ENGINE ---
+        function writeLog(action, details) {
+            if (!currentUser) return;
+            DB.add('activityLogs', {
+                user: currentUser.name,
+                role: currentUser.role,
+                action: action,
+                details: details,
+                branchId: currentUser.branchId,
+                time: new Date().toLocaleString()
             });
         }
 
@@ -271,6 +286,10 @@
             const user = DB.getAll('users').find(u => u.id === selectedUserId);
             if (user && user.pin === pinEntry) {
                 currentUser = user;
+                
+                // Track Login
+                writeLog('System Login', 'User authenticated successfully.');
+                
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'block';
                 document.getElementById('headerUser').textContent = user.name;
@@ -291,11 +310,16 @@
                 switchView('dashboard');
             } else {
                 document.getElementById('errorMessage').textContent = '⚠️ Incorrect Code/PIN!';
+                
+                // Track Failed Logins System-wide
+                const failedUser = DB.getAll('users').find(u => u.id === selectedUserId);
+                DB.add('activityLogs', { user: failedUser ? failedUser.name : 'Unknown', role: 'System', action: 'Security Error', details: 'Failed PIN attempt.', branchId: failedUser ? failedUser.branchId : 0, time: new Date().toLocaleString() });
+                
                 clearPin();
             }
         }
 
-        function logout() { currentUser = null; cart = []; switchView('dashboard'); renderLoginScreen(); }
+        function logout() { writeLog('System Logout', 'Session ended.'); currentUser = null; cart = []; switchView('dashboard'); renderLoginScreen(); }
         function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('sidebarOverlay').classList.add('active'); }
         function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebarOverlay').classList.remove('active'); }
         function closeModal() { document.getElementById('modal').classList.remove('active'); }
@@ -304,7 +328,6 @@
             currentView = view; closeSidebar(); updateBadges();
             const container = document.getElementById('mainContent');
             
-            // Fixed Navigation Array Map Execution to avoid interface locks
             if (view === 'dashboard') renderDashboard(container);
             else if (view === 'pos') renderPOS(container);
             else if (view === 'inventory') renderInventory(container);
@@ -322,7 +345,18 @@
             const sales = getIsolatedData('sales');
             const lowCount = getLowStockCount();
             const totalRev = sales.reduce((a, b) => a + b.total, 0);
+            
+            // Backup Reminder Logic
+            const lastBackupTime = localStorage.getItem('mlea_last_backup_time');
+            const needsBackup = !lastBackupTime || (Date.now() - parseInt(lastBackupTime) > 86400000); // 86.4M ms = 24 Hours
+
             el.innerHTML = `
+                ${needsBackup && currentUser.role !== 'cashier' ? `
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Daily Backup Required!</strong><br>
+                        It has been over 24 hours since your last manual system extract. Please go to the <b>Backup Panel</b> to download your latest data snapshot.
+                    </div>
+                ` : ''}
                 <div class="metrics">
                     <div class="metric-card"><div class="metric-value">${sales.length}</div><div class="metric-label">Sales Count</div></div>
                     <div class="metric-card"><div class="metric-value">${formatCurrency(totalRev)}</div><div class="metric-label">Revenue Pool</div></div>
@@ -330,7 +364,7 @@
                 </div>
                 <div class="card">
                     <h4>Security Isolation Matrix Enabled</h4>
-                    <p style="font-size:0.8em;color:#a0a0b0;margin-top:4px;">Operational limits verified. Your user profile node has active read-write pathways to current localized storage layers.</p>
+                    <p style="font-size:0.8em;color:#a0a0b0;margin-top:4px;">Operational limits verified. Your user profile node has active read-write pathways to current localized storage layers. Note: Background auto-saves run every 5 minutes internally.</p>
                 </div>
             `;
         }
@@ -414,6 +448,9 @@
             });
             DB.set('products', products);
             DB.add('sales', { items: cart, total: total, branchId: currentUser.branchId });
+            
+            writeLog('Transaction', `Processed sale total: ${formatCurrency(total)}`);
+            
             cart = []; alert("Sale Committed!"); renderPOS(document.getElementById('mainContent'));
         }
 
@@ -448,14 +485,16 @@
         }
 
         function saveProduct() {
+            const name = document.getElementById('pName').value;
             DB.add('products', {
-                name: document.getElementById('pName').value,
+                name: name,
                 price: parseFloat(document.getElementById('pPrice').value)||0,
                 stock: parseInt(document.getElementById('pStock').value)||0,
                 barcode: document.getElementById('pBarcode').value,
                 branchId: currentUser.branchId,
                 active: true
             });
+            writeLog('Inventory Update', `Added/Modified item: ${name}`);
             closeModal(); switchView('inventory');
         }
 
@@ -540,14 +579,17 @@
 
         function commitUserNode() {
             const pin = document.getElementById('uPin').value;
+            const name = document.getElementById('uName').value;
+            const role = document.getElementById('uRole').value;
             if (pin.length !== 4) return alert("PIN must be exactly 4 digits.");
             DB.add('users', {
-                name: document.getElementById('uName').value,
-                role: document.getElementById('uRole').value,
+                name: name,
+                role: role,
                 branchId: parseInt(document.getElementById('uBranchId').value) || currentUser.branchId,
                 pin: pin,
                 active: true
             });
+            writeLog('Security Update', `Created new user identity: ${name} (${role})`);
             closeModal(); switchView('users');
         }
 
@@ -555,7 +597,11 @@
             const target = DB.getAll('users').find(u => u.id === id);
             if (!target) return;
             if (currentUser.role === 'manager' && target.role === 'manager') return alert("Access Restriction Error.");
-            if (confirm("Revoke user privileges?")) { DB.delete('users', id); switchView('users'); }
+            if (confirm("Revoke user privileges?")) { 
+                writeLog('Security Revoked', `Deleted user account: ${target.name}`);
+                DB.delete('users', id); 
+                switchView('users'); 
+            }
         }
 
         function renderSuppliers(el) {
@@ -563,7 +609,7 @@
             el.innerHTML = `
                 <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
                     <h4>Vendor Logistics Channel</h4>
-                    <button class="btn btn-primary btn-sm" onclick="DB.add('suppliers',{name:'New Supplier Unit',branchId:currentUser.branchId});switchView('suppliers');">+ Quick Add</button>
+                    <button class="btn btn-primary btn-sm" onclick="DB.add('suppliers',{name:'New Supplier Unit',branchId:currentUser.branchId}); switchView('suppliers');">+ Quick Add</button>
                 </div>
                 <div class="card">
                     <table>
@@ -579,7 +625,7 @@
             el.innerHTML = `
                 <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
                     <h4>Supply Procurement Orders</h4>
-                    <button class="btn btn-primary btn-sm" onclick="DB.add('purchaseOrders',{supplier:'Internal System Fulfillment',branchId:currentUser.branchId});switchView('purchaseOrders');">+ Quick Generate</button>
+                    <button class="btn btn-primary btn-sm" onclick="DB.add('purchaseOrders',{supplier:'Internal System Fulfillment',branchId:currentUser.branchId}); switchView('purchaseOrders');">+ Quick Generate</button>
                 </div>
                 <div class="card">
                     <table>
@@ -595,7 +641,7 @@
             el.innerHTML = `
                 <div class="card" style="display:flex;justify-content:space-between;align-items:center;">
                     <h4>Expense Bookkeeping Logs</h4>
-                    <button class="btn btn-primary btn-sm" onclick="DB.add('expenses',{type:'Operational Utility Cost Outflow',amount:120,branchId:currentUser.branchId});switchView('expenses');">+ Add Expense</button>
+                    <button class="btn btn-primary btn-sm" onclick="DB.add('expenses',{type:'Operational Utility Cost Outflow',amount:120,branchId:currentUser.branchId}); writeLog('Financial', 'Added expense log.'); switchView('expenses');">+ Add Expense</button>
                 </div>
                 <div class="card">
                     <table>
@@ -630,11 +676,30 @@
         }
 
         function renderReports(el) {
+            // Fetch relevant logs based on user's branch authorization
+            let rawLogs = getIsolatedData('activityLogs').reverse().slice(0, 30); // Show last 30 actions
+            
             el.innerHTML = `
                 <div class="card">
-                    <h4>Internal System Core Database Backups</h4>
+                    <h4>Core Database Backups</h4>
                     <button class="btn btn-success" style="width:100%;margin-bottom:6px;" onclick="triggerSystemExport()">📥 Extract & Download JSON File</button>
                     <button class="btn btn-warning" style="width:100%;" onclick="triggerRestorePortal()">📤 Re-inject JSON Storage Blueprint</button>
+                </div>
+                
+                <div class="card">
+                    <h4>📋 System Activity & Error Log</h4>
+                    <div style="max-height: 250px; overflow-y: auto; margin-top: 10px;">
+                        ${rawLogs.length === 0 ? '<p style="font-size:0.8em;color:#a0a0b0;">No activity tracked yet.</p>' : ''}
+                        ${rawLogs.map(l => `
+                            <div class="log-row">
+                                <div style="display:flex; justify-content:space-between;">
+                                    <strong>${l.user}</strong> <span>${l.time}</span>
+                                </div>
+                                <div style="color:${l.action.includes('Error') ? '#ff4757' : '#2ed573'}; font-weight:bold;">[${l.action}]</div>
+                                <div>${l.details}</div>
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
             `;
         }
@@ -646,6 +711,10 @@
             temporaryAnchor.href = URL.createObjectURL(contentBlob);
             temporaryAnchor.download = `MLEA_ISOLATED_BACKUP_${new Date().toISOString().split('T')[0]}.json`;
             temporaryAnchor.click();
+            
+            // Mark Backup Time
+            localStorage.setItem('mlea_last_backup_time', Date.now().toString());
+            writeLog('System Routine', 'Executed manual database extraction.');
         }
 
         function triggerRestorePortal() {
@@ -664,11 +733,22 @@
                 try {
                     const compiled = JSON.parse(e.target.result);
                     DB.stores.forEach(s => { if (compiled[s]) DB.set(s, compiled[s]); });
+                    writeLog('System Override', 'Injected external JSON restore file.');
                     alert("Database injection finished!"); window.location.reload();
-                } catch(err) { alert("Invalid File Format"); }
+                } catch(err) { 
+                    writeLog('System Error', 'Failed JSON file import protocol.');
+                    alert("Invalid File Format"); 
+                }
             };
             browserStreamReader.readAsText(selector);
         }
+
+        // --- BACKGROUND SILENT 5-MIN AUTO-SAVE ENGINE ---
+        setInterval(() => {
+            const packagePayload = {};
+            DB.stores.forEach(s => packagePayload[s] = DB.getAll(s));
+            localStorage.setItem('mlea_auto_checkpoint_backup', JSON.stringify(packagePayload));
+        }, 5 * 60 * 1000);
 
         window.onload = initApp;
     </script>
