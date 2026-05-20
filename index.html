@@ -211,7 +211,7 @@
         let currentUser = null, currentView = 'dashboard', currentCurrency = 'PHP';
         let taxRate = 0.12, discountRate = 0, discountType = 'percent';
         let cart = [], selectedUserId = null, pinEntry = '', receiptFooter = 'Thank you for your business!';
-        let adminActiveBranch = 'all'; // Smart Admin Filter State
+        let adminActiveBranch = 'all'; 
 
         function formatCurrency(amt) {
             const c = currencies[currentCurrency] || currencies.PHP;
@@ -225,8 +225,7 @@
             
             // Admin Override Logic
             if (currentUser.role === 'admin') {
-                if (adminActiveBranch === 'all') return allItems; // Show everything
-                // Filter specifically for the selected branch (excluding the Master Admin user from disappearing)
+                if (adminActiveBranch === 'all') return allItems; 
                 return allItems.filter(item => item.branchId === parseInt(adminActiveBranch) || (storeKey === 'users' && item.role === 'admin'));
             }
             
@@ -343,7 +342,6 @@
         }
 
         function logout() { 
-            // 🚨 BUG FIX: Clean session variables before re-rendering login screen
             writeLog('System Logout', 'Session ended.'); 
             cart = []; 
             adminActiveBranch = 'all';
@@ -524,6 +522,7 @@
                 <div class="form-group"><label>Baseline Stock</label><input type="number" id="pStock"></div>
                 <div class="form-group"><label>Barcode String</label><input type="text" id="pBarcode"></div>
                 <button class="btn btn-success" style="width:100%;" onclick="saveProduct()">Save Product Blueprint</button>
+                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
             `;
             document.getElementById('modal').classList.add('active');
         }
@@ -566,6 +565,7 @@
                 <h4>Add Corporate Location Branch Node</h4>
                 <div class="form-group"><label>Branch Name</label><input type="text" id="bName"></div>
                 <button class="btn btn-success" style="width:100%;" onclick="DB.add('branches',{name:document.getElementById('bName').value}); closeModal(); switchView('branches');">Save Location</button>
+                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
             `;
             document.getElementById('modal').classList.add('active');
         }
@@ -587,6 +587,7 @@
                                     <td><strong>${u.name}</strong><br><small style="color:#6a6a7a;">Branch Target: #${u.branchId}</small></td>
                                     <td><span class="role-badge ${u.role}-badge">${u.role}</span></td>
                                     <td>
+                                        <button class="btn btn-warning btn-xs" onclick="showUserModal(${u.id})">Edit</button>
                                         ${u.role === 'admin' ? '' : `<button class="btn btn-danger btn-xs" onclick="deleteUserNode(${u.id})">Remove</button>`}
                                     </td>
                                 </tr>
@@ -597,44 +598,60 @@
             `;
         }
 
-        function showUserModal() {
+        function showUserModal(id = null) {
             const branches = DB.getAll('branches');
             const isAdmin = currentUser.role === 'admin';
+            const editUser = id ? DB.getAll('users').find(u => u.id === id) : null;
+            
             document.getElementById('modalContent').innerHTML = `
-                <h4>Authorize System Profile</h4>
-                <div class="form-group"><label>Alias Display Name</label><input type="text" id="uName"></div>
+                <h4>${editUser ? 'Edit System Profile' : 'Authorize System Profile'}</h4>
+                <div class="form-group"><label>Alias Display Name</label><input type="text" id="uName" value="${editUser ? editUser.name : ''}"></div>
                 <div class="form-group">
                     <label>Designated Operational Role</label>
                     <select id="uRole">
-                        ${isAdmin ? '<option value="manager">Branch Manager Node</option>' : ''}
-                        <option value="cashier" selected>Cashier Desk Terminal</option>
+                        ${isAdmin ? `<option value="manager" ${editUser && editUser.role === 'manager' ? 'selected' : ''}>Branch Manager Node</option>` : ''}
+                        <option value="cashier" ${editUser && editUser.role === 'cashier' ? 'selected' : (!editUser ? 'selected' : '')}>Cashier Desk Terminal</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Assigned Branch Link</label>
                     <select id="uBranchId" ${!isAdmin ? 'disabled' : ''}>
-                        ${isAdmin ? branches.map(b => `<option value="${b.id}" ${adminActiveBranch == b.id ? 'selected' : ''}>${b.name}</option>`).join('') : `<option value="${currentUser.branchId}">Current Managed Branch</option>`}
+                        ${isAdmin ? branches.map(b => `<option value="${b.id}" ${editUser && editUser.branchId == b.id ? 'selected' : (adminActiveBranch == b.id ? 'selected' : '')}>${b.name}</option>`).join('') : `<option value="${currentUser.branchId}">Current Managed Branch</option>`}
                     </select>
                 </div>
-                <div class="form-group"><label>Secure Access PIN (4 Digits)</label><input type="password" maxlength="4" id="uPin"></div>
-                <button class="btn btn-success" style="width:100%;" onclick="commitUserNode()">Authorize Member Access</button>
+                <div class="form-group"><label>Secure Access PIN (4 Digits)</label><input type="password" maxlength="4" id="uPin" value="${editUser ? editUser.pin : ''}"></div>
+                <button class="btn btn-success" style="width:100%;" onclick="commitUserNode(${id || 'null'})">${editUser ? 'Update Profile' : 'Authorize Member Access'}</button>
+                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
             `;
             document.getElementById('modal').classList.add('active');
         }
 
-        function commitUserNode() {
+        function commitUserNode(id) {
             const pin = document.getElementById('uPin').value;
             const name = document.getElementById('uName').value;
             const role = document.getElementById('uRole').value;
             if (pin.length !== 4) return alert("PIN must be exactly 4 digits.");
-            DB.add('users', {
-                name: name,
-                role: role,
-                branchId: parseInt(document.getElementById('uBranchId').value) || currentUser.branchId,
-                pin: pin,
-                active: true
-            });
-            writeLog('Security Update', `Created new user identity: ${name} (${role})`);
+            
+            if (id) {
+                const existing = DB.getAll('users').find(u => u.id === id);
+                if(existing) {
+                    existing.name = name;
+                    existing.role = role;
+                    existing.branchId = parseInt(document.getElementById('uBranchId').value) || currentUser.branchId;
+                    existing.pin = pin;
+                    DB.update('users', existing);
+                    writeLog('Security Update', `Updated user identity: ${name}`);
+                }
+            } else {
+                DB.add('users', {
+                    name: name,
+                    role: role,
+                    branchId: parseInt(document.getElementById('uBranchId').value) || currentUser.branchId,
+                    pin: pin,
+                    active: true
+                });
+                writeLog('Security Update', `Created new user identity: ${name} (${role})`);
+            }
             closeModal(); switchView('users');
         }
 
@@ -775,6 +792,7 @@
                 <h4>Upload System Archive JSON Backup File</h4>
                 <div class="form-group" style="margin-top:10px;"><input type="file" id="importPayload" accept=".json"></div>
                 <button class="btn btn-success" style="width:100%;margin-top:10px;" onclick="processImportStream()">Execute System Restore</button>
+                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
             `;
             document.getElementById('modal').classList.add('active');
         }
