@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MLEA POS - Complete System</title>
-    
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22MLEA%20POS%22%2C%22short_name%22%3A%22MLEAPOS%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a1a2e%22%2C%22theme_color%22%3A%22%231a1a2e%22%2C%22orientation%22%3A%22portrait%22%7D">
-    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#1a1a2e">
@@ -24,7 +21,7 @@
         .user-card{background:#16213e;border:2px solid #2a3a5e;border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s}
         .user-card.selected{border-color:#7c6fff;background:#0f3460}
         .user-card .avatar{font-size:1.8em}
-        .user-card .name{font-size:.7em;color:#e0e0e0;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .user-card .name{font-size:.7em;color:#e0e0e0;margin-top:3px}
         .role-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.65em;margin-top:3px}
         .admin-badge{background:#7c6fff;color:#fff}.manager-badge{background:#2ed573;color:#fff}.cashier-badge{background:#ffa502;color:#fff}
         .section-label{text-align:center;color:#e0e0e0;font-size:.9em;margin:10px 0}
@@ -86,8 +83,14 @@
         .filter-tab .count{background:rgba(255,255,255,.2);border-radius:10px;padding:1px 6px;margin-left:3px;font-size:.85em}
         .po-status{padding:2px 8px;border-radius:10px;font-size:.7em;font-weight:500}
         .po-draft{background:#3a3a5e;color:#a0a0b0}.po-finalized{background:#2ed573;color:#fff}.po-received{background:#7c6fff;color:#fff}
-        .discount-row {display:flex;align-items:center;gap:8px;margin:5px 0}
-        .discount-row select, .discount-row input {flex:1}
+        .barcode-display{background:#fff;padding:20px;text-align:center;border-radius:10px;color:#000}
+        .barcode-display .barcode-text{font-family:'Courier New',monospace;font-size:1.5em;letter-spacing:3px;margin:10px 0}
+        .qr-placeholder{width:150px;height:150px;margin:10px auto;background:linear-gradient(45deg,#000 25%,#fff 25%,#fff 50%,#000 50%,#000 75%,#fff 75%,#fff);background-size:20px 20px;border:1px solid #000}
+        .discount-row{display:flex;align-items:center;gap:8px;margin:5px 0}
+        .discount-row select,.discount-row input{flex:1}
+        .history-log{max-height:200px;overflow-y:auto;font-size:.75em}
+        .history-item{padding:6px;border-bottom:1px solid #2a3a5e;color:#a0a0b0}
+        .history-item .time{color:#7c6fff;font-size:.9em}
         .alert{background:rgba(255,71,87,.15);border:1px solid #ff4757;border-radius:8px;padding:10px;margin:8px 0}
         .alert-warning{background:rgba(255,165,2,.15);border-color:#ffa502}
         .alert-success{background:rgba(46,213,115,.15);border-color:#2ed573}
@@ -98,45 +101,24 @@
     <div class="app-container">
         <div id="loginScreen">
             <div class="login-card">
-                <div class="login-logo">
-                    <h1>🏪 MLEA POS</h1>
-                    <p>Complete Point of Sale System</p>
-                </div>
+                <div class="login-logo"><h1>🏪 MLEA POS</h1><p>Complete Point of Sale System</p></div>
                 <div class="section-label">👤 Select User</div>
                 <div class="user-selector" id="userSelector"></div>
                 <div class="section-label">🔢 Enter PIN</div>
-                <div class="pin-display" id="pinDisplay">
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                </div>
+                <div class="pin-display" id="pinDisplay"><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div></div>
                 <div class="error-msg" id="errorMessage"></div>
                 <div class="pin-pad">
-                    <button class="pin-btn" onclick="enterPin('1')">1</button>
-                    <button class="pin-btn" onclick="enterPin('2')">2</button>
-                    <button class="pin-btn" onclick="enterPin('3')">3</button>
-                    <button class="pin-btn" onclick="enterPin('4')">4</button>
-                    <button class="pin-btn" onclick="enterPin('5')">5</button>
-                    <button class="pin-btn" onclick="enterPin('6')">6</button>
-                    <button class="pin-btn" onclick="enterPin('7')">7</button>
-                    <button class="pin-btn" onclick="enterPin('8')">8</button>
-                    <button class="pin-btn" onclick="enterPin('9')">9</button>
-                    <button class="pin-btn clear" onclick="clearPin()">Clear</button>
-                    <button class="pin-btn" onclick="enterPin('0')">0</button>
-                    <button class="pin-btn submit" onclick="submitPin()">→</button>
+                    <button class="pin-btn" onclick="enterPin('1')">1</button><button class="pin-btn" onclick="enterPin('2')">2</button><button class="pin-btn" onclick="enterPin('3')">3</button>
+                    <button class="pin-btn" onclick="enterPin('4')">4</button><button class="pin-btn" onclick="enterPin('5')">5</button><button class="pin-btn" onclick="enterPin('6')">6</button>
+                    <button class="pin-btn" onclick="enterPin('7')">7</button><button class="pin-btn" onclick="enterPin('8')">8</button><button class="pin-btn" onclick="enterPin('9')">9</button>
+                    <button class="pin-btn clear" onclick="clearPin()">Clear</button><button class="pin-btn" onclick="enterPin('0')">0</button><button class="pin-btn submit" onclick="submitPin()">→</button>
                 </div>
             </div>
         </div>
-
         <div id="mainApp">
             <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
             <div class="sidebar" id="sidebar">
-                <div style="padding:15px;background:#1a1a2e;border-bottom:1px solid #2a3a5e;">
-                    <h3 style="color:#9b8fff;">MLEA POS</h3>
-                    <p style="font-size:.75em;color:#a0a0b0;" id="sidebarUserInfo"></p>
-                    <span class="role-badge" id="sidebarRole" style="margin-top:5px;"></span>
-                </div>
+                <div style="padding:15px;background:#1a1a2e;border-bottom:1px solid #2a3a5e;"><h3 style="color:#9b8fff;">MLEA POS</h3><p style="font-size:.75em;color:#a0a0b0;" id="sidebarUserInfo"></p><span class="role-badge" id="sidebarRole" style="margin-top:5px;"></span></div>
                 <div style="padding:10px;display:flex;flex-direction:column;gap:3px;" id="sidebarNav">
                     <button class="nav-btn" onclick="switchView('dashboard')">📊 Dashboard</button>
                     <button class="nav-btn" onclick="switchView('pos')">💻 POS Terminal</button>
@@ -149,653 +131,125 @@
                     <button class="nav-btn" onclick="switchView('reports')">💾 Reports</button>
                 </div>
             </div>
-
-            <div class="header">
-                <button class="hamburger" onclick="openSidebar()">☰</button>
-                <h1>MLEA POS</h1>
-                <div class="header-right">
-                    <span id="headerCurrency"></span>
-                    <span id="headerUser"></span>
-                    <button class="logout-btn" onclick="logout()">🚪</button>
-                </div>
-            </div>
-
+            <div class="header"><button class="hamburger" onclick="openSidebar()">☰</button><h1>MLEA POS</h1><div class="header-right"><span id="headerCurrency"></span><span id="headerUser"></span><button class="logout-btn" onclick="logout()">🚪</button></div></div>
             <div class="nav-bar" id="navBar">
                 <button class="nav-btn active" onclick="switchView('dashboard')">📊 Dashboard</button>
                 <button class="nav-btn" onclick="switchView('pos')">💻 POS</button>
                 <button class="nav-btn" onclick="switchView('inventory')">📦 Stock <span class="badge" id="navLowStock" style="display:none;">0</span></button>
                 <button class="nav-btn" onclick="switchView('settings')">⚙️</button>
             </div>
-
-            <div id="mainContent">
-                <p style="text-align:center;padding:40px;color:#a0a0b0;">Loading...</p>
-            </div>
+            <div id="mainContent"><p style="text-align:center;padding:40px;color:#a0a0b0;">Loading...</p></div>
         </div>
     </div>
-
-    <div class="modal" id="modal">
-        <div class="modal-content" id="modalContent"></div>
-    </div>
+    <div class="modal" id="modal"><div class="modal-content" id="modalContent"></div></div>
 
     <script>
-        // --- 1. DATABASING ENGINE ---
-        const DB = {
-            stores: ['products', 'sales', 'suppliers', 'purchaseOrders', 'expenses', 'users', 'settings'],
-            init() {
-                this.stores.forEach(s => {
-                    if (!localStorage.getItem('mlea_' + s)) localStorage.setItem('mlea_' + s, '[]');
-                });
-            },
-            getAll(key) { return JSON.parse(localStorage.getItem('mlea_' + key) || '[]'); },
-            set(key, data) { localStorage.setItem('mlea_' + key, JSON.stringify(data)); },
-            add(key, item) {
-                const items = this.getAll(key);
-                item.id = items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1;
-                item.createdAt = new Date().toISOString();
-                items.push(item);
-                this.set(key, items);
-                return item.id;
-            },
-            update(key, item) {
-                const items = this.getAll(key);
-                const idx = items.findIndex(i => i.id === item.id);
-                if (idx !== -1) {
-                    item.updatedAt = new Date().toISOString();
-                    items[idx] = item;
-                }
-                this.set(key, items);
-            },
-            delete(key, id) { this.set(key, this.getAll(key).filter(i => i.id !== id)); }
-        };
-        DB.init();
+        const DB={stores:['products','sales','saleItems','suppliers','purchaseOrders','expenses','users','settings','inventoryLogs'],init(){this.stores.forEach(s=>{if(!localStorage.getItem('mlea_'+s))localStorage.setItem('mlea_'+s,'[]')})},getAll(key){return JSON.parse(localStorage.getItem('mlea_'+key)||'[]')},set(key,data){localStorage.setItem('mlea_'+key,JSON.stringify(data))},add(key,item){const items=this.getAll(key);item.id=items.length>0?Math.max(...items.map(i=>i.id))+1:1;item.createdAt=new Date().toISOString();items.push(item);this.set(key,items);return item.id},update(key,item){const items=this.getAll(key);const idx=items.findIndex(i=>i.id===item.id);if(idx!==-1){item.updatedAt=new Date().toISOString();items[idx]=item}this.set(key,items)},delete(key,id){this.set(key,this.getAll(key).filter(i=>i.id!==id))},getById(key,id){return this.getAll(key).find(i=>i.id===id)}};DB.init();
 
-        // --- 2. REGIONAL DICTIONARIES ---
-        const currencies = {
-            USD: { symbol: '$', name: 'US Dollar', flag: '🇺🇸', decimals: 2 },
-            PHP: { symbol: '₱', name: 'Philippine Peso', flag: '🇵🇭', decimals: 2 },
-            EUR: { symbol: '€', name: 'Euro', flag: '🇪🇺', decimals: 2 },
-            GBP: { symbol: '£', name: 'British Pound', flag: '🇬🇧', decimals: 2 },
-            JPY: { symbol: '¥', name: 'Japanese Yen', flag: '🇯🇵', decimals: 0 }
-        };
+        const currencies={USD:{symbol:'$',name:'US Dollar',flag:'🇺🇸',decimals:2},PHP:{symbol:'₱',name:'Philippine Peso',flag:'🇵🇭',decimals:2},EUR:{symbol:'€',name:'Euro',flag:'🇪🇺',decimals:2},GBP:{symbol:'£',name:'British Pound',flag:'🇬🇧',decimals:2},JPY:{symbol:'¥',name:'Japanese Yen',flag:'🇯🇵',decimals:0},INR:{symbol:'₹',name:'Indian Rupee',flag:'🇮🇳',decimals:2},CNY:{symbol:'¥',name:'Chinese Yuan',flag:'🇨🇳',decimals:2},KRW:{symbol:'₩',name:'Korean Won',flag:'🇰🇷',decimals:0},AUD:{symbol:'A$',name:'Australian Dollar',flag:'🇦🇺',decimals:2},CAD:{symbol:'C$',name:'Canadian Dollar',flag:'🇨🇦',decimals:2},SGD:{symbol:'S$',name:'Singapore Dollar',flag:'🇸🇬',decimals:2},MYR:{symbol:'RM',name:'Malaysian Ringgit',flag:'🇲🇾',decimals:2},IDR:{symbol:'Rp',name:'Indonesian Rupiah',flag:'🇮🇩',decimals:0},THB:{symbol:'฿',name:'Thai Baht',flag:'🇹🇭',decimals:2},AED:{symbol:'د.إ',name:'UAE Dirham',flag:'🇦🇪',decimals:2},SAR:{symbol:'﷼',name:'Saudi Riyal',flag:'🇸🇦',decimals:2},VND:{symbol:'₫',name:'Vietnamese Dong',flag:'🇻🇳',decimals:0},BRL:{symbol:'R$',name:'Brazilian Real',flag:'🇧🇷',decimals:2},MXN:{symbol:'Mex$',name:'Mexican Peso',flag:'🇲🇽',decimals:2},NGN:{symbol:'₦',name:'Nigerian Naira',flag:'🇳🇬',decimals:2}};
 
-        // --- 3. SYSTEM STATES ---
-        let currentUser = null, currentView = 'dashboard', currentCurrency = 'USD';
-        let taxRate = 0.10, discountRate = 0, discountType = 'percent';
-        let cart = [], selectedUserId = null, pinEntry = '', inventoryFilter = 'all', receiptFooter = 'Thank you for your business!';
+        let currentUser=null,currentView='dashboard',currentCurrency='USD',taxRate=0.1,discountRate=0,discountType='percent';
+        let cart=[],selectedUserId=null,pinEntry='',products=[],users=[],inventoryFilter='all',receiptFooter='Thank you for your business!';
 
-        function formatCurrency(amt) {
-            const c = currencies[currentCurrency] || currencies.USD;
-            return c.decimals === 0 ? c.symbol + Math.round(amt).toLocaleString() : c.symbol + amt.toFixed(2);
+        function formatCurrency(a){const c=currencies[currentCurrency];return c.decimals===0?c.symbol+' '+Math.round(a).toLocaleString():c.symbol+a.toFixed(2)}
+        function getLowStockCount(){return DB.getAll('products').filter(p=>p.active&&p.stock<10).length}
+        function updateBadges(){const c=getLowStockCount();['sidebarLowStock','navLowStock'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent=c;el.style.display=c>0?'inline':'none'}})}
+
+        function initApp(){
+            users=DB.getAll('users');if(users.length===0){[{name:'Admin User',role:'admin',active:true,pin:'1234'},{name:'Manager',role:'manager',active:true,pin:'5678'},{name:'Cashier',role:'cashier',active:true,pin:'9012'}].forEach(u=>DB.add('users',u));users=DB.getAll('users')}
+            products=DB.getAll('products');if(products.length===0){[{sku:'SKU001',name:'Laptop',price:899.99,stock:15,category:'Electronics',active:true,barcode:'8901234567890'},{sku:'SKU002',name:'Mouse',price:24.99,stock:5,category:'Electronics',active:true,barcode:'8901234567891'},{sku:'SKU003',name:'Keyboard',price:59.99,stock:0,category:'Electronics',active:false,barcode:'8901234567892'},{sku:'SKU004',name:'Monitor',price:299.99,stock:8,category:'Electronics',active:true,barcode:'8901234567893'},{sku:'SKU005',name:'USB Cable',price:9.99,stock:3,category:'Accessories',active:true,barcode:'8901234567894'},{sku:'SKU006',name:'Headphones',price:79.99,stock:12,category:'Audio',active:true,barcode:'8901234567895'}].forEach(p=>DB.add('products',p));products=DB.getAll('products')}
+            if(DB.getAll('suppliers').length===0){DB.add('suppliers',{name:'TechSupply Co.',phone:'555-0100',email:'sales@techsupply.com',address:'123 Tech St'});DB.add('suppliers',{name:'GlobalParts Inc.',phone:'555-0200',email:'info@globalparts.com',address:'456 Industry Ave'})}
+            if(DB.getAll('expenses').length===0){DB.add('expenses',{type:'Rent',amount:2000,date:'2024-01-01',category:'Fixed'});DB.add('expenses',{type:'Electricity',amount:350,date:'2024-01-15',category:'Utilities'})}
+            const saved=DB.getAll('settings');const cs=saved.find(s=>s.key==='currency');if(cs)currentCurrency=cs.value;const ts=saved.find(s=>s.key==='taxRate');if(ts)taxRate=parseFloat(ts.value);const fs=saved.find(s=>s.key==='receiptFooter');if(fs)receiptFooter=fs.value;
+            updateBadges();renderLoginScreen();
         }
 
-        function getLowStockCount() {
-            return DB.getAll('products').filter(p => p.active && p.stock < 10).length;
-        }
+        function renderLoginScreen(){document.getElementById('loginScreen').style.display='flex';document.getElementById('mainApp').style.display='none';users=DB.getAll('users');document.getElementById('userSelector').innerHTML=users.filter(u=>u.active).map(u=>`<div class="user-card ${selectedUserId===u.id?'selected':''}" onclick="selectUser(${u.id})"><div class="avatar">${u.role==='admin'?'👑':u.role==='manager'?'👨‍💼':'👤'}</div><div class="name">${u.name}</div><span class="role-badge ${u.role}-badge">${u.role}</span></div>`).join('')}
+        function selectUser(id){selectedUserId=id;pinEntry='';updatePinDisplay();document.getElementById('errorMessage').textContent='';renderLoginScreen()}
+        function enterPin(d){if(!selectedUserId){document.getElementById('errorMessage').textContent='Select a user first';return}if(pinEntry.length<4){pinEntry+=d;updatePinDisplay();document.getElementById('errorMessage').textContent=''}}
+        function clearPin(){pinEntry='';updatePinDisplay();document.getElementById('errorMessage').textContent=''}
+        function updatePinDisplay(){document.querySelectorAll('.pin-dot').forEach((d,i)=>{d.classList.toggle('filled',i<pinEntry.length);d.classList.remove('error')})}
+        function submitPin(){if(!selectedUserId){document.getElementById('errorMessage').textContent='Select a user first';return}const user=users.find(u=>u.id===selectedUserId);if(user&&user.pin===pinEntry){currentUser=user;document.getElementById('loginScreen').style.display='none';document.getElementById('mainApp').style.display='block';document.getElementById('headerUser').textContent=user.name;document.getElementById('headerCurrency').textContent=currencies[currentCurrency].flag+' '+currentCurrency;document.getElementById('sidebarUserInfo').textContent=user.name+' ('+user.role+')';const sr=document.getElementById('sidebarRole');sr.textContent=user.role;sr.className='role-badge '+user.role+'-badge';const navUsers=document.getElementById('navUsers');if(navUsers)navUsers.style.display=user.role==='admin'?'block':'none';pinEntry='';selectedUserId=null;updatePinDisplay();updateBadges();switchView('dashboard')}else{document.getElementById('errorMessage').textContent='Wrong PIN!';pinEntry='';updatePinDisplay();document.querySelectorAll('.pin-dot').forEach(d=>d.classList.add('error'));setTimeout(()=>document.querySelectorAll('.pin-dot').forEach(d=>d.classList.remove('error')),400)}}
+        function logout(){if(cart.length>0&&!confirm('Cart has items. Logout anyway?'))return;currentUser=null;cart=[];discountRate=0;discountType='percent';document.getElementById('mainApp').style.display='none';closeSidebar();renderLoginScreen()}
 
-        function updateBadges() {
-            const c = getLowStockCount();
-            ['sidebarLowStock', 'navLowStock'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) { el.textContent = c; el.style.display = c > 0 ? 'inline' : 'none'; }
-            });
-        }
+        function openSidebar(){document.getElementById('sidebar').classList.add('active');document.getElementById('sidebarOverlay').classList.add('active')}
+        function closeSidebar(){document.getElementById('sidebar').classList.remove('active');document.getElementById('sidebarOverlay').classList.remove('active')}
+        function switchView(view){currentView=view;closeSidebar();updateBadges();document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));const content=document.getElementById('mainContent');switch(view){case 'dashboard':renderDashboard(content);break;case 'pos':renderPOS(content);break;case 'inventory':renderInventory(content);break;case 'suppliers':renderSuppliers(content);break;case 'purchaseOrders':renderPurchaseOrders(content);break;case 'expenses':renderExpenses(content);break;case 'settings':renderSettings(content);break;case 'users':renderUsers(content);break;case 'reports':renderReports(content);break;default:renderDashboard(content)}}
 
-        // --- 4. INITIALIZATION AND AUTH ---
-        function initApp() {
-            let users = DB.getAll('users');
-            if (users.length === 0) {
-                [{ name: 'Admin User', role: 'admin', active: true, pin: '1234' },
-                 { name: 'Manager', role: 'manager', active: true, pin: '5678' },
-                 { name: 'Cashier', role: 'cashier', active: true, pin: '9012' }].forEach(u => DB.add('users', u));
-            }
-            let products = DB.getAll('products');
-            if (products.length === 0) {
-                [{ sku: 'SKU001', name: 'Premium Coffee', price: 4.50, stock: 50, category: 'Beverages', active: true, barcode: '11111' },
-                 { sku: 'SKU002', name: 'Chocolate Muffin', price: 3.00, stock: 8, category: 'Pastries', active: true, barcode: '22222' }].forEach(p => DB.add('products', p));
-            }
-            const savedSettings = DB.getAll('settings');
-            const sc = savedSettings.find(s => s.key === 'currency'); if (sc) currentCurrency = sc.value;
-            const st = savedSettings.find(s => s.key === 'taxRate'); if (st) taxRate = parseFloat(st.value);
-            const sf = savedSettings.find(s => s.key === 'receiptFooter'); if (sf) receiptFooter = sf.value;
+        function renderDashboard(el){products=DB.getAll('products');const sales=DB.getAll('sales')||[];const today=new Date().toISOString().split('T')[0];const todaySales=sales.filter(s=>s.date===today).reduce((s,i)=>s+i.total,0);const monthSales=sales.filter(s=>s.date.startsWith(today.substring(0,7))).reduce((s,i)=>s+i.total,0);const monthTax=sales.filter(s=>s.date.startsWith(today.substring(0,7))).reduce((s,i)=>s+i.tax,0);const lowStock=getLowStockCount();const totalProducts=products.filter(p=>p.active).length;el.innerHTML=`<div class="metrics"><div class="metric-card"><div class="metric-value">${formatCurrency(todaySales)}</div><div class="metric-label">Today's Sales</div></div><div class="metric-card"><div class="metric-value">${formatCurrency(monthSales)}</div><div class="metric-label">Monthly Revenue</div></div><div class="metric-card"><div class="metric-value">${formatCurrency(monthTax)}</div><div class="metric-label">Tax Collected</div></div></div><div class="card"><h4>Welcome, ${currentUser.name}! 👋</h4><p style="color:#a0a0b0;font-size:.8em;">Role: ${currentUser.role} | Products: ${totalProducts} | Currency: ${currencies[currentCurrency].flag} ${currentCurrency}</p></div>${lowStock>0?`<div class="alert alert-warning">⚠️ <strong>${lowStock}</strong> products are low on stock! <button class="btn btn-sm btn-warning" onclick="switchView('inventory')">View</button></div>`:''}<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;"><button class="btn btn-primary" onclick="switchView('pos')">🛒 New Sale</button><button class="btn btn-success" onclick="switchView('inventory')">📦 Inventory</button><button class="btn btn-warning" onclick="switchView('purchaseOrders')">📋 Purchases</button><button class="btn btn-primary" onclick="switchView('reports')">📊 Reports</button></div>`}
 
-            updateBadges();
-            renderLoginScreen();
-        }
+        function renderPOS(el){products=DB.getAll('products');const subtotal=cart.reduce((s,i)=>s+(i.price*i.quantity),0);const discount=discountType==='percent'?subtotal*(discountRate/100):discountRate;const afterDiscount=Math.max(0,subtotal-discount);const tax=afterDiscount*taxRate;const total=afterDiscount+tax;const activeProducts=products.filter(p=>p.active);el.innerHTML=`<div style="margin-bottom:10px;"><input type="text" id="scanInput" placeholder="🔍 Scan barcode or search product..." onkeypress="if(event.key==='Enter'){addToCart(event.target.value);event.target.value='';}"><button class="btn btn-primary btn-sm" style="margin-top:5px;" onclick="document.getElementById('scanInput').focus()">📷 Scan Mode</button></div><div class="product-grid">${activeProducts.slice(0,8).map(p=>`<div class="product-card" onclick="addToCart('${p.sku}')"><strong>${p.name}</strong><div style="color:#9b8fff;">${formatCurrency(p.price)}</div><small class="${p.stock<10?'stock-low':''}" style="color:#a0a0b0;">Stock: ${p.stock}</small></div>`).join('')}</div>${activeProducts.length>8?`<p style="text-align:center;color:#a0a0b0;font-size:.8em;">+${activeProducts.length-8} more products. Search above.</p>`:''}<div class="card" style="margin-top:10px;"><h4>🛒 Cart (${cart.length} items)</h4>${cart.map((item,i)=>`<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">${item.name}</div><div class="cart-item-price">${formatCurrency(item.price)} each</div></div><div class="cart-item-qty"><button class="qty-btn" onclick="updateCartQty(${i},-1)">−</button><span>${item.quantity}</span><button class="qty-btn" onclick="updateCartQty(${i},1)">+</button></div><div style="font-weight:bold;min-width:60px;text-align:right;">${formatCurrency(item.price*item.quantity)}</div><button class="btn btn-danger btn-xs" onclick="removeFromCart(${i})">✕</button></div>`).join('')}${cart.length===0?'<p style="color:#a0a0b0;text-align:center;">Cart is empty</p>':''}<hr style="border-color:#2a3a5e;margin:10px 0;"><div>Subtotal: ${formatCurrency(subtotal)}</div><div class="discount-row"><span>Discount:</span><select id="discountType" onchange="changeDiscountType(this.value)" style="width:auto;flex:0 0 80px;"><option value="percent" ${discountType==='percent'?'selected':''}>%</option><option value="amount" ${discountType==='amount'?'selected':''}>${currencies[currentCurrency].symbol}</option></select><input type="number" id="discountValue" value="${discountType==='percent'?discountRate:discountRate}" step="${discountType==='percent'?1:0.01}" min="0" ${discountType==='percent'?'max="100"':''} onchange="updateDiscount(this.value)" style="flex:1;"></div><div style="color:#ffa502;">Discount: −${formatCurrency(discount)}</div><div>Tax (${(taxRate*100).toFixed(0)}%): ${formatCurrency(tax)}</div><div style="font-size:1.2em;color:#9b8fff;"><strong>Total: ${formatCurrency(total)}</strong></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;"><button class="btn btn-success" onclick="processPayment('cash')">💵 Cash</button><button class="btn btn-primary" onclick="processPayment('card')">💳 Card</button><button class="btn btn-warning" onclick="processPayment('other')">📱 Other</button></div><button class="btn btn-danger btn-sm" style="width:100%;margin-top:5px;" onclick="clearCart()">🗑️ Clear Cart</button></div>`;if(document.getElementById('scanInput'))document.getElementById('scanInput').focus()}
 
-        function renderLoginScreen() {
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('mainApp').style.display = 'none';
-            const users = DB.getAll('users').filter(u => u.active);
-            document.getElementById('userSelector').innerHTML = users.map(u => `
-                <div class="user-card ${selectedUserId === u.id ? 'selected' : ''}" onclick="selectUser(${u.id})">
-                    <div class="avatar">${u.role === 'admin' ? '👑' : u.role === 'manager' ? '👨‍💼' : '👤'}</div>
-                    <div class="name">${u.name}</div>
-                    <span class="role-badge ${u.role}-badge">${u.role}</span>
-                </div>
-            `).join('');
-        }
+        function renderInventory(el){products=DB.getAll('products');let filtered=products;if(inventoryFilter==='low')filtered=products.filter(p=>p.active&&p.stock<10);if(inventoryFilter==='inactive')filtered=products.filter(p=>!p.active);if(inventoryFilter==='all')filtered=products.filter(p=>p.active);const lowCount=products.filter(p=>p.active&&p.stock<10).length;const inactiveCount=products.filter(p=>!p.active).length;el.innerHTML=`<div class="filter-tabs"><div class="filter-tab ${inventoryFilter==='all'?'active':''}" onclick="inventoryFilter='all';renderInventory(document.getElementById('mainContent'))">All<span class="count">${products.filter(p=>p.active).length}</span></div><div class="filter-tab ${inventoryFilter==='low'?'active':''}" onclick="inventoryFilter='low';renderInventory(document.getElementById('mainContent'))">Low Stock<span class="count">${lowCount}</span></div><div class="filter-tab ${inventoryFilter==='inactive'?'active':''}" onclick="inventoryFilter='inactive';renderInventory(document.getElementById('mainContent'))">Inactive<span class="count">${inactiveCount}</span></div></div><button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="showAddProduct()">+ Add Product</button><div style="overflow-x:auto;"><table><thead><tr><th>SKU</th><th>Name</th><th>Price</th><th>Stock</th><th>Category</th><th>Actions</th></tr></thead><tbody>${filtered.map(p=>`<tr><td>${p.sku}</td><td>${p.name}</td><td>${formatCurrency(p.price)}</td><td>${p.stock} ${p.stock<10?'<span class="badge" style="background:#ff4757;">!</span>':''}</td><td>${p.category||'-'}</td><td style="white-space:nowrap;"><button class="btn btn-primary btn-xs" onclick="showBarcode('${p.barcode||p.sku}')">QR</button><button class="btn btn-success btn-xs" onclick="adjustStock(${p.id})">+</button><button class="btn btn-warning btn-xs" onclick="editProduct(${p.id})">✎</button><button class="btn btn-danger btn-xs" onclick="deleteProduct(${p.id})">✕</button></td></tr>`).join('')}</tbody></table></div>${filtered.length===0?'<p style="text-align:center;color:#a0a0b0;padding:20px;">No products found</p>':''}`}
 
-        function selectUser(id) { selectedUserId = id; pinEntry = ''; updatePinDisplay(); renderLoginScreen(); }
-        function enterPin(d) { if (!selectedUserId) return; if (pinEntry.length < 4) { pinEntry += d; updatePinDisplay(); } }
-        function clearPin() { pinEntry = ''; updatePinDisplay(); }
-        function updatePinDisplay() {
-            document.querySelectorAll('.pin-dot').forEach((d, i) => d.classList.toggle('filled', i < pinEntry.length));
-        }
+        function renderSuppliers(el){const suppliers=DB.getAll('suppliers');el.innerHTML=`<button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="showAddSupplier()">+ Add Supplier</button>${suppliers.map(s=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;"><h4>${s.name}</h4><button class="btn btn-primary btn-sm" onclick="createPO(${s.id})">Create PO</button></div><p style="color:#a0a0b0;font-size:.8em;">📞 ${s.phone} | 📧 ${s.email}</p><p style="color:#a0a0b0;font-size:.75em;">📍 ${s.address||'No address'}</p></div>`).join('')}`}
 
-        function submitPin() {
-            const user = DB.getAll('users').find(u => u.id === selectedUserId);
-            if (user && user.pin === pinEntry) {
-                currentUser = user;
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainApp').style.display = 'block';
-                document.getElementById('headerUser').textContent = user.name;
-                document.getElementById('headerCurrency').textContent = (currencies[currentCurrency]?.flag || '') + ' ' + currentCurrency;
-                document.getElementById('sidebarUserInfo').textContent = `${user.name} (${user.role})`;
-                document.getElementById('sidebarRole').textContent = user.role;
-                document.getElementById('sidebarRole').className = `role-badge ${user.role}-badge`;
-                document.getElementById('navUsers').style.display = user.role === 'admin' ? 'block' : 'none';
-                switchView('dashboard');
-            } else {
-                document.getElementById('errorMessage').textContent = '⚠️ Incorrect Code/PIN!';
-                clearPin();
-            }
-        }
+        function renderPurchaseOrders(el){const pos=DB.getAll('purchaseOrders');const suppliers=DB.getAll('suppliers');el.innerHTML=`<h4>📋 Purchase Orders</h4>${pos.map(po=>{const supplier=suppliers.find(s=>s.id===po.supplierId);return`<div class="card"><div style="display:flex;justify-content:space-between;"><strong>PO #${po.id}</strong><span class="po-status po-${po.status}">${po.status.toUpperCase()}</span></div><p style="color:#a0a0b0;font-size:.8em;">Supplier: ${supplier?supplier.name:'Unknown'} | Date: ${po.date}</p><p>Total: ${formatCurrency(po.total||0)} | Items: ${(po.items||[]).length}</p>${po.status==='draft'?`<button class="btn btn-success btn-sm" onclick="finalizePO(${po.id})">✅ Finalize</button><button class="btn btn-danger btn-sm" onclick="deletePO(${po.id})">🗑️</button>`:''}${po.status==='finalized'?`<button class="btn btn-primary btn-sm" onclick="receivePO(${po.id})">📥 Receive Stock</button>`:''}${po.status==='received'?`<p style="color:#2ed573;font-size:.8em;">✅ Received</p>`:''}</div>`}).join('')}${pos.length===0?'<p style="text-align:center;color:#a0a0b0;padding:20px;">No purchase orders yet</p>':''}`}
 
-        function logout() { currentUser = null; cart = []; switchView('dashboard'); renderLoginScreen(); }
-        function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('sidebarOverlay').classList.add('active'); }
-        function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebarOverlay').classList.remove('active'); }
-        function closeModal() { document.getElementById('modal').classList.remove('active'); }
+        function renderExpenses(el){const expenses=DB.getAll('expenses');const categories=[...new Set(expenses.map(e=>e.category))];el.innerHTML=`<button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="showAddExpense()">+ Add Expense</button>${categories.map(cat=>{const catExpenses=expenses.filter(e=>e.category===cat);const catTotal=catExpenses.reduce((s,e)=>s+e.amount,0);return`<div class="card"><h4>${cat} <span style="color:#9b8fff;">${formatCurrency(catTotal)}</span></h4>${catExpenses.map(e=>`<div style="display:flex;justify-content:space-between;font-size:.8em;color:#a0a0b0;padding:3px 0;"><span>${e.type}</span><span>${formatCurrency(e.amount)} | ${e.date}</span></div>`).join('')}</div>`}).join('')}${expenses.length===0?'<p style="text-align:center;color:#a0a0b0;padding:20px;">No expenses yet</p>':''}`}
 
-        function switchView(view) {
-            currentView = view; closeSidebar(); updateBadges();
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            const container = document.getElementById('mainContent');
-            if (view === 'dashboard') renderDashboard(container);
-            else if (view === 'pos') renderPOS(container);
-            else if (view === 'inventory') renderInventory(container);
-            else if (view === 'suppliers') renderSuppliers(container);
-            else if (view === 'purchaseOrders') renderPurchaseOrders(container);
-            else if (view === 'expenses') renderExpenses(container);
-            else if (view === 'settings') renderSettings(container);
-            else if (view === 'users') renderUsers(container);
-            else if (view === 'reports') renderReports(container);
-        }
+        function renderSettings(el){el.innerHTML=`<div class="card"><h4>💱 Currency Settings</h4><select id="currencySelect" onchange="changeCurrency(this.value)">${Object.entries(currencies).map(([code,c])=>`<option value="${code}" ${currentCurrency===code?'selected':''}>${c.flag} ${c.name} (${c.symbol})</option>`).join('')}</select><p style="color:#a0a0b0;font-size:.8em;margin-top:5px;">Current: ${currencies[currentCurrency].flag} ${currencies[currentCurrency].name}</p></div><div class="card"><h4>💰 Tax Rate</h4><input type="number" id="taxInput" value="${taxRate*100}" step="0.1" min="0" max="100"><p style="color:#a0a0b0;font-size:.8em;">Current: ${(taxRate*100).toFixed(1)}%</p><button class="btn btn-primary btn-sm" onclick="saveTax()">Save Tax</button></div><div class="card"><h4>📄 Receipt Footer</h4><input type="text" id="footerInput" value="${receiptFooter}"><button class="btn btn-primary btn-sm" style="margin-top:5px;" onclick="saveFooter()">Save Footer</button></div>`}
 
-        // --- 5. VIEW CONTROLLERS ---
-        function renderDashboard(el) {
-            const sales = DB.getAll('sales');
-            const lowCount = getLowStockCount();
-            const totalRev = sales.reduce((a, b) => a + b.total, 0);
-            el.innerHTML = `
-                <div class="metrics">
-                    <div class="metric-card"><div class="metric-value">${sales.length}</div><div class="metric-label">Sales Count</div></div>
-                    <div class="metric-card"><div class="metric-value">${formatCurrency(totalRev)}</div><div class="metric-label">Total Revenue</div></div>
-                    <div class="metric-card"><div class="metric-value">${lowCount}</div><div class="metric-label">Low Stock Items</div></div>
-                </div>
-                <div class="card">
-                    <h4>Operational Summary</h4>
-                    <p style="font-size:0.85em;color:#a0a0b0;margin-top:5px;">Welcome back to your workstation panel. Use the navigational buttons above or sidebar links to perform client sales, inventory tracking, and system setups.</p>
-                </div>
-            `;
-        }
+        function renderUsers(el){if(currentUser.role!=='admin'){el.innerHTML='<p style="text-align:center;color:#ff4757;padding:20px;">🔒 Admin access required</p>';return}users=DB.getAll('users');el.innerHTML=`<button class="btn btn-primary" style="width:100%;margin-bottom:10px;" onclick="showAddUser()">+ Add User</button>${users.map(u=>`<div class="card" style="display:flex;justify-content:space-between;align-items:center;"><div><strong>${u.name}</strong><span class="role-badge ${u.role}-badge">${u.role}</span><span>${u.active?'✅':'❌'}</span><div style="font-size:.7em;color:#a0a0b0;">PIN: ${u.pin}</div></div><div style="display:flex;gap:5px;"><button class="btn btn-primary btn-xs" onclick="editUser(${u.id})">✎</button><button class="btn btn-warning btn-xs" onclick="toggleUser(${u.id})">${u.active?'Deactivate':'Activate'}</button></div></div>`).join('')}`}
 
-        function renderPOS(el) {
-            const products = DB.getAll('products').filter(p => p.active);
-            const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-            const disc = discountType === 'percent' ? subtotal * (discountRate / 100) : discountRate;
-            const taxable = Math.max(0, subtotal - disc);
-            const tax = taxable * taxRate;
-            const total = taxable + tax;
+        function renderReports(el){el.innerHTML=`<div class="card"><h4>📊 Export Reports</h4><div style="display:grid;gap:8px;"><button class="btn btn-primary" onclick="exportCSV('sales')">💰 Sales Report (CSV)</button><button class="btn btn-success" onclick="exportCSV('inventory')">📦 Inventory Report (CSV)</button><button class="btn btn-primary" onclick="exportCSV('expenses')">💸 Expenses Report (CSV)</button></div></div><div class="card"><h4>💾 Backup & Restore</h4><p style="color:#a0a0b0;font-size:.75em;margin-bottom:8px;">${getLastBackupInfo()}</p><button class="btn btn-primary" style="width:100%;margin-bottom:5px;" onclick="backupData()">📥 Download Backup</button><button class="btn btn-warning" style="width:100%;" onclick="restoreBackup()">📤 Restore from Backup</button></div><div class="card"><h4>🖨️ Print Options</h4><button class="btn btn-warning" style="width:100%;" onclick="window.print()">🖨️ Print Current View</button></div><div class="card"><h4>🗑️ Danger Zone</h4><button class="btn btn-danger" style="width:100%;" onclick="clearAllData()">🗑️ Reset All Data</button></div>`}
 
-            el.innerHTML = `
-                <div class="card">
-                    <input type="text" id="posSearch" placeholder="🔍 Enter Item Name or Barcode Scan..." oninput="handlePOSSearch(this.value)">
-                </div>
-                <div class="product-grid" id="posProductGrid">
-                    ${products.map(p => `
-                        <div class="product-card" onclick="addToCart(${p.id})">
-                            <strong>${p.name}</strong>
-                            <div style="color:#9b8fff;">${formatCurrency(p.price)}</div>
-                            <small class="${p.stock < 10 ? 'stock-low' : ''}">Qty Left: ${p.stock}</small>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="card">
-                    <h4>Checkout Cart</h4>
-                    <div style="margin:10px 0;">
-                        ${cart.map((item, idx) => `
-                            <div class="cart-item">
-                                <div class="cart-item-info">
-                                    <div class="cart-item-name">${item.name}</div>
-                                    <div class="cart-item-price">${formatCurrency(item.price)}</div>
-                                </div>
-                                <div class="cart-item-qty">
-                                    <button class="qty-btn" onclick="adjustCartQty(${idx}, -1)">-</button>
-                                    <span>${item.qty}</span>
-                                    <button class="qty-btn" onclick="adjustCartQty(${idx}, 1)">+</button>
-                                </div>
-                                <button class="btn btn-danger btn-xs" onclick="removeCartItem(${idx})">✕</button>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="discount-row">
-                        <select onchange="discountType=this.value; renderPOS(document.getElementById('mainContent'))">
-                            <option value="percent" ${discountType === 'percent' ? 'selected' : ''}>% Disc</option>
-                            <option value="flat" ${discountType === 'flat' ? 'selected' : ''}>Fixed Disc</option>
-                        </select>
-                        <input type="number" value="${discountRate}" onchange="discountRate=parseFloat(this.value)||0; renderPOS(document.getElementById('mainContent'))">
-                    </div>
-                    <div style="font-size:0.85em;color:#a0a0b0;margin-top:10px;text-align:right;">
-                        <div>Subtotal: ${formatCurrency(subtotal)}</div>
-                        <div>Discount: -${formatCurrency(disc)}</div>
-                        <div>Tax Setup (${taxRate * 100}%): ${formatCurrency(tax)}</div>
-                        <div style="font-size:1.2em;color:#2ed573;font-weight:bold;margin-top:5px;">Grand Total: ${formatCurrency(total)}</div>
-                    </div>
-                    <button class="btn btn-success" style="width:100%;margin-top:10px;" onclick="processCheckout(${total}, ${tax}, ${disc})">💳 Complete Transaction Checkout</button>
-                </div>
-            `;
-        }
+        function addToCart(sku){const product=products.find(p=>(p.sku===sku||p.barcode===sku)&&p.active);if(product&&product.stock>0){const existing=cart.find(i=>i.sku===product.sku);if(existing){existing.quantity++}else{cart.push({...product,quantity:1})}switchView('pos')}else{alert('Product not found or out of stock!')}}
+        function removeFromCart(i){cart.splice(i,1);switchView('pos')}
+        function updateCartQty(i,change){const product=products.find(p=>p.id===cart[i].id);if(change>0&&cart[i].quantity>=product.stock){alert('Max stock reached!');return}cart[i].quantity+=change;if(cart[i].quantity<=0)cart.splice(i,1);switchView('pos')}
+        function clearCart(){if(cart.length>0&&confirm('Clear entire cart?')){cart=[];discountRate=0;switchView('pos')}}
+        function changeDiscountType(type){discountType=type;discountRate=0;switchView('pos')}
+        function updateDiscount(val){discountRate=parseFloat(val)||0;switchView('pos')}
+        function processPayment(method){if(cart.length===0){alert('Cart is empty!');return}const subtotal=cart.reduce((s,i)=>s+(i.price*i.quantity),0);const discount=discountType==='percent'?subtotal*(discountRate/100):discountRate;const afterDiscount=Math.max(0,subtotal-discount);const tax=afterDiscount*taxRate;const total=afterDiscount+tax;const sale={date:new Date().toISOString().split('T')[0],total,subtotal,discount,tax,paymentMethod:method,cashierId:currentUser.id,currency:currentCurrency,items:cart.map(i=>({productId:i.id,name:i.name,quantity:i.quantity,price:i.price}))};const saleId=DB.add('sales',sale);cart.forEach(item=>{DB.add('saleItems',{saleId,productId:item.id,quantity:item.quantity,price:item.price});const product=products.find(p=>p.id===item.id);if(product){product.stock-=item.quantity;DB.update('products',product)}});const receiptHTML=`<div class="receipt"><h2>MLEA POS</h2><p style="text-align:center;">Receipt #${saleId}</p><p style="text-align:center;">${new Date().toLocaleString()}</p><p style="text-align:center;">Cashier: ${currentUser.name}</p><hr>${cart.map(i=>`<div>${i.name} x${i.quantity} - ${formatCurrency(i.price*i.quantity)}</div>`).join('')}<hr><div>Subtotal: ${formatCurrency(subtotal)}</div>${discount>0?`<div>Discount: −${formatCurrency(discount)}</div>`:''}<div>Tax: ${formatCurrency(tax)}</div><div class="total">TOTAL: ${formatCurrency(total)}</div><div>Payment: ${method.toUpperCase()}</div><hr><p style="text-align:center;">${receiptFooter}</p></div>`;document.getElementById('modalContent').innerHTML=receiptHTML;document.getElementById('modal').classList.add('active');cart=[];discountRate=0;products=DB.getAll('products');updateBadges();setTimeout(()=>{document.getElementById('modal').classList.remove('active');switchView('dashboard')},3000)}
 
-        function handlePOSSearch(val) {
-            const grid = document.getElementById('posProductGrid');
-            const matched = DB.getAll('products').filter(p => p.active && (p.name.toLowerCase().includes(val.toLowerCase()) || p.barcode === val));
-            grid.innerHTML = matched.map(p => `
-                <div class="product-card" onclick="addToCart(${p.id})">
-                    <strong>${p.name}</strong>
-                    <div style="color:#9b8fff;">${formatCurrency(p.price)}</div>
-                    <small class="${p.stock < 10 ? 'stock-low' : ''}">Qty Left: ${p.stock}</small>
-                </div>
-            `).join('');
-        }
+        function showAddProduct(){document.getElementById('modalContent').innerHTML=`<h4>Add Product</h4><div class="form-group"><label>Name *</label><input type="text" id="pName"></div><div class="form-group"><label>SKU</label><input type="text" id="pSku" placeholder="Auto-generated if empty"></div><div class="form-row"><div class="form-group"><label>Price *</label><input type="number" id="pPrice" step="0.01"></div><div class="form-group"><label>Stock *</label><input type="number" id="pStock" value="0"></div></div><div class="form-group"><label>Category</label><input type="text" id="pCategory" placeholder="e.g., Electronics"></div><div class="form-group"><label>Barcode</label><input type="text" id="pBarcode" placeholder="Scan or enter barcode"></div><button class="btn btn-primary" onclick="addProduct()">💾 Save</button><button class="btn btn-danger" onclick="closeModal()">Cancel</button>`;document.getElementById('modal').classList.add('active')}
+        function addProduct(){const name=document.getElementById('pName').value;const price=parseFloat(document.getElementById('pPrice').value);if(!name||!price){alert('Name and price required!');return}const product={sku:document.getElementById('pSku').value||('SKU'+Date.now().toString(36).toUpperCase()),name,price,stock:parseInt(document.getElementById('pStock').value)||0,category:document.getElementById('pCategory').value||'General',barcode:document.getElementById('pBarcode').value||'',active:true};DB.add('products',product);products=DB.getAll('products');closeModal();switchView('inventory')}
+        function editProduct(id){const p=products.find(pr=>pr.id===id);if(!p)return;document.getElementById('modalContent').innerHTML=`<h4>Edit Product</h4><div class="form-group"><label>Name</label><input type="text" id="pName" value="${p.name}"></div><div class="form-group"><label>SKU</label><input type="text" id="pSku" value="${p.sku}"></div><div class="form-row"><div class="form-group"><label>Price</label><input type="number" id="pPrice" value="${p.price}" step="0.01"></div><div class="form-group"><label>Stock</label><input type="number" id="pStock" value="${p.stock}"></div></div><div class="form-group"><label>Category</label><input type="text" id="pCategory" value="${p.category||''}"></div><div class="form-group"><label>Barcode</label><input type="text" id="pBarcode" value="${p.barcode||''}"></div><div class="form-group"><label>Active</label><select id="pActive"><option value="1" ${p.active?'selected':''}>Yes</option><option value="0" ${!p.active?'selected':''}>No</option></select></div><button class="btn btn-primary" onclick="saveProduct(${id})">💾 Save</button><button class="btn btn-danger" onclick="closeModal()">Cancel</button>`;document.getElementById('modal').classList.add('active')}
+        function saveProduct(id){const p=products.find(pr=>pr.id===id);if(!p)return;p.name=document.getElementById('pName').value;p.sku=document.getElementById('pSku').value;p.price=parseFloat(document.getElementById('pPrice').value);p.stock=parseInt(document.getElementById('pStock').value);p.category=document.getElementById('pCategory').value;p.barcode=document.getElementById('pBarcode').value;p.active=document.getElementById('pActive').value==='1';DB.update('products',p);products=DB.getAll('products');closeModal();switchView('inventory')}
+        function deleteProduct(id){if(confirm('Delete this product?')){DB.delete('products',id);products=DB.getAll('products');updateBadges();switchView('inventory')}}
+        function adjustStock(id){const p=products.find(pr=>pr.id===id);document.getElementById('modalContent').innerHTML=`<h4>Adjust Stock: ${p.name}</h4><p style="color:#a0a0b0;">Current: ${p.stock}</p><div class="form-group"><label>New Stock</label><input type="number" id="newStock" value="${p.stock}"></div><div class="form-group"><label>Reason</label><select id="adjReason"><option>Restock</option><option>Damage</option><option>Correction</option><option>Return</option><option>Other</option></select></div><div class="form-group"><label>Note</label><input type="text" id="adjNote" placeholder="Optional note"></div><button class="btn btn-primary" onclick="saveStockAdjust(${id})">💾 Save</button><button class="btn btn-danger" onclick="closeModal()">Cancel</button><div class="card" style="margin-top:10px;"><h5>Stock History</h5><div class="history-log">${(DB.getAll('inventoryLogs')||[]).filter(l=>l.productId===id).slice(-20).reverse().map(l=>`<div class="history-item"><span class="time">${new Date(l.createdAt).toLocaleString()}</span> ${l.oldStock}→${l.newStock} (${l.reason}) ${l.note||''}<br><small>by ${l.userName}</small></div>`).join('')||'<p style="color:#a0a0b0;">No history</p>'}</div></div>`;document.getElementById('modal').classList.add('active')}
+        function saveStockAdjust(id){const p=products.find(pr=>pr.id===id);const oldStock=p.stock;const newStock=parseInt(document.getElementById('newStock').value);const reason=document.getElementById('adjReason').value;const note=document.getElementById('adjNote').value;if(isNaN(newStock)){alert('Enter valid stock number');return}p.stock=newStock;DB.update('products',p);DB.add('inventoryLogs',{productId:id,productName:p.name,oldStock,newStock,reason,note,userName:currentUser.name});products=DB.getAll('products');updateBadges();closeModal();switchView('inventory')}
+        function showBarcode(code){document.getElementById('modalContent').innerHTML=`<div class="barcode-display"><h4>Barcode / QR Code</h4><div class="qr-placeholder"></div><div class="barcode-text">${code}</div><p style="font-size:.8em;color:#666;">Code: ${code}</p><button class="btn btn-primary" onclick="closeModal()">Close</button></div>`;document.getElementById('modal').classList.add('active')}
+        function showAddSupplier(){document.getElementById('modalContent').innerHTML=`<h4>Add Supplier</h4><div class="form-group"><label>Name *</label><input type="text" id="sName"></div><div class="form-group"><label>Phone</label><input type="tel" id="sPhone"></div><div class="form-group"><label>Email</label><input type="email" id="sEmail"></div><div class="form-group"><label>Address</label><textarea id="sAddress" rows="2"></textarea></div><button class="btn btn-primary" onclick="addSupplier()">💾 Save</button><button class="btn btn-danger" onclick="closeModal()">Cancel</button>`;document.getElementById('modal').classList.add('active')}
+        function addSupplier(){const name=document.getElementById('sName').value;if(!name){alert('Name required!');return}DB.add('suppliers',{name,phone:document.getElementById('sPhone').value,email:document.getElementById('sEmail').value,address:document.getElementById('sAddress').value});closeModal();switchView('suppliers')}
+        function createPO(supplierId){const products=DB.getAll('products').filter(p=>p.active);document.getElementById('modalContent').innerHTML=`<h4>Create Purchase Order</h4><div class="form-group"><label>Supplier</label><select id="poSupplier">${DB.getAll('suppliers').map(s=>`<option value="${s.id}" ${s.id===supplierId?'selected':''}>${s.name}</option>`).join('')}</select></div><div id="poItems"><h5>Items</h5></div><button class="btn btn-success btn-sm" onclick="addPOItem()">+ Add Item</button><div style="margin-top:10px;"><button class="btn btn-primary" onclick="savePO()">💾 Save as Draft</button><button class="btn btn-danger" onclick="closeModal()">Cancel</button></div>`;document.getElementById('modal').classList.add('active');addPOItem()}
+        function addPOItem(){const div=document.createElement('div');div.className='form-row';div.style.marginBottom='5px';div.innerHTML=`<select class="po-product"><option value="">Select product</option>${DB.getAll('products').map(p=>`<option value="${p.id}">${p.name}</option>`).join('')}</select><input type="number" class="po-qty" value="1" min="1" style="width:60px;"><button class="btn btn-danger btn-xs" onclick="this.parentElement.remove()">✕</button>`;document.getElementById('poItems').appendChild(div)}
+        function savePO(){const supplierId=parseInt(document.getElementById('poSupplier').value);const items=[];document.querySelectorAll('#poItems .form-row').forEach(row=>{const sel=row.querySelector('.po-product');const qty=row.querySelector('.po-qty');if(sel.value&&qty.value)items.push({productId:parseInt(sel.value),quantity:parseInt(qty.value),name:sel.options[sel.selectedIndex].text})});if(items.length===0){alert('Add at least one item!');return}const total=items.reduce((s,i)=>{const p=DB.getById('products',i.productId);return s+(p?p.price*i.quantity:0)},0);DB.add('purchaseOrders',{supplierId,date:new Date().toISOString().split('T')[0],status:'draft',items,total});closeModal();switchView('purchaseOrders')}
+        function finalizePO(id){const po=DB.getById('purchaseOrders',id);if(po){po.status='finalized';DB.update('purchaseOrders',po);switchView('purchaseOrders')}}
+        function receivePO(id){const po=DB.getById('purchaseOrders',id);if(po&&po.status==='finalized'){po.status='received';DB.update('purchaseOrders',po);po.items.forEach(item=>{const product=products.find(p=>p.id===item.productId);if(product){product.stock+=item.quantity;DB.update('products',product)}});products=DB.getAll('products');updateBadges();alert('✅ Stock updated automatically!');switchView('purchaseOrders')}}
+        function deletePO(id){if(confirm('Delete this purchase order?')){DB.delete('purchaseOrders',id);switchView('purchaseOrders')}}
+        function showAddExpense(){document.getElementById('modalContent').innerHTML=`<h4>Add Expense</h4><div class="form-group"><label>Type *</label><input type="text" id="eType" placeholder="e.g., Rent, Utilities"></div><div class="form-group"><label>Amount *</label><input type="number" id="eAmount" step="0.01"></div><div class="form-group"><label>Category</label><select id="eCategory"><option>Fixed</option><option>Variable</option><option>Utilities</option><option>Maintenance</option><option>Other</option></select></div><div class="form-group"><label>Date</label><input type="date" id="eDate" value="${new Date().toISOString().split('T')[0]}"></div><button class="btn btn-primary" onclick="addExpense()">💾 Save</button><button class="btn btn-danger" onclick="closeModal()">Cancel</button>`;document.getElementById('modal').classList.add('active')}
+        function addExpense(){const type=document.getElementById('eType').value;const amount=parseFloat(document.getElementById('eAmount').value);if(!type||!amount){alert('Type and amount required!');return}DB.add('expenses',{type,amount,date:document.getElementById('eDate').value,category:document.getElementById('eCategory').value});closeModal();switchView('expenses')}
+        function showAddUser(){document.getElementById('modalContent').innerHTML=`<h4>Add User</h4><div class="form-group"><label>Name *</label><input type="text" id="uName"></div><div class="form-group"><label>Role</label><select id="uRole"><option value="cashier">Cashier</option><option value="manager">Manager</option><option value="admin">Admin</option></select></div><div class="form-group"><label>4-digit PIN *</label><input type="password" id="uPin" maxlength="4" pattern="[0-9]{4}"></div><button class="btn btn-primary" onclick="addUser()">💾 Save</button><button class="btn btn-danger" onclick="closeModal()">Cancel</button>`;document.getElementById('modal').classList.add('active')}
+        function addUser(){const name=document.getElementById('uName').value;const pin=document.getElementById('uPin').value;if(!name||pin.length!==4){alert('Name required and PIN must be 4 digits!');return}DB.add('users',{name,role:document.getElementById('uRole').value,active:true,pin});users=DB.getAll('users');closeModal();switchView('users');renderLoginScreen()}
+        function editUser(id){const u=users.find(ur=>ur.id===id);if(!u)return;document.getElementById('modalContent').innerHTML=`<h4>Edit User</h4><div class="form-group"><label>Name</label><input type="text" id="uName" value="${u.name}"></div><div class="form-group"><label>Role</label><select id="uRole">${['admin','manager','cashier'].map(r=>`<option value="${r}" ${u.role===r?'selected':''}>${r}</option>`).join('')}</select></div><div class="form-group"><label>New PIN (leave blank to keep)</label><input type="password" id="uPin" maxlength="4" placeholder="Enter new PIN"></div><button class="btn btn-primary" onclick="saveUser(${id})">💾 Save</button><button class="btn btn-danger" onclick="closeModal()">Cancel</button>`;document.getElementById('modal').classList.add('active')}
+        function saveUser(id){const u=users.find(ur=>ur.id===id);if(!u)return;u.name=document.getElementById('uName').value;u.role=document.getElementById('uRole').value;const pin=document.getElementById('uPin').value;if(pin.length===4)u.pin=pin;DB.update('users',u);users=DB.getAll('users');closeModal();switchView('users');renderLoginScreen()}
+        function toggleUser(id){const u=users.find(ur=>ur.id===id);u.active=!u.active;DB.update('users',u);users=DB.getAll('users');switchView('users');renderLoginScreen()}
 
-        function addToCart(id) {
-            const p = DB.getAll('products').find(x => x.id === id);
-            if (!p || p.stock <= 0) { alert("Item completely out of stock!"); return; }
-            const existing = cart.find(item => item.id === id);
-            if (existing) {
-                if (existing.qty >= p.stock) { alert("Maximum store inventory reached!"); return; }
-                existing.qty++;
-            } else { cart.push({ id: p.id, name: p.name, price: p.price, qty: 1 }); }
-            renderPOS(document.getElementById('mainContent'));
-        }
+        function changeCurrency(code){currentCurrency=code;const all=DB.getAll('settings');const existing=all.find(s=>s.key==='currency');if(existing){existing.value=code;DB.update('settings',existing)}else{DB.add('settings',{key:'currency',value:code})}document.getElementById('headerCurrency').textContent=currencies[code].flag+' '+code;switchView('settings')}
+        function saveTax(){const val=parseFloat(document.getElementById('taxInput').value);if(!isNaN(val)&&val>=0&&val<=100){taxRate=val/100;const all=DB.getAll('settings');const existing=all.find(s=>s.key==='taxRate');if(existing){existing.value=taxRate.toString();DB.update('settings',existing)}else{DB.add('settings',{key:'taxRate',value:taxRate.toString()})}alert('Tax rate saved!')}}
+        function saveFooter(){receiptFooter=document.getElementById('footerInput').value;const all=DB.getAll('settings');const existing=all.find(s=>s.key==='receiptFooter');if(existing){existing.value=receiptFooter;DB.update('settings',existing)}else{DB.add('settings',{key:'receiptFooter',value:receiptFooter})}alert('Receipt footer saved!')}
 
-        function adjustCartQty(idx, amt) {
-            const item = cart[idx];
-            const p = DB.getAll('products').find(x => x.id === item.id);
-            item.qty += amt;
-            if (item.qty <= 0) cart.splice(idx, 1);
-            else if (item.qty > p.stock) { alert("Maximum stock baseline reached!"); item.qty = p.stock; }
-            renderPOS(document.getElementById('mainContent'));
-        }
+        function exportCSV(type){let csv='';const curr=currentCurrency;if(type==='sales'){const sales=DB.getAll('sales');csv=`Date,Total (${curr}),Tax,Payment,Cashier\n`;sales.forEach(s=>{const u=users.find(ur=>ur.id===s.cashierId);csv+=`${s.date},${s.total},${s.tax},${s.paymentMethod},${u?u.name:'Unknown'}\n`})}else if(type==='inventory'){csv=`SKU,Name,Price (${curr}),Stock,Category,Barcode,Active\n`;products.forEach(p=>csv+=`${p.sku},${p.name},${p.price},${p.stock},${p.category||''},${p.barcode||''},${p.active}\n`)}else if(type==='expenses'){const expenses=DB.getAll('expenses');csv=`Type,Amount (${curr}),Date,Category\n`;expenses.forEach(e=>csv+=`${e.type},${e.amount},${e.date},${e.category}\n`)}const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${type}_report_${new Date().toISOString().split('T')[0]}.csv`;a.click()}
 
-        function removeCartItem(idx) { cart.splice(idx, 1); renderPOS(document.getElementById('mainContent')); }
+        function backupData(){const data={};DB.stores.forEach(s=>data[s]=DB.getAll(s));data.backupDate=new Date().toISOString();data.version='2.0';const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);const filename=`mlea_backup_${new Date().toISOString().split('T')[0]}_${new Date().toLocaleTimeString().replace(/:/g,'-')}.json`;a.download=filename;a.click();localStorage.setItem('mlea_last_backup',JSON.stringify({date:new Date().toISOString(),filename}));alert('✅ Backup downloaded!\nFile: '+filename+'\nKeep this file safe!')}
 
-        function processCheckout(total, tax, disc) {
-            if (cart.length === 0) return alert("Your transaction cart is completely empty.");
-            const products = DB.getAll('products');
-            cart.forEach(item => {
-                const target = products.find(p => p.id === item.id);
-                if (target) target.stock -= item.qty;
-            });
-            DB.set('products', products);
-            const saleRecord = { items: cart, total: total, tax: tax, discount: disc, date: new Date().toISOString().split('T')[0] };
-            DB.add('sales', saleRecord);
-            
-            // Render Print View
-            const modal = document.getElementById('modal');
-            document.getElementById('modalContent').innerHTML = `
-                <div class="receipt">
-                    <h2>MLEA STORE LOGISTICS</h2>
-                    <h3>Official Document</h3>
-                    <hr style="margin:10px 0;">
-                    <div>Date: ${new Date().toLocaleDateString()}</div>
-                    <hr style="margin:10px 0;">
-                    ${cart.map(i => `<div>${i.name} x${i.qty} - ${formatCurrency(i.price * i.qty)}</div>`).join('')}
-                    <hr style="margin:10px 0;">
-                    <div class="total">Paid Total: ${formatCurrency(total)}</div>
-                    <div style="text-align:center;margin-top:15px;font-size:0.9em;">${receiptFooter}</div>
-                </div>
-                <button class="btn btn-primary" style="width:100%;margin-top:12px;" onclick="window.print()">🖨️ Print Document Receipt</button>
-                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="cart=[]; closeModal(); switchView('pos')">Close Workspace</button>
-            `;
-            modal.classList.add('active');
-        }
+        function restoreBackup(){document.getElementById('modalContent').innerHTML=`<h4>📥 Restore from Backup</h4><div class="alert alert-warning">⚠️ This will REPLACE all current data!</div><div class="form-group"><label>Select backup file (.json)</label><input type="file" id="backupFile" accept=".json"></div><div id="backupPreview" style="margin:10px 0;"></div><button class="btn btn-primary" onclick="performRestore()">🔄 Restore Data</button><button class="btn btn-danger" onclick="closeModal()">Cancel</button>`;document.getElementById('modal').classList.add('active');document.getElementById('backupFile').addEventListener('change',function(e){const file=e.target.files[0];if(file){const reader=new FileReader();reader.onload=function(event){try{const data=JSON.parse(event.target.result);const preview=document.getElementById('backupPreview');preview.innerHTML=`<div class="card" style="background:rgba(46,213,115,0.15);border-color:#2ed573;"><strong>Backup Info:</strong><br>Date: ${data.backupDate||'Unknown'}<br>Version: ${data.version||'Unknown'}<br>Products: ${(data.products||[]).length}<br>Sales: ${(data.sales||[]).length}<br>Suppliers: ${(data.suppliers||[]).length}<br>Users: ${(data.users||[]).length}</div>`}catch(err){document.getElementById('backupPreview').innerHTML='<p style="color:#ff4757;">Invalid backup file!</p>'}};reader.readAsText(file)}})}
 
-        function renderInventory(el) {
-            const products = DB.getAll('products');
-            el.innerHTML = `
-                <div class="card" style="display:flex;justify-content:between;align-items:center;">
-                    <h4>Stored Products Inventory</h4>
-                    <button class="btn btn-primary btn-sm" onclick="showProductModal()">+ Add Product</button>
-                </div>
-                <div class="card">
-                    <table>
-                        <thead>
-                            <tr><th>Product Name</th><th>Stock Baseline</th><th>Price Variant</th><th>Action Options</th></tr>
-                        </thead>
-                        <tbody>
-                            ${products.map(p => `
-                                <tr>
-                                    <td><strong>${p.name}</strong><br><small style="color:#6a6a7a;">${p.sku}</small></td>
-                                    <td class="${p.stock < 10 ? 'stock-low' : ''}">${p.stock} units</td>
-                                    <td>${formatCurrency(p.price)}</td>
-                                    <td>
-                                        <button class="btn btn-warning btn-xs" onclick="showProductModal(${p.id})">⚙️ Modify</button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
+        function performRestore(){const fileInput=document.getElementById('backupFile');const file=fileInput.files[0];if(!file){alert('Please select a backup file first!');return}if(!confirm('⚠️ This will DELETE all current data and replace with backup. Continue?'))return;if(!confirm('FINAL WARNING: Current data will be lost!'))return;const reader=new FileReader();reader.onload=function(event){try{const data=JSON.parse(event.target.result);DB.stores.forEach(s=>localStorage.removeItem('mlea_'+s));DB.init();DB.stores.forEach(s=>{if(data[s]){localStorage.setItem('mlea_'+s,JSON.stringify(data[s]))}});alert('✅ Data restored successfully! The app will now reload.');closeModal();location.reload()}catch(err){alert('❌ Error restoring backup: '+err.message)}};reader.readAsText(file)}
 
-        function showProductModal(id = null) {
-            const item = id ? DB.getAll('products').find(p => p.id === id) : { name: '', sku: '', price: 0, stock: 0, category: '', barcode: '', active: true };
-            document.getElementById('modalContent').innerHTML = `
-                <h4>${id ? 'Modify Existing Item' : 'Create New Product Form'}</h4>
-                <div class="form-group"><label>Product Name</label><input type="text" id="pName" value="${item.name}"></div>
-                <div class="form-group"><label>Unique SKU Label</label><input type="text" id="pSku" value="${item.sku}"></div>
-                <div class="form-row">
-                    <div class="form-group"><label>Unit Retail Price</label><input type="number" step="0.01" id="pPrice" value="${item.price}"></div>
-                    <div class="form-group"><label>Initial Stock Core</label><input type="number" id="pStock" value="${item.stock}"></div>
-                </div>
-                <div class="form-group"><label>Product Barcode Sequence</label><input type="text" id="pBarcode" value="${item.barcode}"></div>
-                <button class="btn btn-success" style="width:100%;" onclick="saveProduct(${id})">Save System Entity</button>
-                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss View</button>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
+        function getLastBackupInfo(){const last=localStorage.getItem('mlea_last_backup');const auto=localStorage.getItem('mlea_auto_backup');let info='';if(last){const d=JSON.parse(last);info+=`Last manual backup: ${new Date(d.date).toLocaleString()}\n`}if(auto){const d=JSON.parse(auto);info+=`Last auto-backup: ${new Date(d.autoBackupDate).toLocaleString()}`}return info||'No backups yet. Use Download Backup to create one.'}
 
-        function saveProduct(id) {
-            const p = {
-                id: id,
-                name: document.getElementById('pName').value,
-                sku: document.getElementById('pSku').value,
-                price: parseFloat(document.getElementById('pPrice').value) || 0,
-                stock: parseInt(document.getElementById('pStock').value) || 0,
-                barcode: document.getElementById('pBarcode').value,
-                active: true
-            };
-            if (id) DB.update('products', p); else DB.add('products', p);
-            closeModal(); switchView('inventory');
-        }
+        function clearAllData(){if(!confirm('⚠️ DELETE ALL DATA? This cannot be undone!'))return;if(!confirm('FINAL WARNING: All products, sales, suppliers, expenses will be deleted!'))return;DB.stores.forEach(s=>localStorage.removeItem('mlea_'+s));cart=[];discountRate=0;currentUser=null;document.getElementById('mainApp').style.display='none';initApp();alert('🗑️ All data cleared. System reset.')}
 
-        // --- OTHER SYSTEM PANELS ---
-        function renderSuppliers(el) {
-            const lists = DB.getAll('suppliers');
-            el.innerHTML = `
-                <div class="card" style="display:flex;justify-content:between;align-items:center;">
-                    <h4>Vendor Logistics Channel</h4>
-                    <button class="btn btn-primary btn-sm" onclick="showSupplierModal()">+ Add Supplier</button>
-                </div>
-                <div class="card">
-                    <table>
-                        <thead><tr><th>Company / Vendor</th><th>Contact Coordinates</th><th>Control Actions</th></tr></thead>
-                        <tbody>
-                            ${lists.map(s => `
-                                <tr>
-                                    <td><strong>${s.name}</strong></td>
-                                    <td>${s.phone}<br><small>${s.email}</small></td>
-                                    <td><button class="btn btn-danger btn-xs" onclick="DB.delete('suppliers', ${s.id}); switchView('suppliers')">Remove</button></td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
+        function autoBackup(){const data={};DB.stores.forEach(s=>data[s]=DB.getAll(s));data.autoBackupDate=new Date().toISOString();localStorage.setItem('mlea_auto_backup',JSON.stringify(data))}
 
-        function showSupplierModal() {
-            document.getElementById('modalContent').innerHTML = `
-                <h4>Add External Vendor Contract</h4>
-                <div class="form-group"><label>Supplier Entity Name</label><input type="text" id="sName"></div>
-                <div class="form-group"><label>Mobile/Phone Number</label><input type="text" id="sPhone"></div>
-                <div class="form-group"><label>Email Domain</label><input type="email" id="sEmail"></div>
-                <button class="btn btn-success" style="width:100%;" onclick="DB.add('suppliers', {name:document.getElementById('sName').value, phone:document.getElementById('sPhone').value, email:document.getElementById('sEmail').value}); closeModal(); switchView('suppliers');">Commit Entry</button>
-                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
+        function closeModal(){document.getElementById('modal').classList.remove('active')}
+        document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+        document.addEventListener('keydown',function(e){if(document.getElementById('loginScreen').style.display!=='none'){if(e.key>='0'&&e.key<='9')enterPin(e.key);else if(e.key==='Enter')submitPin();else if(e.key==='Backspace'){pinEntry=pinEntry.slice(0,-1);updatePinDisplay()}}});
 
-        function renderPurchaseOrders(el) {
-            const pos = DB.getAll('purchaseOrders');
-            el.innerHTML = `
-                <div class="card" style="display:flex;justify-content:between;align-items:center;">
-                    <h4>Supply Procurement Orders</h4>
-                    <button class="btn btn-primary btn-sm" onclick="showPOModal()">+ Generate Order</button>
-                </div>
-                <div class="card">
-                    <table>
-                        <thead><tr><th>Order Tag</th><th>Vendor Unit</th><th>Operational Status</th></tr></thead>
-                        <tbody>
-                            ${pos.map(p => `
-                                <tr>
-                                    <td>Order Reference #${p.id}</td>
-                                    <td>${p.supplier}</td>
-                                    <td><span class="po-status po-received">${p.status}</span></td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function showPOModal() {
-            const sups = DB.getAll('suppliers');
-            document.getElementById('modalContent').innerHTML = `
-                <h4>Stock Replenishment Form</h4>
-                <div class="form-group">
-                    <label>Target Supplier Channel</label>
-                    <select id="poSup">${sups.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}</select>
-                </div>
-                <div class="form-group"><label>Detailed Logistics Details</label><textarea id="poDesc" placeholder="Items, quantity and negotiated values..."></textarea></div>
-                <button class="btn btn-success" style="width:100%;" onclick="DB.add('purchaseOrders', {supplier:document.getElementById('poSup').value, desc:document.getElementById('poDesc').value, status:'Dispatched'}); closeModal(); switchView('purchaseOrders');">Log Order Dispatched</button>
-                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        function renderExpenses(el) {
-            const exps = DB.getAll('expenses');
-            el.innerHTML = `
-                <div class="card" style="display:flex;justify-content:between;align-items:center;">
-                    <h4>Expense Bookkeeping Logs</h4>
-                    <button class="btn btn-primary btn-sm" onclick="showExpenseModal()">+ Add Expense Record</button>
-                </div>
-                <div class="card">
-                    <table>
-                        <thead><tr><th>Expense Description</th><th>Allocated Asset Cost</th></tr></thead>
-                        <tbody>
-                            ${exps.map(e => `<tr><td><strong>${e.type}</strong><br><small>${e.date}</small></td><td>${formatCurrency(e.amount)}</td></tr>`).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function showExpenseModal() {
-            document.getElementById('modalContent').innerHTML = `
-                <h4>File Business Operational Outflow</h4>
-                <div class="form-group"><label>Operational Title / Class</label><input type="text" id="eType"></div>
-                <div class="form-group"><label>Financial Cost Total</label><input type="number" step="0.01" id="eAmt"></div>
-                <button class="btn btn-success" style="width:100%;" onclick="DB.add('expenses', {type:document.getElementById('eType').value, amount:parseFloat(document.getElementById('eAmt').value)||0, date:new Date().toISOString().split('T')[0]}); closeModal(); switchView('expenses');">Commit Ledger Data</button>
-                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        function renderSettings(el) {
-            el.innerHTML = `
-                <div class="card">
-                    <h4>Global Parameters Realignment</h4>
-                    <div class="form-group" style="margin-top:10px;">
-                        <label>Active Currency Selection Dropdown</label>
-                        <select onchange="saveGlobalOption('currency', this.value)">
-                            ${Object.keys(currencies).map(k => `<option value="${k}" ${currentCurrency === k ? 'selected' : ''}>${currencies[k].flag} ${currencies[k].name} (${currencies[k].symbol})</option>`).join('')}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Tax Standard Coefficient (Decimal Format)</label>
-                        <input type="number" step="0.01" value="${taxRate}" onchange="saveGlobalOption('taxRate', this.value)">
-                    </div>
-                    <div class="form-group">
-                        <label>Default Print Receipt Trailer Text</label>
-                        <input type="text" value="${receiptFooter}" onchange="saveGlobalOption('receiptFooter', this.value)">
-                    </div>
-                </div>
-            `;
-        }
-
-        function saveGlobalOption(key, val) {
-            const sets = DB.getAll('settings');
-            const match = sets.find(s => s.key === key);
-            if (match) match.value = val; else sets.push({ key: key, value: val });
-            DB.set('settings', sets);
-            if (key === 'currency') currentCurrency = val;
-            if (key === 'taxRate') taxRate = parseFloat(val) || 0;
-            if (key === 'receiptFooter') receiptFooter = val;
-            document.getElementById('headerCurrency').textContent = (currencies[currentCurrency]?.flag || '') + ' ' + currentCurrency;
-        }
-
-        function renderUsers(el) {
-            if (currentUser?.role !== 'admin') { el.innerHTML = `<div class="alert">⛔ Operational Access Restricted. Admin Privileges Mandated.</div>`; return; }
-            const users = DB.getAll('users');
-            el.innerHTML = `
-                <div class="card" style="display:flex;justify-content:between;align-items:center;">
-                    <h4>System Profiles Authorization</h4>
-                    <button class="btn btn-primary btn-sm" onclick="showUserModal()">+ Add User Node</button>
-                </div>
-                <div class="card">
-                    <table>
-                        <thead><tr><th>Operator Identity</th><th>Designated Role</th><th>Status Visibility</th></tr></thead>
-                        <tbody>
-                            ${users.map(u => `
-                                <tr>
-                                    <td><strong>${u.name}</strong></td>
-                                    <td><span class="role-badge ${u.role}-badge">${u.role}</span></td>
-                                    <td>
-                                        <button class="btn ${u.active ? 'btn-success' : 'btn-danger'} btn-xs" onclick="toggleUserNode(${u.id})">${u.active ? 'Active Status' : 'Suspended'}</button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-        }
-
-        function toggleUserNode(id) {
-            const list = DB.getAll('users'); const u = list.find(x => x.id === id);
-            if (u) { u.active = !u.active; DB.set('users', list); renderUsers(document.getElementById('mainContent')); }
-        }
-
-        function showUserModal() {
-            document.getElementById('modalContent').innerHTML = `
-                <h4>Generate Secure User Account Identity</h4>
-                <div class="form-group"><label>Display Alias Name</label><input type="text" id="uName"></div>
-                <div class="form-group">
-                    <label>Security Access Matrix Role</label>
-                    <select id="uRole"><option value="cashier">Cashier Desk Node</option><option value="manager">Manager Operations</option><option value="admin">System Global Administrator</option></select>
-                </div>
-                <div class="form-group"><label>Numeric Unlock Code / PIN (4 Digits)</label><input type="password" maxlength="4" pattern="[0-9]*" id="uPin"></div>
-                <button class="btn btn-success" style="width:100%;" onclick="commitUserNode()">Authorize Node Profile</button>
-                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Dismiss</button>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        function commitUserNode() {
-            const p = document.getElementById('uPin').value;
-            if (p.length !== 4) return alert("Security standard states PIN validation must hit exactly 4 digits.");
-            DB.add('users', { name: document.getElementById('uName').value, role: document.getElementById('uRole').value, pin: p, active: true });
-            closeModal(); switchView('users');
-        }
-
-        // --- 6. DATABASE BACKUP & RESTORE PORTAL ---
-        function renderReports(el) {
-            el.innerHTML = `
-                <div class="card">
-                    <h4>Internal System Core Database Backups</h4>
-                    <p style="font-size:0.8em;color:#a0a0b0;margin-bottom:10px;">Run database state extracts directly into backup records files onto external local directories.</p>
-                    <button class="btn btn-success" style="width:100%;margin-bottom:6px;" onclick="triggerSystemExport()">📥 Extract & Download JSON File</button>
-                    <button class="btn btn-warning" style="width:100%;" onclick="triggerRestorePortal()">📤 Re-inject JSON Storage Blueprint</button>
-                </div>
-                <div class="card">
-                    <h4>Danger Zone Security Reset</h4>
-                    <button class="btn btn-danger" style="width:100%;" onclick="factoryWipeSystem()">⚠️ Wipe Application Database</button>
-                </div>
-            `;
-        }
-
-        function triggerSystemExport() {
-            const archive = {}; DB.stores.forEach(s => archive[s] = DB.getAll(s));
-            const contentBlob = new Blob([JSON.stringify(archive, null, 2)], { type: 'application/json' });
-            const temporaryAnchor = document.createElement('a');
-            temporaryAnchor.href = URL.createObjectURL(contentBlob);
-            temporaryAnchor.download = `MLEA_BACKUP_${new Date().toISOString().split('T')[0]}.json`;
-            temporaryAnchor.click();
-        }
-
-        function triggerRestorePortal() {
-            document.getElementById('modalContent').innerHTML = `
-                <h4>Upload System Archive JSON Backup File</h4>
-                <div class="alert alert-warning" style="font-size:0.75em;margin:8px 0;">⚠️ This action will completely replace your current device database.</div>
-                <div class="form-group" style="margin-top:10px;"><input type="file" id="importPayload" accept=".json"></div>
-                <button class="btn btn-success" style="width:100%;margin-top:10px;" onclick="processImportStream()">Execute System Restore</button>
-                <button class="btn btn-danger" style="width:100%;margin-top:5px;" onclick="closeModal()">Cancel Process</button>
-            `;
-            document.getElementById('modal').classList.add('active');
-        }
-
-        function processImportStream() {
-            const selector = document.getElementById('importPayload').files[0];
-            if (!selector) return alert("Select an explicit JSON profile data template before clicking execute.");
-            
-            const browserStreamReader = new FileReader();
-            browserStreamReader.onload = function(e) {
-                try {
-                    const compiled = JSON.parse(e.target.result);
-                    
-                    // Validation Check to verify if it is an actual MLEA backup file
-                    let valid = DB.stores.some(s => compiled.hasOwnProperty(s));
-                    if (!valid) {
-                        alert("Error: This JSON file does not match the system's backup format.");
-                        return;
-                    }
-
-                    // Confirm before clearing storage
-                    if (confirm("Are you absolutely sure you want to restore this data? Current matching records will be overwritten.")) {
-                        DB.stores.forEach(s => { 
-                            if (compiled[s]) {
-                                localStorage.setItem('mlea_' + s, JSON.stringify(compiled[s]));
-                            } 
-                        });
-                        alert("Core database restored successfully! The app will now reload.");
-                        window.location.reload();
-                    }
-                } catch(err) { 
-                    alert("Archive verification breakdown: File content format unrecognizable."); 
-                }
-            };
-            browserStreamReader.readAsText(selector);
-        }
-
-        function factoryWipeSystem() {
-            if (confirm("🚨 Severe Action Triggered! Clean wipe all local browser database elements?")) {
-                localStorage.clear(); window.location.reload();
-            }
-        }
-
-        // --- 7. BACKGROUND AUTO-SAVE TIMEWORKER ---
-        setInterval(() => {
-            const packagePayload = {};
-            DB.stores.forEach(s => packagePayload[s] = DB.getAll(s));
-            localStorage.setItem('mlea_auto_checkpoint_backup', JSON.stringify(packagePayload));
-        }, 5 * 60 * 1000);
-
-        window.onload = initApp;
+        setInterval(autoBackup,5*60*1000);
+        initApp();
     </script>
 </body>
 </html>
