@@ -342,7 +342,20 @@
             }
         }
 
-        function logout() { writeLog('System Logout', 'Session ended.'); currentUser = null; cart = []; switchView('dashboard'); renderLoginScreen(); }
+        function logout() { 
+            // 🚨 BUG FIX: Clean session variables before re-rendering login screen
+            writeLog('System Logout', 'Session ended.'); 
+            cart = []; 
+            adminActiveBranch = 'all';
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            currentUser = null; 
+            selectedUserId = null;
+            pinEntry = '';
+            updatePinDisplay();
+            renderLoginScreen(); 
+        }
+
         function openSidebar() { document.getElementById('sidebar').classList.add('active'); document.getElementById('sidebarOverlay').classList.add('active'); }
         function closeSidebar() { document.getElementById('sidebar').classList.remove('active'); document.getElementById('sidebarOverlay').classList.remove('active'); }
         function closeModal() { document.getElementById('modal').classList.remove('active'); }
@@ -423,17 +436,24 @@
                             </div>
                         </div>
                     `).join('')}
-                    <div class="discount-row" style="margin-top:10px;">
-                        <select onchange="discountType=this.value; renderPOS(document.getElementById('mainContent'))">
-                            <option value="percent" ${discountType === 'percent' ? 'selected' : ''}>% Discount</option>
-                            <option value="flat" ${discountType === 'flat' ? 'selected' : ''}>Fixed Amount</option>
+                    
+                    <div class="discount-row" style="margin-top:15px;">
+                        <select style="flex:1;" onchange="discountType=this.value; renderPOS(document.getElementById('mainContent'))">
+                            <option value="percent" ${discountType === 'percent' ? 'selected' : ''}>Discount (%)</option>
+                            <option value="flat" ${discountType === 'flat' ? 'selected' : ''}>Discount (Flat)</option>
                         </select>
-                        <input type="number" value="${discountRate}" onchange="discountRate=parseFloat(this.value)||0; renderPOS(document.getElementById('mainContent'))">
+                        <input type="number" style="flex:1;" placeholder="0" value="${discountRate}" onchange="discountRate=parseFloat(this.value)||0; renderPOS(document.getElementById('mainContent'))">
                     </div>
+                    <div class="discount-row" style="margin-top:5px;">
+                        <label style="flex:1; font-size:0.85em; color:#a0a0b0; padding-left:5px;">Tax Rate (%)</label>
+                        <input type="number" style="flex:1;" placeholder="Tax %" value="${+(taxRate * 100).toFixed(2)}" step="0.1" onchange="taxRate=parseFloat(this.value)/100||0; renderPOS(document.getElementById('mainContent'))">
+                    </div>
+
                     <div style="text-align:right;margin-top:10px;font-size:0.85em;color:#a0a0b0;">
                         <div>Subtotal: ${formatCurrency(subtotal)}</div>
                         <div>Discount: -${formatCurrency(disc)}</div>
-                        <div style="font-size:1.1em;color:#2ed573;font-weight:bold;margin-top:5px;">Total: ${formatCurrency(total)}</div>
+                        <div>Tax (${+(taxRate * 100).toFixed(2)}%): +${formatCurrency(tax)}</div>
+                        <div style="font-size:1.2em;color:#2ed573;font-weight:bold;margin-top:5px;">Grand Total: ${formatCurrency(total)}</div>
                     </div>
                     <button class="btn btn-success" style="width:100%;margin-top:10px;" onclick="processCheckout(${total})">Complete Checkout</button>
                 </div>
@@ -692,6 +712,10 @@
                             <option value="EUR" ${currentCurrency==='EUR'?'selected':''}>🇪🇺 EUR (€)</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label>Default Tax Rate (%)</label>
+                        <input type="number" step="0.1" value="${+(taxRate * 100).toFixed(2)}" onchange="saveGlobalOption('taxRate', parseFloat(this.value)/100 || 0)">
+                    </div>
                 </div>
             `;
         }
@@ -699,7 +723,9 @@
         function saveGlobalOption(key, val) {
             const sets = DB.getAll('settings'); const match = sets.find(s => s.key === key);
             if (match) match.value = val; else sets.push({ key: key, value: val });
-            DB.set('settings', sets); if (key === 'currency') currentCurrency = val;
+            DB.set('settings', sets); 
+            if (key === 'currency') currentCurrency = val;
+            if (key === 'taxRate') taxRate = val;
             document.getElementById('headerCurrency').textContent = (currencies[currentCurrency]?.flag || '') + ' ' + currentCurrency;
         }
 
