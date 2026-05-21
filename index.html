@@ -989,11 +989,15 @@
     }
 
     if (result.success) {
-      setActivated(key);
-      statusEl.textContent = '✅ ' + result.message;
-      statusEl.className = 'activation-status success';
-      showToast('🎉 License activated! All features unlocked.');
-    } else {
+  setActivated(key);
+  let msg = '✅ ' + result.message;
+  if (result.deviceCount && result.maxDevices) {
+    msg += ' · Device ' + result.deviceCount + ' of ' + result.maxDevices;
+  }
+  statusEl.textContent = msg;
+  statusEl.className = 'activation-status success';
+  showToast('🎉 License activated! All features unlocked.');
+  } else {
       statusEl.textContent = '❌ ' + result.message;
       statusEl.className = 'activation-status error';
     }
