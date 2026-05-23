@@ -32,7 +32,6 @@
       overflow-x: hidden;
     }
 
-    /* subtle grid background */
     body::after {
       content: '';
       position: fixed;
@@ -45,7 +44,6 @@
       z-index: 0;
     }
 
-    /* ── NAVBAR ── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
@@ -59,506 +57,163 @@
       border-bottom: 1px solid var(--border);
     }
 
-    .nav-logo {
-      font-size: 1.1em;
-      font-weight: 800;
-      color: var(--purple-light);
-      letter-spacing: -0.5px;
-    }
-
-    .nav-cta {
-      background: var(--purple);
-      color: #fff;
-      padding: 8px 20px;
-      border-radius: 999px;
-      font-size: 0.82em;
-      font-weight: 700;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
+    .nav-logo { font-size: 1.1em; font-weight: 800; color: var(--purple-light); letter-spacing: -0.5px; }
+    .nav-cta { background: var(--purple); color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 0.82em; font-weight: 700; text-decoration: none; transition: opacity 0.2s; }
     .nav-cta:hover { opacity: 0.85; }
 
-    /* ── HERO ── */
     .hero {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 120px 24px 80px;
-      text-align: center;
-      overflow: hidden;
+      position: relative; z-index: 1; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 120px 24px 80px; text-align: center; overflow: hidden;
     }
 
-    .hero-orb {
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      filter: blur(80px);
-    }
+    .hero-orb { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(80px); }
+    .orb1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(136,118,255,0.14), transparent 70%); top: -100px; left: 50%; transform: translateX(-50%); animation: drift 8s ease-in-out infinite; }
+    .orb2 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(56,217,192,0.08), transparent 70%); bottom: 0; right: -80px; animation: drift 10s ease-in-out infinite reverse; }
+    @keyframes drift { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-20px); } }
 
-    .orb1 {
-      width: 500px; height: 500px;
-      background: radial-gradient(circle, rgba(136,118,255,0.14), transparent 70%);
-      top: -100px; left: 50%;
-      transform: translateX(-50%);
-      animation: drift 8s ease-in-out infinite;
-    }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(136,118,255,0.1); border: 1px solid rgba(136,118,255,0.25); color: var(--purple-light); padding: 7px 18px; border-radius: 999px; font-size: 0.7em; font-family: var(--mono); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 30px; animation: fadeUp 0.6s ease both; }
+    .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(56,217,192,0.4); } 50% { box-shadow: 0 0 0 6px rgba(56,217,192,0); } }
 
-    .orb2 {
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(56,217,192,0.08), transparent 70%);
-      bottom: 0; right: -80px;
-      animation: drift 10s ease-in-out infinite reverse;
-    }
+    h1 { font-size: clamp(2.4em, 8vw, 5em); font-weight: 800; line-height: 1.08; letter-spacing: -1.5px; max-width: 720px; animation: fadeUp 0.7s 0.1s ease both; }
+    h1 em { font-style: normal; background: linear-gradient(120deg, var(--purple-light) 0%, var(--teal) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 
-    @keyframes drift {
-      0%,100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-20px); }
-    }
+    .hero-desc { margin-top: 22px; color: var(--muted); font-size: clamp(0.88em, 2vw, 1.05em); max-width: 500px; line-height: 1.75; animation: fadeUp 0.7s 0.2s ease both; }
 
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(136,118,255,0.1);
-      border: 1px solid rgba(136,118,255,0.25);
-      color: var(--purple-light);
-      padding: 7px 18px;
-      border-radius: 999px;
-      font-size: 0.7em;
-      font-family: var(--mono);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 30px;
-      animation: fadeUp 0.6s ease both;
-    }
+    .price-block { margin-top: 40px; animation: fadeUp 0.7s 0.3s ease both; }
+    .price-amount { font-size: clamp(3em, 11vw, 5.5em); font-weight: 800; color: var(--teal); letter-spacing: -2px; line-height: 1; }
+    .price-sub { color: var(--muted); font-size: 0.78em; font-family: var(--mono); margin-top: 8px; }
 
-    .pulse-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--teal);
-      animation: pulse 2s infinite;
-    }
+    .hero-btns { margin-top: 38px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; animation: fadeUp 0.7s 0.4s ease both; }
 
-    @keyframes pulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(56,217,192,0.4); }
-      50% { box-shadow: 0 0 0 6px rgba(56,217,192,0); }
-    }
-
-    h1 {
-      font-size: clamp(2.4em, 8vw, 5em);
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -1.5px;
-      max-width: 720px;
-      animation: fadeUp 0.7s 0.1s ease both;
-    }
-
-    h1 em {
-      font-style: normal;
-      background: linear-gradient(120deg, var(--purple-light) 0%, var(--teal) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-desc {
-      margin-top: 22px;
-      color: var(--muted);
-      font-size: clamp(0.88em, 2vw, 1.05em);
-      max-width: 500px;
-      line-height: 1.75;
-      animation: fadeUp 0.7s 0.2s ease both;
-    }
-
-    .price-block {
-      margin-top: 40px;
-      animation: fadeUp 0.7s 0.3s ease both;
-    }
-
-    .price-amount {
-      font-size: clamp(3em, 11vw, 5.5em);
-      font-weight: 800;
-      color: var(--teal);
-      letter-spacing: -2px;
-      line-height: 1;
-    }
-
-    .price-sub {
-      color: var(--muted);
-      font-size: 0.78em;
-      font-family: var(--mono);
-      margin-top: 8px;
-    }
-
-    .hero-btns {
-      margin-top: 38px;
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-      animation: fadeUp 0.7s 0.4s ease both;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--purple), #6a5be8);
-      color: #fff;
-      padding: 15px 34px;
-      border-radius: 14px;
-      font-size: 0.95em;
-      font-weight: 700;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 6px 28px rgba(136,118,255,0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+    .btn-primary { background: linear-gradient(135deg, var(--purple), #6a5be8); color: #fff; padding: 15px 34px; border-radius: 14px; font-size: 0.95em; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 6px 28px rgba(136,118,255,0.3); transition: transform 0.2s, box-shadow 0.2s; border: none; cursor: pointer; font-family: var(--font); }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(136,118,255,0.45); }
 
-    .btn-outline {
-      background: transparent;
-      color: var(--text);
-      padding: 15px 28px;
-      border-radius: 14px;
-      font-size: 0.95em;
-      font-weight: 600;
-      text-decoration: none;
-      border: 1px solid var(--border);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: border-color 0.2s, background 0.2s;
-    }
+    .btn-outline { background: transparent; color: var(--text); padding: 15px 28px; border-radius: 14px; font-size: 0.95em; font-weight: 600; text-decoration: none; border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.2s, background 0.2s; cursor: pointer; font-family: var(--font); }
     .btn-outline:hover { border-color: var(--purple); background: rgba(136,118,255,0.06); }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(22px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ── TRUST BAR ── */
-    .trust-bar {
-      position: relative; z-index: 1;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 30px;
-      padding: 28px 24px;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-    }
-
-    .trust-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.82em;
-      color: var(--muted);
-      font-family: var(--mono);
-    }
-
+    /* Trust Bar */
+    .trust-bar { position: relative; z-index: 1; display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; padding: 28px 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); }
+    .trust-item { display: flex; align-items: center; gap: 8px; font-size: 0.82em; color: var(--muted); font-family: var(--mono); }
     .trust-item span:first-child { font-size: 1.2em; }
 
-    /* ── SECTIONS ── */
-    .section {
-      position: relative; z-index: 1;
-      max-width: 920px;
-      margin: 0 auto;
-      padding: 90px 24px;
+    /* Activation Section */
+    .activation-section {
+      position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 32px 24px;
     }
-
-    .section-label {
-      font-family: var(--mono);
-      font-size: 0.7em;
-      color: var(--teal);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 10px;
+    .activation-card {
+      background: var(--card); border: 2px solid var(--purple); border-radius: 20px; padding: 32px; text-align: center;
     }
-
-    .section-title {
-      font-size: clamp(1.7em, 5vw, 2.6em);
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 8px;
+    .activation-card h3 { font-size: 1.3em; font-weight: 700; margin-bottom: 8px; color: var(--purple-light); }
+    .activation-card p { color: var(--muted); font-size: 0.82em; margin-bottom: 20px; font-family: var(--mono); }
+    .license-input-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .license-input {
+      background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 14px 18px;
+      border-radius: 12px; font-family: var(--mono); font-size: 0.9em; letter-spacing: 2px; text-align: center;
+      width: 280px; transition: border-color 0.3s;
     }
+    .license-input:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(136,118,255,0.1); }
+    .license-input::placeholder { color: var(--muted); letter-spacing: 1px; }
+    .license-input:disabled { opacity: 0.7; cursor: not-allowed; }
 
-    .section-sub {
-      color: var(--muted);
-      font-size: 0.88em;
-      margin-bottom: 44px;
-      line-height: 1.7;
+    .btn-activate {
+      background: var(--teal); color: #0b1a18; padding: 14px 24px; border-radius: 12px; font-weight: 700;
+      font-size: 0.9em; cursor: pointer; border: none; font-family: var(--font); transition: transform 0.2s, box-shadow 0.2s;
     }
+    .btn-activate:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56,217,192,0.3); }
+    .btn-activate:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-    /* ── FEATURES ── */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 14px;
+    .activation-status { margin-top: 16px; font-family: var(--mono); font-size: 0.78em; min-height: 20px; transition: all 0.3s; }
+    .activation-status.success { color: var(--teal); }
+    .activation-status.error { color: var(--red); }
+    .activation-status.loading { color: var(--amber); }
+
+    /* Feature Lock Icons */
+    .feature-lock { position: relative; }
+    .feature-lock::before {
+      content: '🔒'; position: absolute; top: 12px; right: 12px; font-size: 1.2em; opacity: 0.6; z-index: 2;
     }
+    .feature-lock.unlocked::before { content: '🔓'; }
 
+    /* Sections */
+    .section { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; padding: 90px 24px; }
+    .section-label { font-family: var(--mono); font-size: 0.7em; color: var(--teal); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+    .section-title { font-size: clamp(1.7em, 5vw, 2.6em); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .section-sub { color: var(--muted); font-size: 0.88em; margin-bottom: 44px; line-height: 1.7; }
+
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
     .feat {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 26px;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.3s, transform 0.2s;
+      background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 26px;
+      position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.2s;
     }
-
-    .feat::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top left, rgba(136,118,255,0.06), transparent 60%);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
+    .feat::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top left, rgba(136,118,255,0.06), transparent 60%); opacity: 0; transition: opacity 0.3s; }
     .feat:hover { border-color: rgba(136,118,255,0.35); transform: translateY(-3px); }
     .feat:hover::after { opacity: 1; }
-
     .feat-icon { font-size: 2em; margin-bottom: 14px; }
     .feat-title { font-size: 0.95em; font-weight: 700; margin-bottom: 8px; }
     .feat-desc { font-size: 0.78em; color: var(--muted); line-height: 1.65; font-family: var(--mono); }
 
-    /* ── ROLES ── */
-    .roles-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-      gap: 14px;
-    }
-
-    .role-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 28px 22px;
-      text-align: center;
-      transition: transform 0.2s;
-    }
+    .roles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+    .role-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 28px 22px; text-align: center; transition: transform 0.2s; position: relative; }
     .role-card:hover { transform: translateY(-3px); }
-
     .role-icon { font-size: 2.6em; margin-bottom: 12px; }
     .role-name { font-weight: 800; font-size: 1em; margin-bottom: 8px; }
-
-    .pill {
-      display: inline-block;
-      padding: 3px 14px;
-      border-radius: 999px;
-      font-size: 0.65em;
-      font-family: var(--mono);
-      margin-bottom: 12px;
-    }
-    .pill-admin   { background: rgba(136,118,255,0.15); color: var(--purple-light); }
-    .pill-manager { background: rgba(56,217,192,0.15);  color: var(--teal); }
-    .pill-cashier { background: rgba(245,166,35,0.15);  color: var(--amber); }
-
+    .pill { display: inline-block; padding: 3px 14px; border-radius: 999px; font-size: 0.65em; font-family: var(--mono); margin-bottom: 12px; }
+    .pill-admin { background: rgba(136,118,255,0.15); color: var(--purple-light); }
+    .pill-manager { background: rgba(56,217,192,0.15); color: var(--teal); }
+    .pill-cashier { background: rgba(245,166,35,0.15); color: var(--amber); }
     .role-desc { font-size: 0.78em; color: var(--muted); line-height: 1.6; font-family: var(--mono); }
 
-    /* ── FAQ ── */
     .faq-list { display: flex; flex-direction: column; gap: 12px; }
-
-    .faq-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-
-    .faq-q {
-      padding: 18px 22px;
-      font-weight: 700;
-      font-size: 0.9em;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      user-select: none;
-      transition: color 0.2s;
-    }
+    .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .faq-q { padding: 18px 22px; font-weight: 700; font-size: 0.9em; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; transition: color 0.2s; }
     .faq-q:hover { color: var(--purple-light); }
-
     .faq-arrow { font-size: 0.8em; transition: transform 0.3s; color: var(--muted); }
     .faq-item.open .faq-arrow { transform: rotate(180deg); }
-
-    .faq-a {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.35s ease, padding 0.35s;
-      font-size: 0.82em;
-      color: var(--muted);
-      font-family: var(--mono);
-      line-height: 1.7;
-      padding: 0 22px;
-    }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s; font-size: 0.82em; color: var(--muted); font-family: var(--mono); line-height: 1.7; padding: 0 22px; }
     .faq-item.open .faq-a { max-height: 200px; padding: 0 22px 18px; }
 
-    /* ── HOW TO BUY ── */
     .steps { display: flex; flex-direction: column; gap: 14px; }
-
-    .step {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px 26px;
-      transition: border-color 0.3s;
-    }
+    .step { display: flex; align-items: flex-start; gap: 20px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 26px; transition: border-color 0.3s; }
     .step:hover { border-color: rgba(136,118,255,0.3); }
-
-    .step-num {
-      width: 42px; height: 42px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--purple), #6a5be8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1em;
-      flex-shrink: 0;
-      box-shadow: 0 4px 16px rgba(136,118,255,0.3);
-    }
-
+    .step-num { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--purple), #6a5be8); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1em; flex-shrink: 0; box-shadow: 0 4px 16px rgba(136,118,255,0.3); }
     .step h3 { font-size: 0.95em; font-weight: 700; margin-bottom: 5px; }
-    .step p  { font-size: 0.78em; color: var(--muted); font-family: var(--mono); line-height: 1.65; }
+    .step p { font-size: 0.78em; color: var(--muted); font-family: var(--mono); line-height: 1.65; }
 
-    /* ── PAYMENT CHIPS ── */
-    .payment-methods {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-
-    .pay-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 7px 14px;
-      border-radius: 10px;
-      font-size: 0.75em;
-      font-family: var(--mono);
-      cursor: pointer;
-      user-select: all;
-      transition: opacity 0.2s;
-    }
+    .payment-methods { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+    .pay-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 10px; font-size: 0.75em; font-family: var(--mono); cursor: pointer; user-select: all; transition: opacity 0.2s; }
     .pay-chip:hover { opacity: 0.8; }
+    .chip-paypal { background: rgba(0,112,243,0.12); border: 1px solid rgba(0,112,243,0.25); color: #6ab0ff; }
+    .chip-gcash { background: rgba(0,163,255,0.12); border: 1px solid rgba(0,163,255,0.25); color: #4dc8ff; }
+    .chip-name { background: rgba(56,217,192,0.1); border: 1px solid rgba(56,217,192,0.2); color: var(--teal); cursor: default; }
 
-    .chip-paypal {
-      background: rgba(0,112,243,0.12);
-      border: 1px solid rgba(0,112,243,0.25);
-      color: #6ab0ff;
-    }
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); max-width: 920px; margin: 0 auto; position: relative; z-index: 1; }
 
-    .chip-gcash {
-      background: rgba(0,163,255,0.12);
-      border: 1px solid rgba(0,163,255,0.25);
-      color: #4dc8ff;
-    }
+    .bottom-cta { position: relative; z-index: 1; text-align: center; padding: 90px 24px 110px; overflow: hidden; }
+    .bottom-cta-glow { position: absolute; width: 500px; height: 300px; background: radial-gradient(ellipse, rgba(136,118,255,0.1), transparent 70%); left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none; }
+    .bottom-cta h2 { font-size: clamp(1.8em, 6vw, 3.2em); font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; }
+    .bottom-cta p { color: var(--muted); font-family: var(--mono); font-size: 0.84em; margin-bottom: 36px; }
 
-    .chip-name {
-      background: rgba(56,217,192,0.1);
-      border: 1px solid rgba(56,217,192,0.2);
-      color: var(--teal);
-      cursor: default;
-    }
-
-    /* ── DIVIDER ── */
-    .divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border), transparent);
-      max-width: 920px;
-      margin: 0 auto;
-      position: relative; z-index: 1;
-    }
-
-    /* ── BOTTOM CTA ── */
-    .bottom-cta {
-      position: relative; z-index: 1;
-      text-align: center;
-      padding: 90px 24px 110px;
-      overflow: hidden;
-    }
-
-    .bottom-cta-glow {
-      position: absolute;
-      width: 500px; height: 300px;
-      background: radial-gradient(ellipse, rgba(136,118,255,0.1), transparent 70%);
-      left: 50%; top: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .bottom-cta h2 {
-      font-size: clamp(1.8em, 6vw, 3.2em);
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 14px;
-    }
-
-    .bottom-cta p {
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 0.84em;
-      margin-bottom: 36px;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      position: relative; z-index: 1;
-      border-top: 1px solid var(--border);
-      padding: 26px 24px;
-      text-align: center;
-      font-size: 0.74em;
-      color: var(--muted);
-      font-family: var(--mono);
-    }
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 26px 24px; text-align: center; font-size: 0.74em; color: var(--muted); font-family: var(--mono); }
     footer em { color: var(--purple-light); font-style: normal; }
 
-    /* ── TOAST ── */
-    .toast {
-      position: fixed;
-      bottom: 32px; left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--teal);
-      color: #0b1a18;
-      padding: 11px 26px;
-      border-radius: 999px;
-      font-size: 0.85em;
-      font-weight: 700;
-      z-index: 9999;
-      transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
-      pointer-events: none;
-    }
+    .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--teal); color: #0b1a18; padding: 11px 26px; border-radius: 999px; font-size: 0.85em; font-weight: 700; z-index: 9999; transition: transform 0.3s cubic-bezier(.34,1.56,.64,1); pointer-events: none; }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* ── REVEAL ── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
-    }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav>
     <div class="nav-logo">🏪 MLEA POS</div>
     <a href="#how-to-buy" class="nav-cta">Buy Now — ₱1,500/$24 Only</a>
   </nav>
 
-  <!-- HERO -->
   <div class="hero">
     <div class="hero-orb orb1"></div>
     <div class="hero-orb orb2"></div>
@@ -573,11 +228,24 @@
 
     <div class="hero-btns">
       <a href="#how-to-buy" class="btn-primary">🛒 Buy Now</a>
-      <a href="https://nethanbenogie-code.github.io/mleapropos/" target="_blank" class="btn-outline">👀 Live Demo</a>
+      <button class="btn-outline" onclick="document.getElementById('activation').scrollIntoView({behavior:'smooth'})">🔑 Activate License</button>
     </div>
   </div>
 
-  <!-- TRUST BAR -->
+  <!-- ACTIVATION SECTION (inserted right after hero) -->
+  <div class="activation-section" id="activation">
+    <div class="activation-card reveal">
+      <h3>🔐 Already Purchased?</h3>
+      <p>Enter your license key to unlock all features.</p>
+      <div class="license-input-group">
+        <input type="text" class="license-input" id="licenseInput" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" oninput="formatLicense(this)">
+        <button class="btn-activate" id="activateBtn" onclick="handleActivation()">Activate</button>
+      </div>
+      <div class="activation-status" id="activationStatus"></div>
+      <button id="deactivateBtn" class="btn-outline" style="display:none;margin-top:12px;color:var(--red);border-color:var(--red);" onclick="handleDeactivation()">Deactivate License</button>
+    </div>
+  </div>
+
   <div class="trust-bar">
     <div class="trust-item"><span>✅</span> One-time payment</div>
     <div class="trust-item"><span>📱</span> Works on any device</div>
@@ -586,49 +254,34 @@
     <div class="trust-item"><span>💱</span> Multi-currency support</div>
   </div>
 
-  <!-- FEATURES -->
+  <!-- Features with lock icons -->
   <div class="section">
     <div class="section-label reveal">Features</div>
     <div class="section-title reveal">Built for real businesses</div>
-    <p class="section-sub reveal">Everything you need to run daily operations, right out of the box.</p>
+    <p class="section-sub reveal">Everything you need to run daily operations, right out of the box. <em style="color: var(--amber);">Locked features require license activation.</em></p>
     <div class="features-grid">
-      <div class="feat reveal"><div class="feat-icon">🏢</div><div class="feat-title">Multi-Branch Support</div><p class="feat-desc">Run multiple store locations from one system. Each branch has its own data and staff.</p></div>
-      <div class="feat reveal"><div class="feat-icon">🔐</div><div class="feat-title">PIN-Based Login</div><p class="feat-desc">Fast 4-digit PIN login for staff. No forgotten passwords, no delays at checkout.</p></div>
-      <div class="feat reveal"><div class="feat-icon">📦</div><div class="feat-title">Inventory Tracking</div><p class="feat-desc">Real-time stock levels with low-stock alerts across all your branches.</p></div>
-      <div class="feat reveal"><div class="feat-icon">💰</div><div class="feat-title">Sales & Receipts</div><p class="feat-desc">Cart system with discounts, 12% VAT, and instant printable mini receipts.</p></div>
-      <div class="feat reveal"><div class="feat-icon">📊</div><div class="feat-title">Reports & Analytics</div><p class="feat-desc">Daily and historical sales reports. Track revenue, expenses, and performance.</p></div>
-      <div class="feat reveal"><div class="feat-icon">🌍</div><div class="feat-title">Multi-Currency</div><p class="feat-desc">Supports PHP, USD, EUR, GBP, JPY, SGD, AED and more. Switch anytime in settings.</p></div>
-      <div class="feat reveal"><div class="feat-icon">🚚</div><div class="feat-title">Supplier Management</div><p class="feat-desc">Track suppliers and purchases to keep your supply chain smooth and organized.</p></div>
-      <div class="feat reveal"><div class="feat-icon">📱</div><div class="feat-title">Mobile-Ready</div><p class="feat-desc">Works on phones, tablets, and desktops. No app needed — runs in any browser.</p></div>
+      <div class="feat reveal feature-lock" data-feature="multi-branch"><div class="feat-icon">🏢</div><div class="feat-title">Multi-Branch Support</div><p class="feat-desc">Run multiple store locations from one system. Each branch has its own data and staff.</p></div>
+      <div class="feat reveal feature-lock" data-feature="pin-login"><div class="feat-icon">🔐</div><div class="feat-title">PIN-Based Login</div><p class="feat-desc">Fast 4-digit PIN login for staff. No forgotten passwords, no delays at checkout.</p></div>
+      <div class="feat reveal feature-lock" data-feature="inventory"><div class="feat-icon">📦</div><div class="feat-title">Inventory Tracking</div><p class="feat-desc">Real-time stock levels with low-stock alerts across all your branches.</p></div>
+      <div class="feat reveal feature-lock" data-feature="sales"><div class="feat-icon">💰</div><div class="feat-title">Sales & Receipts</div><p class="feat-desc">Cart system with discounts, 12% VAT, and instant printable mini receipts.</p></div>
+      <div class="feat reveal feature-lock" data-feature="reports"><div class="feat-icon">📊</div><div class="feat-title">Reports & Analytics</div><p class="feat-desc">Daily and historical sales reports. Track revenue, expenses, and performance.</p></div>
+      <div class="feat reveal feature-lock" data-feature="currency"><div class="feat-icon">🌍</div><div class="feat-title">Multi-Currency</div><p class="feat-desc">Supports PHP, USD, EUR, GBP, JPY, SGD, AED and more. Switch anytime in settings.</p></div>
+      <div class="feat reveal feature-lock" data-feature="supplier"><div class="feat-icon">🚚</div><div class="feat-title">Supplier Management</div><p class="feat-desc">Track suppliers and purchases to keep your supply chain smooth and organized.</p></div>
+      <div class="feat reveal feature-lock" data-feature="mobile"><div class="feat-icon">📱</div><div class="feat-title">Mobile-Ready</div><p class="feat-desc">Works on phones, tablets, and desktops. No app needed — runs in any browser.</p></div>
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- ROLES -->
+  <!-- Roles with lock icons -->
   <div class="section">
     <div class="section-label reveal">Access Control</div>
     <div class="section-title reveal">The right access for every role</div>
     <p class="section-sub reveal">Keep your team organized with role-based permissions.</p>
     <div class="roles-grid">
-      <div class="role-card reveal">
-        <div class="role-icon">👑</div>
-        <div class="role-name">Admin</div>
-        <span class="pill pill-admin">Full Access</span>
-        <p class="role-desc">Full control over all branches, users, settings, products, and reports.</p>
-      </div>
-      <div class="role-card reveal">
-        <div class="role-icon">👨‍💼</div>
-        <div class="role-name">Manager</div>
-        <span class="pill pill-manager">Branch Access</span>
-        <p class="role-desc">Manages their assigned branch — products, staff, and branch-level reports.</p>
-      </div>
-      <div class="role-card reveal">
-        <div class="role-icon">👤</div>
-        <div class="role-name">Cashier</div>
-        <span class="pill pill-cashier">POS Only</span>
-        <p class="role-desc">Handles sales transactions, issues receipts, and manages the cart.</p>
-      </div>
+      <div class="role-card reveal feature-lock" data-feature="role-admin"><div class="role-icon">👑</div><div class="role-name">Admin</div><span class="pill pill-admin">Full Access</span><p class="role-desc">Full control over all branches, users, settings, products, and reports.</p></div>
+      <div class="role-card reveal feature-lock" data-feature="role-manager"><div class="role-icon">👨‍💼</div><div class="role-name">Manager</div><span class="pill pill-manager">Branch Access</span><p class="role-desc">Manages their assigned branch — products, staff, and branch-level reports.</p></div>
+      <div class="role-card reveal feature-lock" data-feature="role-cashier"><div class="role-icon">👤</div><div class="role-name">Cashier</div><span class="pill pill-cashier">POS Only</span><p class="role-desc">Handles sales transactions, issues receipts, and manages the cart.</p></div>
     </div>
   </div>
 
@@ -640,26 +293,12 @@
     <div class="section-title reveal">Common questions</div>
     <p class="section-sub reveal">Got questions? Here are the answers.</p>
     <div class="faq-list">
-      <div class="faq-item reveal">
-        <div class="faq-q" onclick="toggleFaq(this)">Do I need to install anything? <span class="faq-arrow">▼</span></div>
-        <div class="faq-a">No. MLEA POS runs entirely in your browser. Just open the link and you're ready to go — works on any device.</div>
-      </div>
-      <div class="faq-item reveal">
-        <div class="faq-q" onclick="toggleFaq(this)">Is this a subscription? <span class="faq-arrow">▼</span></div>
-        <div class="faq-a">No subscriptions ever. You pay ₱1,500/$24 Only once and the system is yours. No monthly fees, no hidden charges.</div>
-      </div>
-      <div class="faq-item reveal">
-        <div class="faq-q" onclick="toggleFaq(this)">Can I use it for multiple branches? <span class="faq-arrow">▼</span></div>
-        <div class="faq-a">Yes! MLEA POS is built with multi-branch support from the ground up. Each branch has its own data and staff.</div>
-      </div>
-      <div class="faq-item reveal">
-        <div class="faq-q" onclick="toggleFaq(this)">What currencies does it support? <span class="faq-arrow">▼</span></div>
-        <div class="faq-a">It supports PHP, USD, EUR, GBP, JPY, INR, CNY, AUD, SGD, MYR, and AED. You can switch currencies anytime from settings.</div>
-      </div>
-      <div class="faq-item reveal">
-        <div class="faq-q" onclick="toggleFaq(this)">How fast will I get access after paying? <span class="faq-arrow">▼</span></div>
-        <div class="faq-a">Just message Gieo after sending your payment. Once confirmed, the link is sent right away — usually within a few minutes.</div>
-      </div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Do I need to install anything? <span class="faq-arrow">▼</span></div><div class="faq-a">No. MLEA POS runs entirely in your browser. Just open the link and you're ready to go — works on any device.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Is this a subscription? <span class="faq-arrow">▼</span></div><div class="faq-a">No subscriptions ever. You pay ₱1,500/$24 Only once and the system is yours. No monthly fees, no hidden charges.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Can I use it for multiple branches? <span class="faq-arrow">▼</span></div><div class="faq-a">Yes! MLEA POS is built with multi-branch support from the ground up. Each branch has its own data and staff.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">What currencies does it support? <span class="faq-arrow">▼</span></div><div class="faq-a">It supports PHP, USD, EUR, GBP, JPY, INR, CNY, AUD, SGD, MYR, and AED. You can switch currencies anytime from settings.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">How fast will I get access after paying? <span class="faq-arrow">▼</span></div><div class="faq-a">Just message Gieo after sending your payment. Once confirmed, your license key is sent right away — usually within a few minutes.</div></div>
+      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">How does the license key work? <span class="faq-arrow">▼</span></div><div class="faq-a">You get a unique license key tied to your devices. You can activate up to the number of devices you purchased. Need more? Just ask Gieo to upgrade.</div></div>
     </div>
   </div>
 
@@ -669,80 +308,197 @@
   <div class="section" id="how-to-buy">
     <div class="section-label reveal">Purchase</div>
     <div class="section-title reveal">How to buy</div>
-    <p class="section-sub reveal">Simple steps, no accounts needed. Pay and get access fast.</p>
+    <p class="section-sub reveal">Simple steps, no accounts needed. Pay and get your license key fast.</p>
     <div class="steps">
-
-      <div class="step reveal">
-        <div class="step-num">1</div>
-        <div>
-          <h3>Send ₱1,500/$24 Only via PayPal or GCash</h3>
-          <p>Choose your preferred payment method and send the exact amount.</p>
-          <div class="payment-methods">
-            <div class="pay-chip chip-paypal" onclick="copyText('ogie613@hotmail.com', 'PayPal email copied!')">📧 ogie613@hotmail.com</div>
-            <div class="pay-chip chip-gcash" onclick="copyText('09350840375', 'GCash number copied!')">📱 09350840375</div>
-            <div class="pay-chip chip-name">👤 R***** TR C*******A</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step reveal">
-        <div class="step-num">2</div>
-        <div>
-          <h3>Message Gieo with your payment proof</h3>
-          <p>Send a screenshot or confirmation of your payment so Gieo can verify it on his end.</p>
-        </div>
-      </div>
-
-      <div class="step reveal">
-        <div class="step-num">3</div>
-        <div>
-          <h3>Get your live access link</h3>
-          <p>Once payment is confirmed, Gieo sends you the MLEA POS link. You're ready to start running your business.</p>
-        </div>
-      </div>
-
+      <div class="step reveal"><div class="step-num">1</div><div><h3>Send ₱1,500/$24 Only via PayPal or GCash</h3><p>Choose your preferred payment method and send the exact amount.</p><div class="payment-methods"><div class="pay-chip chip-paypal" onclick="copyText('ogie613@hotmail.com', 'PayPal email copied!')">📧 ogie613@hotmail.com</div><div class="pay-chip chip-gcash" onclick="copyText('09350840375', 'GCash number copied!')">📱 09350840375</div><div class="pay-chip chip-name">👤 R***** TR C*******A</div></div></div></div>
+      <div class="step reveal"><div class="step-num">2</div><div><h3>Message Gieo with your payment proof</h3><p>Send a screenshot or confirmation of your payment so Gieo can verify it and issue your license key.</p></div></div>
+      <div class="step reveal"><div class="step-num">3</div><div><h3>Receive your license key & activate</h3><p>Gieo sends your unique license key. Enter it above to unlock all features. You can then use the POS on multiple devices (up to your plan).</p></div></div>
     </div>
   </div>
 
-  <!-- BOTTOM CTA -->
   <div class="bottom-cta">
     <div class="bottom-cta-glow"></div>
     <h2 class="reveal">Ready to level up<br>your business?</h2>
     <p class="reveal">One payment. Lifetime access. No strings attached.</p>
-    <a href="#how-to-buy" class="btn-primary reveal" style="display:inline-flex;">🛒 Get MLEA POS — ₱1,500/$24 Only </a>
+    <a href="#how-to-buy" class="btn-primary reveal" style="display:inline-flex;">🛒 Get MLEA POS — ₱1,500/$24 Only</a>
   </div>
 
-  <footer>
-    Made by <em>Gieo</em> · MLEA POS Multi-Branch System v2.2 · All rights reserved
-  </footer>
+  <footer>Made by <em>Gieo</em> · MLEA POS Multi-Branch System v2.2 · All rights reserved</footer>
 
   <div class="toast" id="toast">Copied!</div>
 
   <script>
-    function copyText(text, msg) {
-      navigator.clipboard.writeText(text).then(() => {
-        const t = document.getElementById('toast');
-        t.textContent = '✅ ' + msg;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2500);
+    // ═══════════════════════════════════════════
+    // LICENSE ACTIVATION (Multi-Device Support)
+    // ═══════════════════════════════════════════
+    const LICENSE_SERVER = 'https://script.google.com/macros/s/AKfycby1QlCg9jzpXmxtE1N-5w7b4CuGa0TT5gcfwYrx-0yetL4iI5s86ZX8NyLhDwo4tLJX/exec';
+    const DEMO_KEY = 'MLEA-DEMO-UNLOCK-KEY1';
+
+    function getDeviceId() {
+      return btoa(
+        navigator.userAgent.replace(/\s/g,'').slice(-20) +
+        screen.width + 'x' + screen.height +
+        new Date().getTimezoneOffset()
+      ).replace(/[^a-zA-Z0-9]/g,'').slice(0,16);
+    }
+
+    function formatLicense(input) {
+      let value = input.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      if (value.length > 16) value = value.slice(0,16);
+      const parts = [];
+      for (let i = 0; i < value.length; i += 4) parts.push(value.slice(i, i+4));
+      input.value = parts.join('-');
+    }
+
+    function isActivated() { return localStorage.getItem('mlea_pos_activated') === 'true'; }
+    function getStoredLicense() { return localStorage.getItem('mlea_pos_license') || ''; }
+
+    function setActivated(licenseKey, info) {
+      localStorage.setItem('mlea_pos_activated', 'true');
+      localStorage.setItem('mlea_pos_license', licenseKey);
+      if (info) localStorage.setItem('mlea_license_info', JSON.stringify(info));
+      updateUIForActivation();
+    }
+
+    function clearActivation() {
+      localStorage.removeItem('mlea_pos_activated');
+      localStorage.removeItem('mlea_pos_license');
+      localStorage.removeItem('mlea_license_info');
+      updateUIForActivation();
+    }
+
+    function updateUIForActivation() {
+      const activated = isActivated();
+      const licenseKey = getStoredLicense();
+      const input = document.getElementById('licenseInput');
+      const btn = document.getElementById('activateBtn');
+      const deactBtn = document.getElementById('deactivateBtn');
+      const statusEl = document.getElementById('activationStatus');
+
+      // Lock/unlock feature cards
+      document.querySelectorAll('.feature-lock').forEach(el => {
+        if (activated) el.classList.add('unlocked');
+        else el.classList.remove('unlocked');
       });
+
+      if (activated) {
+        input.value = licenseKey;
+        input.disabled = true;
+        btn.style.display = 'none';
+        deactBtn.style.display = 'inline-flex';
+        // Show stored device info
+        const storedInfo = localStorage.getItem('mlea_license_info');
+        let msg = '✅ System Activated';
+        if (storedInfo) {
+          try {
+            const info = JSON.parse(storedInfo);
+            if (info.deviceCount && info.maxDevices) {
+              msg = `✅ Activated · Device ${info.deviceCount} of ${info.maxDevices}`;
+            }
+          } catch(e) {}
+        }
+        statusEl.textContent = msg;
+        statusEl.className = 'activation-status success';
+      } else {
+        input.value = '';
+        input.disabled = false;
+        btn.style.display = 'inline-flex';
+        deactBtn.style.display = 'none';
+        statusEl.textContent = '';
+        statusEl.className = 'activation-status';
+      }
+    }
+
+    async function handleActivation() {
+      const input = document.getElementById('licenseInput');
+      const statusEl = document.getElementById('activationStatus');
+      const btn = document.getElementById('activateBtn');
+      const key = input.value.trim();
+
+      if (!key) {
+        statusEl.textContent = '⚠️ Please enter your license key';
+        statusEl.className = 'activation-status error';
+        return;
+      }
+
+      btn.disabled = true;
+      statusEl.textContent = '⏳ Verifying with license server...';
+      statusEl.className = 'activation-status loading';
+
+      const deviceId = getDeviceId();
+      const url = LICENSE_SERVER + '?action=activate&licenseKey=' + encodeURIComponent(key) + '&deviceId=' + encodeURIComponent(deviceId);
+
+      try {
+        const response = await fetch(url);
+        const text = await response.text();
+        let result;
+        try { result = JSON.parse(text); } catch (e) {
+          statusEl.textContent = '❌ Invalid server response';
+          statusEl.className = 'activation-status error';
+          btn.disabled = false;
+          return;
+        }
+
+        if (result.success) {
+          setActivated(key, { deviceCount: result.deviceCount, maxDevices: result.maxDevices, customer: result.customer });
+          statusEl.textContent = `✅ ${result.message} (Device ${result.deviceCount}/${result.maxDevices})`;
+          statusEl.className = 'activation-status success';
+          showToast('🎉 License activated!');
+        } else {
+          statusEl.textContent = '❌ ' + result.message;
+          statusEl.className = 'activation-status error';
+        }
+      } catch (error) {
+        if (key === DEMO_KEY) {
+          setActivated(key, { deviceCount: 1, maxDevices: 1 });
+          statusEl.textContent = '⚠️ Demo activated offline';
+          statusEl.className = 'activation-status success';
+          showToast('📡 Offline demo mode');
+        } else {
+          statusEl.textContent = '❌ Cannot reach license server. Check your internet.';
+          statusEl.className = 'activation-status error';
+        }
+      }
+      btn.disabled = false;
+    }
+
+    async function handleDeactivation() {
+      if (!confirm('Deactivate license? All premium features will be locked.')) return;
+      const licenseKey = getStoredLicense();
+      const deviceId = getDeviceId();
+      try {
+        await fetch(LICENSE_SERVER + '?action=deactivate&licenseKey=' + encodeURIComponent(licenseKey) + '&deviceId=' + encodeURIComponent(deviceId));
+      } catch (e) {}
+      clearActivation();
+      showToast('🔒 License deactivated');
+    }
+
+    // ═══════════════════ UTILITIES ═══════════════════
+    function copyText(text, msg) {
+      navigator.clipboard.writeText(text).then(() => showToast('✅ ' + msg));
+    }
+
+    function showToast(message) {
+      const t = document.getElementById('toast');
+      t.textContent = message;
+      t.classList.add('show');
+      clearTimeout(t._timeout);
+      t._timeout = setTimeout(() => t.classList.remove('show'), 2500);
     }
 
     function toggleFaq(el) {
-      const item = el.parentElement;
-      item.classList.toggle('open');
+      el.parentElement.classList.toggle('open');
     }
 
+    // Scroll reveal
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
     }, { threshold: 0.1 });
-
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Initialize UI
+    updateUIForActivation();
+    console.log('🔐 MLEA POS Sales Page with Multi-Device License');
   </script>
 </body>
 </html>
