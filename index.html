@@ -224,10 +224,10 @@
     <p class="hero-desc">Manage sales, inventory, staff, and multiple branches — all from your browser. No subscriptions, no complicated setup.</p>
 
     <div class="price-block">
-      <!-- ID added so we can update it dynamically -->
+      <!-- ID added so we can update the USD part -->
       <div class="price-amount" id="priceAmount">₱1,500 / $24 Only</div>
       <div class="price-sub">one-time · no monthly fees · instant access after payment</div>
-      <div class="price-note">* PHP amount updates automatically at current exchange rate</div>
+      <div class="price-note">* USD amount updates automatically based on current exchange rate</div>
     </div>
 
     <div class="hero-btns">
@@ -528,7 +528,7 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // ═══════════════════ DYNAMIC EXCHANGE RATE ═══════════════════
+    // ═══════════════════ DYNAMIC USD EQUIVALENT (₱1,500 FIXED) ═══════════════════
     async function updatePriceFromRate() {
       const priceEl = document.getElementById('priceAmount');
       if (!priceEl) return;
@@ -538,22 +538,21 @@
           'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json'
         );
         const data = await response.json();
-        const rate = data.usd.php; // PHP per 1 USD
-        const phpAmount = (24 * rate).toFixed(2); // $24 to PHP
+        const rate = data.usd.php;             // PHP per 1 USD
+        const usdAmount = (1500 / rate).toFixed(2); // static 1,500 PHP → USD
 
-        priceEl.textContent = `₱${phpAmount} / $24 Only`;
+        priceEl.textContent = `₱1,500 / $${usdAmount} Only`;
       } catch (error) {
-        // Fallback to static value
-        console.warn('Exchange rate fetch failed, using default.');
+        // Fallback if the API fails
         priceEl.textContent = '₱1,500 / $24 Only';
       }
     }
 
-    // Initialize UI and price
+    // Initialize UI and dynamic price
     updateUIForActivation();
     updatePriceFromRate();
 
-    console.log('🔐 MLEA POS Sales Page with Dynamic Exchange Rate');
+    console.log('🔐 MLEA POS Sales Page – Dynamic USD Equivalent');
   </script>
 </body>
 </html>
