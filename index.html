@@ -1,1734 +1,748 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MLEA POS — BIR-Ready Multi-Branch System</title>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#080b14">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg-void:#080b14;
-  --bg-deep:#0d1220;
-  --bg-surface:#111827;
-  --bg-elevated:#161f33;
-  --bg-glass:rgba(255,255,255,0.04);
-  --bg-glass-hover:rgba(255,255,255,0.07);
-  --border:rgba(255,255,255,0.08);
-  --border-bright:rgba(255,255,255,0.15);
-  --accent-gold:#d4a853;
-  --accent-gold-soft:rgba(212,168,83,0.15);
-  --accent-gold-glow:rgba(212,168,83,0.35);
-  --accent-emerald:#2dd4a0;
-  --accent-emerald-soft:rgba(45,212,160,0.12);
-  --accent-rose:#f06577;
-  --accent-rose-soft:rgba(240,101,119,0.12);
-  --accent-blue:#6fa3ef;
-  --accent-blue-soft:rgba(111,163,239,0.12);
-  --text-primary:#f0f0f5;
-  --text-secondary:#8892a4;
-  --text-muted:#4a5568;
-  --font-display:'Syne',sans-serif;
-  --font-body:'DM Sans',sans-serif;
-  --font-mono:'DM Mono',monospace;
-  --radius-sm:8px;
-  --radius-md:14px;
-  --radius-lg:20px;
-  --radius-xl:28px;
-  --shadow-ambient:0 0 60px rgba(212,168,83,0.04);
-  --shadow-card:0 4px 30px rgba(0,0,0,0.4);
-  --shadow-glow-gold:0 0 30px rgba(212,168,83,0.2);
-  --shadow-glow-emerald:0 0 30px rgba(45,212,160,0.2);
-}
-body{font-family:var(--font-body);background:var(--bg-void);color:var(--text-primary);overflow-x:hidden;min-height:100vh}
-.app-container{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg-deep);position:relative;overflow-x:hidden}
-@media(min-width:768px){.app-container{max-width:768px}}
-.ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.ambient::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,83,0.06) 0%,transparent 70%);top:-100px;right:-100px;animation:drift 20s ease-in-out infinite}
-.ambient::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(45,212,160,0.04) 0%,transparent 70%);bottom:-100px;left:-100px;animation:drift 25s ease-in-out infinite reverse}
-@keyframes drift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(20px,-20px) scale(1.05)}66%{transform:translate(-10px,15px) scale(0.97)}}
-/* LICENSE GATE */
-#licenseGate{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;position:relative;z-index:10}
-.license-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:36px 28px;width:100%;max-width:360px;text-align:center;box-shadow:var(--shadow-card),var(--shadow-ambient);animation:slideUp .5s cubic-bezier(0.22,1,0.36,1)}
-@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-.license-logo{width:64px;height:64px;background:linear-gradient(135deg,var(--accent-gold),#f0c060);border-radius:var(--radius-md);margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:var(--shadow-glow-gold)}
-.license-card h2{font-family:var(--font-display);font-size:1.5em;font-weight:700;color:var(--text-primary);letter-spacing:-0.02em}
-.license-card p{color:var(--text-secondary);font-size:.82em;margin:6px 0 24px;font-weight:300}
-.license-card input{width:100%;padding:14px 18px;background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-md);font-size:1.05em;text-align:center;letter-spacing:4px;color:var(--text-primary);outline:none;font-family:var(--font-mono);transition:all .25s;margin-bottom:12px}
-.license-card input:focus{border-color:var(--accent-gold);background:rgba(212,168,83,0.06);box-shadow:0 0 0 3px var(--accent-gold-glow)}
-.btn-activate{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent-gold),#e8b850);color:#1a0f00;border:none;border-radius:var(--radius-md);font-size:.92em;font-weight:700;font-family:var(--font-display);cursor:pointer;letter-spacing:.04em;transition:all .2s;box-shadow:var(--shadow-glow-gold)}
-.btn-activate:hover{transform:translateY(-1px);box-shadow:0 0 40px rgba(212,168,83,0.45)}
-.btn-deactivate{width:100%;padding:11px;background:transparent;color:var(--accent-rose);border:1px solid rgba(240,101,119,0.3);border-radius:var(--radius-md);font-size:.8em;cursor:pointer;font-family:var(--font-body);margin-top:8px;transition:all .2s}
-.btn-deactivate:hover{background:var(--accent-rose-soft)}
-.license-status{font-size:.75em;margin-top:12px;min-height:18px;font-weight:500}
-.license-status.success{color:var(--accent-emerald)}.license-status.error{color:var(--accent-rose)}
-/* LOGIN */
-#loginScreen{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;position:relative;z-index:10}
-.login-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:28px 22px;width:100%;max-width:360px;box-shadow:var(--shadow-card);animation:slideUp .5s cubic-bezier(0.22,1,0.36,1)}
-.login-logo{text-align:center;margin-bottom:24px}
-.login-logo-icon{width:56px;height:56px;background:linear-gradient(135deg,var(--accent-gold),#f0c060);border-radius:var(--radius-md);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:var(--shadow-glow-gold)}
-.login-logo h1{font-family:var(--font-display);color:var(--text-primary);font-size:1.6em;font-weight:800;letter-spacing:-0.03em}
-.login-logo p{color:var(--text-secondary);font-size:.78em;font-weight:300;margin-top:3px;letter-spacing:.04em}
-.section-label{font-size:.65em;color:var(--text-muted);text-transform:uppercase;letter-spacing:.12em;font-weight:600;font-family:var(--font-display);margin-bottom:8px}
-.user-selector{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:18px;max-height:190px;overflow-y:auto}
-.user-selector::-webkit-scrollbar{width:3px}.user-selector::-webkit-scrollbar-track{background:transparent}.user-selector::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:3px}
-.user-card{background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.user-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(212,168,83,0.08));opacity:0;transition:opacity .2s}
-.user-card:hover::before,.user-card.selected::before{opacity:1}
-.user-card.selected{border-color:var(--accent-gold);background:var(--accent-gold-soft);box-shadow:0 0 20px var(--accent-gold-glow)}
-.user-card .avatar{font-size:1.6em;display:block}
-.user-card .name{font-size:.68em;color:var(--text-primary);margin-top:4px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.role-badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:.6em;font-weight:600;font-family:var(--font-display);letter-spacing:.04em;margin-top:3px}
-.admin-badge{background:rgba(212,168,83,0.2);color:var(--accent-gold)}
-.manager-badge{background:var(--accent-emerald-soft);color:var(--accent-emerald)}
-.cashier-badge{background:var(--accent-blue-soft);color:var(--accent-blue)}
-.pin-display{display:flex;justify-content:center;gap:14px;margin:14px 0 8px}
-.pin-dot{width:12px;height:12px;border-radius:50%;background:var(--bg-glass);border:1.5px solid var(--border);transition:all .25s}
-.pin-dot.filled{background:var(--accent-gold);border-color:var(--accent-gold);box-shadow:0 0 12px var(--accent-gold-glow);transform:scale(1.15)}
-.pin-dot.error{background:var(--accent-rose);border-color:var(--accent-rose);box-shadow:0 0 12px rgba(240,101,119,0.5);animation:shake .3s ease}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-.error-msg{color:var(--accent-rose);text-align:center;font-size:.78em;min-height:18px;margin-bottom:8px;font-weight:500}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
-.pin-btn{background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;font-size:1.25em;cursor:pointer;color:var(--text-primary);font-family:var(--font-display);font-weight:600;transition:all .15s;position:relative;overflow:hidden}
-.pin-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.08);opacity:0;transition:opacity .15s}
-.pin-btn:active::after{opacity:1}
-.pin-btn:hover{border-color:var(--border-bright);background:var(--bg-glass-hover)}
-.pin-btn:active{transform:scale(.94)}
-.pin-btn.clear{background:var(--accent-rose-soft);color:var(--accent-rose);border-color:rgba(240,101,119,0.25);font-size:.8em;font-weight:600}
-.pin-btn.submit{background:linear-gradient(135deg,var(--accent-gold),#e8b850);color:#1a0f00;border-color:transparent;font-size:.95em;box-shadow:0 4px 15px var(--accent-gold-glow)}
-/* MAIN APP */
-#mainApp{display:none;position:relative;z-index:10}
-.header{background:rgba(13,18,32,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:14px 16px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
-.header-logo{font-family:var(--font-display);color:var(--text-primary);font-size:1.05em;font-weight:700;letter-spacing:-0.02em}
-.header-right{display:flex;align-items:center;gap:8px}
-.logout-btn{background:var(--accent-rose-soft);color:var(--accent-rose);border:1px solid rgba(240,101,119,0.2);padding:7px 14px;border-radius:20px;cursor:pointer;font-size:.75em;font-weight:600;font-family:var(--font-display);transition:all .2s;letter-spacing:.03em}
-.logout-btn:hover{background:rgba(240,101,119,0.25)}
-.hamburger{background:var(--bg-glass);border:1px solid var(--border);color:var(--text-primary);font-size:18px;cursor:pointer;width:38px;height:38px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;transition:all .2s}
-.hamburger:hover{background:var(--bg-glass-hover);border-color:var(--border-bright)}
-.branch-indicator{background:var(--accent-emerald-soft);color:var(--accent-emerald);padding:5px 11px;border-radius:20px;font-size:.72em;font-weight:600;font-family:var(--font-display);letter-spacing:.03em;border:1px solid rgba(45,212,160,0.2)}
-.admin-indicator{background:var(--accent-gold-soft);color:var(--accent-gold);padding:5px 11px;border-radius:20px;font-size:.72em;font-weight:600;font-family:var(--font-display);letter-spacing:.03em;border:1px solid rgba(212,168,83,0.25)}
-#mainContent{padding:14px;min-height:60vh}
-/* CARDS */
-.card{background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin:10px 0;backdrop-filter:blur(10px);transition:border-color .2s}
-.card:hover{border-color:var(--border-bright)}
-.card h4,.card h5{font-family:var(--font-display);font-weight:600;letter-spacing:-0.01em;margin-bottom:10px}
-.card h5{font-size:.88em;color:var(--text-secondary)}
-/* BIR BADGE */
-.bir-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(212,168,83,0.2),rgba(212,168,83,0.08));border:1px solid rgba(212,168,83,0.35);border-radius:20px;padding:4px 12px;font-size:.68em;font-weight:700;color:var(--accent-gold);font-family:var(--font-display);letter-spacing:.06em;text-transform:uppercase}
-/* METRICS */
-.metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.metric-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;text-align:center;transition:all .2s;position:relative;overflow:hidden}
-.metric-card::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--accent-gold),transparent);opacity:0.4}
-.metric-value{font-family:var(--font-display);font-size:1.2em;font-weight:700;color:var(--accent-gold);letter-spacing:-0.02em}
-.metric-label{font-size:.66em;color:var(--text-muted);margin-top:5px;text-transform:uppercase;letter-spacing:.08em;font-weight:500}
-/* BUTTONS */
-.btn{padding:11px 22px;border:none;border-radius:var(--radius-md);cursor:pointer;font-size:.83em;font-weight:600;font-family:var(--font-display);letter-spacing:.03em;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-.btn:active{transform:scale(.96)}
-.btn-primary{background:linear-gradient(135deg,var(--accent-gold),#e8b850);color:#1a0f00;box-shadow:0 4px 15px var(--accent-gold-glow)}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 22px var(--accent-gold-glow)}
-.btn-success{background:var(--accent-emerald-soft);color:var(--accent-emerald);border:1px solid rgba(45,212,160,0.25)}
-.btn-success:hover{background:rgba(45,212,160,0.2)}
-.btn-danger{background:var(--accent-rose-soft);color:var(--accent-rose);border:1px solid rgba(240,101,119,0.2)}
-.btn-danger:hover{background:rgba(240,101,119,0.22)}
-.btn-warning{background:rgba(251,189,35,0.12);color:#fbb923;border:1px solid rgba(251,189,35,0.2)}
-.btn-warning:hover{background:rgba(251,189,35,0.2)}
-.btn-sm{padding:7px 14px;font-size:.72em;border-radius:var(--radius-sm)}
-.btn-xs{padding:4px 10px;font-size:.66em;border-radius:6px}
-.btn-block{width:100%;margin-bottom:8px}
-/* INPUTS */
-input[type="text"],input[type="number"],input[type="tel"],input[type="email"],input[type="file"],select,textarea{width:100%;padding:11px 16px;background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-md);font-size:.87em;color:var(--text-primary);outline:none;font-family:var(--font-body);margin-bottom:8px;transition:all .2s;-webkit-appearance:none}
-input:focus,select:focus{border-color:var(--accent-gold);background:rgba(212,168,83,0.05);box-shadow:0 0 0 3px rgba(212,168,83,0.12)}
-select{cursor:pointer}
-select option{background:var(--bg-surface);color:var(--text-primary)}
-/* TABLE */
-table{width:100%;border-collapse:collapse;font-size:.78em}
-th{background:var(--bg-elevated);color:var(--text-secondary);padding:10px 12px;text-align:left;font-family:var(--font-display);font-size:.7em;text-transform:uppercase;letter-spacing:.08em;font-weight:600;border-bottom:1px solid var(--border)}
-td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text-secondary);vertical-align:middle}
-tr:hover td{background:var(--bg-glass);color:var(--text-primary)}
-.stock-low{color:var(--accent-rose);font-weight:700}
-/* SIDEBAR */
-.sidebar{position:fixed;left:-300px;top:0;bottom:0;width:270px;background:rgba(13,18,32,0.96);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);z-index:1000;transition:left .3s cubic-bezier(0.22,1,0.36,1);overflow-y:auto;border-right:1px solid var(--border)}
-.sidebar.active{left:0}
-.sidebar-header{padding:24px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
-.sidebar-logo{width:40px;height:40px;background:linear-gradient(135deg,var(--accent-gold),#f0c060);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 4px 15px var(--accent-gold-glow)}
-.sidebar-header-text h3{font-family:var(--font-display);color:var(--text-primary);font-size:1.05em;font-weight:700;letter-spacing:-0.02em}
-.sidebar-header-text p{color:var(--text-muted);font-size:.68em;margin-top:2px}
-.sidebar-nav{padding:12px 10px;flex:1}
-.sidebar-section-title{font-size:.58em;color:var(--text-muted);text-transform:uppercase;letter-spacing:.15em;padding:12px 10px 5px;font-weight:700;font-family:var(--font-display)}
-.sidebar-nav-item{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:var(--radius-md);cursor:pointer;color:var(--text-secondary);font-size:.83em;font-weight:400;transition:all .18s;margin-bottom:2px;position:relative}
-.sidebar-nav-item:hover{background:var(--bg-glass);color:var(--text-primary)}
-.sidebar-nav-item.active{background:var(--accent-gold-soft);color:var(--accent-gold);font-weight:600}
-.sidebar-nav-item.active::before{content:'';position:absolute;left:0;top:25%;bottom:25%;width:3px;background:var(--accent-gold);border-radius:0 3px 3px 0}
-.sidebar-nav-icon{font-size:1em;width:22px;text-align:center;opacity:.85}
-.sidebar-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:999}.sidebar-overlay.active{display:block}
-.sidebar-footer{padding:12px 10px;border-top:1px solid var(--border);margin-top:auto}
-.sidebar-footer-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:var(--radius-md);cursor:pointer;color:var(--accent-rose);font-size:.82em;font-weight:500;border:none;background:none;font-family:var(--font-body);transition:all .2s}
-.sidebar-footer-btn:hover{background:var(--accent-rose-soft)}
-/* MODAL */
-.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(12px);z-index:2000;justify-content:center;align-items:center;padding:20px}
-.modal.active{display:flex}
-.modal-content{background:var(--bg-surface);border:1px solid var(--border-bright);border-radius:var(--radius-xl);padding:26px;width:100%;max-width:400px;max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-card);animation:slideUp .3s cubic-bezier(0.22,1,0.36,1)}
-.modal-content h4{font-family:var(--font-display);font-size:1.1em;font-weight:700;letter-spacing:-0.02em;margin-bottom:16px;color:var(--text-primary)}
-.modal-content::-webkit-scrollbar{width:3px}.modal-content::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:3px}
-/* POS */
-.product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
-.product-card{background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-md);padding:14px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
-.product-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-gold-soft),transparent);opacity:0;transition:opacity .2s}
-.product-card:hover{border-color:rgba(212,168,83,0.4);transform:translateY(-1px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}
-.product-card:hover::after{opacity:1}
-.product-card:active{transform:scale(.96)}
-.product-card strong{font-family:var(--font-display);font-size:.85em;display:block;margin-bottom:4px;position:relative;z-index:1}
-.product-card .price{color:var(--accent-gold);font-weight:700;font-size:.95em;font-family:var(--font-display);position:relative;z-index:1}
-.product-card small{color:var(--text-muted);font-size:.67em;position:relative;z-index:1}
-.cart-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);gap:8px}
-.cart-item:last-of-type{border-bottom:none}
-.scan-input-wrap{position:relative;margin-bottom:14px}
-.scan-input-wrap::before{content:'⚡';position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:14px;z-index:1;opacity:.6}
-#scanInput{padding-left:40px;font-size:.95em;background:var(--bg-glass);border:1px solid var(--accent-emerald);border-radius:var(--radius-md);color:var(--text-primary);font-family:var(--font-mono)}
-#scanInput:focus{border-color:var(--accent-emerald);box-shadow:0 0 0 3px var(--accent-emerald-soft)}
-.scan-hint{color:var(--accent-emerald);font-size:.68em;text-align:center;margin-top:4px;font-weight:500;letter-spacing:.04em}
-/* DISCOUNT BADGE */
-.discount-applied{background:rgba(45,212,160,0.15);border:1px solid rgba(45,212,160,0.3);border-radius:var(--radius-sm);padding:6px 12px;font-size:.75em;color:var(--accent-emerald);font-weight:600;margin-bottom:8px;text-align:center;}
-/* DASHBOARD */
-.welcome-card{background:linear-gradient(135deg,var(--bg-elevated),var(--bg-glass));border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:12px;position:relative;overflow:hidden}
-.welcome-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,var(--accent-gold-soft),transparent);pointer-events:none}
-.welcome-card h3{font-family:var(--font-display);font-size:1.15em;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px}
-.welcome-card p{color:var(--text-secondary);font-size:.8em}
-.welcome-card .role-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:.7em;font-weight:600;margin-top:10px;font-family:var(--font-display);letter-spacing:.04em}
-/* EMPTY STATE */
-.empty-state{text-align:center;padding:50px 20px;color:var(--text-muted)}
-.empty-state .empty-icon{font-size:2.5em;margin-bottom:10px;opacity:.5}
-.empty-state p{font-size:.85em}
-.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:12px 0}
-/* SALE COMPLETE */
-.sale-complete{text-align:center;padding:10px}
-.sale-complete .check-circle{width:70px;height:70px;background:var(--accent-emerald-soft);border:2px solid var(--accent-emerald);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:30px;animation:popIn .4s cubic-bezier(0.22,1,0.36,1)}
-@keyframes popIn{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
-.sale-complete h3{font-family:var(--font-display);color:var(--accent-emerald);font-size:1.2em;margin-bottom:6px}
-.sale-complete .amount{font-family:var(--font-display);font-size:2em;font-weight:800;color:var(--text-primary);letter-spacing:-0.03em}
-.sale-complete small{color:var(--text-muted);font-size:.78em;display:block;margin-top:6px}
-/* PRINT SELECTION MODAL */
-.print-option-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.print-option-btn{background:var(--bg-glass);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 10px;cursor:pointer;text-align:center;transition:all .2s;color:var(--text-primary);font-family:var(--font-display);font-size:.78em;font-weight:600}
-.print-option-btn:hover{border-color:var(--accent-gold);background:var(--accent-gold-soft);color:var(--accent-gold)}
-.print-option-btn:active{transform:scale(.95)}
-.print-option-btn .pob-icon{font-size:1.8em;display:block;margin-bottom:8px}
-/* Z/X READING */
-.reading-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;margin-bottom:10px}
-.reading-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:.82em}
-.reading-row:last-child{border-bottom:none}
-.reading-row.total{font-family:var(--font-display);font-weight:700;font-size:.95em;color:var(--accent-gold);border-top:1px solid var(--border);padding-top:10px;margin-top:4px}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border-bright);border-radius:4px}
-/* PRINT STYLES */
-@media print{
-  .sidebar,.header,.hamburger,.sidebar-overlay,.ambient,#licenseGate,#loginScreen,.modal,#mainContent,body>*:not(#printFrame){display:none!important}
-  body{background:#fff!important;margin:0;padding:0}
-  #printFrame{display:block!important;position:fixed;top:0;left:0;right:0;bottom:0;border:none;width:100%;height:100%}
-}
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MLEA POS – Buy Now</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0e1a;
+      --surface: #11152a;
+      --card: #161c32;
+      --border: #1e2640;
+      --purple: #8876ff;
+      --purple-light: #a899ff;
+      --teal: #38d9c0;
+      --amber: #f5a623;
+      --red: #ff5e6d;
+      --text: #dde1f5;
+      --muted: #5c6280;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      overflow-x: hidden;
+    }
+
+    /* subtle grid background */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(136,118,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(136,118,255,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      background: rgba(11,14,26,0.75);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-size: 1.1em;
+      font-weight: 800;
+      color: var(--purple-light);
+      letter-spacing: -0.5px;
+    }
+
+    .nav-cta {
+      background: var(--purple);
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-size: 0.82em;
+      font-weight: 700;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 80px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+    }
+
+    .orb1 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(136,118,255,0.14), transparent 70%);
+      top: -100px; left: 50%;
+      transform: translateX(-50%);
+      animation: drift 8s ease-in-out infinite;
+    }
+
+    .orb2 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(56,217,192,0.08), transparent 70%);
+      bottom: 0; right: -80px;
+      animation: drift 10s ease-in-out infinite reverse;
+    }
+
+    @keyframes drift {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-20px); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(136,118,255,0.1);
+      border: 1px solid rgba(136,118,255,0.25);
+      color: var(--purple-light);
+      padding: 7px 18px;
+      border-radius: 999px;
+      font-size: 0.7em;
+      font-family: var(--mono);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .pulse-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(56,217,192,0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(56,217,192,0); }
+    }
+
+    h1 {
+      font-size: clamp(2.4em, 8vw, 5em);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      max-width: 720px;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(120deg, var(--purple-light) 0%, var(--teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: clamp(0.88em, 2vw, 1.05em);
+      max-width: 500px;
+      line-height: 1.75;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .price-block {
+      margin-top: 40px;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+
+    .price-amount {
+      font-size: clamp(3em, 11vw, 5.5em);
+      font-weight: 800;
+      color: var(--teal);
+      letter-spacing: -2px;
+      line-height: 1;
+    }
+
+    .price-sub {
+      color: var(--muted);
+      font-size: 0.78em;
+      font-family: var(--mono);
+      margin-top: 8px;
+    }
+
+    .hero-btns {
+      margin-top: 38px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--purple), #6a5be8);
+      color: #fff;
+      padding: 15px 34px;
+      border-radius: 14px;
+      font-size: 0.95em;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 28px rgba(136,118,255,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(136,118,255,0.45); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      padding: 15px 28px;
+      border-radius: 14px;
+      font-size: 0.95em;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--purple); background: rgba(136,118,255,0.06); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      position: relative; z-index: 1;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      padding: 28px 24px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82em;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    .trust-item span:first-child { font-size: 1.2em; }
+
+    /* ── SECTIONS ── */
+    .section {
+      position: relative; z-index: 1;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 90px 24px;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.7em;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: clamp(1.7em, 5vw, 2.6em);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      font-size: 0.88em;
+      margin-bottom: 44px;
+      line-height: 1.7;
+    }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 14px;
+    }
+
+    .feat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+
+    .feat::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(136,118,255,0.06), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .feat:hover { border-color: rgba(136,118,255,0.35); transform: translateY(-3px); }
+    .feat:hover::after { opacity: 1; }
+
+    .feat-icon { font-size: 2em; margin-bottom: 14px; }
+    .feat-title { font-size: 0.95em; font-weight: 700; margin-bottom: 8px; }
+    .feat-desc { font-size: 0.78em; color: var(--muted); line-height: 1.65; font-family: var(--mono); }
+
+    /* ── ROLES ── */
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .role-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 22px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .role-card:hover { transform: translateY(-3px); }
+
+    .role-icon { font-size: 2.6em; margin-bottom: 12px; }
+    .role-name { font-weight: 800; font-size: 1em; margin-bottom: 8px; }
+
+    .pill {
+      display: inline-block;
+      padding: 3px 14px;
+      border-radius: 999px;
+      font-size: 0.65em;
+      font-family: var(--mono);
+      margin-bottom: 12px;
+    }
+    .pill-admin   { background: rgba(136,118,255,0.15); color: var(--purple-light); }
+    .pill-manager { background: rgba(56,217,192,0.15);  color: var(--teal); }
+    .pill-cashier { background: rgba(245,166,35,0.15);  color: var(--amber); }
+
+    .role-desc { font-size: 0.78em; color: var(--muted); line-height: 1.6; font-family: var(--mono); }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .faq-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .faq-q {
+      padding: 18px 22px;
+      font-weight: 700;
+      font-size: 0.9em;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--purple-light); }
+
+    .faq-arrow { font-size: 0.8em; transition: transform 0.3s; color: var(--muted); }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s;
+      font-size: 0.82em;
+      color: var(--muted);
+      font-family: var(--mono);
+      line-height: 1.7;
+      padding: 0 22px;
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 22px 18px; }
+
+    /* ── HOW TO BUY ── */
+    .steps { display: flex; flex-direction: column; gap: 14px; }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 26px;
+      transition: border-color 0.3s;
+    }
+    .step:hover { border-color: rgba(136,118,255,0.3); }
+
+    .step-num {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple), #6a5be8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1em;
+      flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(136,118,255,0.3);
+    }
+
+    .step h3 { font-size: 0.95em; font-weight: 700; margin-bottom: 5px; }
+    .step p  { font-size: 0.78em; color: var(--muted); font-family: var(--mono); line-height: 1.65; }
+
+    /* ── PAYMENT CHIPS ── */
+    .payment-methods {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .pay-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 0.75em;
+      font-family: var(--mono);
+      cursor: pointer;
+      user-select: all;
+      transition: opacity 0.2s;
+    }
+    .pay-chip:hover { opacity: 0.8; }
+
+    .chip-paypal {
+      background: rgba(0,112,243,0.12);
+      border: 1px solid rgba(0,112,243,0.25);
+      color: #6ab0ff;
+    }
+
+    .chip-gcash {
+      background: rgba(0,163,255,0.12);
+      border: 1px solid rgba(0,163,255,0.25);
+      color: #4dc8ff;
+    }
+
+    .chip-name {
+      background: rgba(56,217,192,0.1);
+      border: 1px solid rgba(56,217,192,0.2);
+      color: var(--teal);
+      cursor: default;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      max-width: 920px;
+      margin: 0 auto;
+      position: relative; z-index: 1;
+    }
+
+    /* ── BOTTOM CTA ── */
+    .bottom-cta {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 90px 24px 110px;
+      overflow: hidden;
+    }
+
+    .bottom-cta-glow {
+      position: absolute;
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(136,118,255,0.1), transparent 70%);
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .bottom-cta h2 {
+      font-size: clamp(1.8em, 6vw, 3.2em);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 14px;
+    }
+
+    .bottom-cta p {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.84em;
+      margin-bottom: 36px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 26px 24px;
+      text-align: center;
+      font-size: 0.74em;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+    footer em { color: var(--purple-light); font-style: normal; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--teal);
+      color: #0b1a18;
+      padding: 11px 26px;
+      border-radius: 999px;
+      font-size: 0.85em;
+      font-weight: 700;
+      z-index: 9999;
+      transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+      pointer-events: none;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
 </head>
 <body>
-<div class="ambient"></div>
-<iframe id="printFrame" style="display:none;border:none;width:0;height:0;" title="Print Frame"></iframe>
 
-<div class="app-container">
-  <!-- LICENSE GATE -->
-  <div id="licenseGate">
-    <div class="license-card">
-      <div class="license-logo">🔐</div>
-      <h2>MLEA POS</h2>
-      <p>Enter your license key to unlock the system</p>
-      <input type="text" id="licenseInput" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" oninput="formatLicense(this)">
-      <button class="btn-activate" id="activateBtn" onclick="handleActivation()">Activate License</button>
-      <button class="btn-deactivate" id="deactivateBtn" style="display:none;" onclick="handleDeactivation()">Deactivate License</button>
-      <button class="btn-deactivate" id="validateBtn" style="display:none;margin-top:4px;color:var(--accent-blue);border-color:rgba(111,163,239,0.3);" onclick="handleValidate()">🔍 Check License Status</button>
-      <div class="license-status" id="licenseStatus"></div>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">🏪 MLEA POS</div>
+    <a href="#how-to-buy" class="nav-cta">Buy Now — ₱1,500/$24 /$24 </a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-orb orb1"></div>
+    <div class="hero-orb orb2"></div>
+    <div class="hero-badge"><span class="pulse-dot"></span> Multi-Branch System v2.2</div>
+    <h1>The POS System Your<br>Business <em>Actually Needs</em></h1>
+    <p class="hero-desc">Manage sales, inventory, staff, and multiple branches — all from your browser. No subscriptions, no complicated setup.</p>
+
+    <div class="price-block">
+      <div class="price-amount">₱1,500/$24 /$24 </div>
+      <div class="price-sub">one-time · no monthly fees · instant access after payment</div>
+    </div>
+
+    <div class="hero-btns">
+      <a href="#how-to-buy" class="btn-primary">🛒 Buy Now</a>
+      <a href="https://nethanbenogie-code.github.io/mleapropos/" target="_blank" class="btn-outline">👀 Live Demo</a>
     </div>
   </div>
 
-  <!-- LOGIN SCREEN -->
-  <div id="loginScreen" style="display:none;">
-    <div class="login-card">
-      <div class="login-logo">
-        <div class="login-logo-icon">🏪</div>
-        <h1>MLEA POS</h1>
-        <p>BIR-Ready Multi-Branch · v3.0</p>
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-item"><span>✅</span> One-time payment</div>
+    <div class="trust-item"><span>📱</span> Works on any device</div>
+    <div class="trust-item"><span>🏢</span> Multi-branch ready</div>
+    <div class="trust-item"><span>🔐</span> PIN-based login</div>
+    <div class="trust-item"><span>💱</span> Multi-currency support</div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section">
+    <div class="section-label reveal">Features</div>
+    <div class="section-title reveal">Built for real businesses</div>
+    <p class="section-sub reveal">Everything you need to run daily operations, right out of the box.</p>
+    <div class="features-grid">
+      <div class="feat reveal"><div class="feat-icon">🏢</div><div class="feat-title">Multi-Branch Support</div><p class="feat-desc">Run multiple store locations from one system. Each branch has its own data and staff.</p></div>
+      <div class="feat reveal"><div class="feat-icon">🔐</div><div class="feat-title">PIN-Based Login</div><p class="feat-desc">Fast 4-digit PIN login for staff. No forgotten passwords, no delays at checkout.</p></div>
+      <div class="feat reveal"><div class="feat-icon">📦</div><div class="feat-title">Inventory Tracking</div><p class="feat-desc">Real-time stock levels with low-stock alerts across all your branches.</p></div>
+      <div class="feat reveal"><div class="feat-icon">💰</div><div class="feat-title">Sales & Receipts</div><p class="feat-desc">Cart system with discounts, 12% VAT, and instant printable mini receipts.</p></div>
+      <div class="feat reveal"><div class="feat-icon">📊</div><div class="feat-title">Reports & Analytics</div><p class="feat-desc">Daily and historical sales reports. Track revenue, expenses, and performance.</p></div>
+      <div class="feat reveal"><div class="feat-icon">🌍</div><div class="feat-title">Multi-Currency</div><p class="feat-desc">Supports PHP, USD, EUR, GBP, JPY, SGD, AED and more. Switch anytime in settings.</p></div>
+      <div class="feat reveal"><div class="feat-icon">🚚</div><div class="feat-title">Supplier Management</div><p class="feat-desc">Track suppliers and purchases to keep your supply chain smooth and organized.</p></div>
+      <div class="feat reveal"><div class="feat-icon">📱</div><div class="feat-title">Mobile-Ready</div><p class="feat-desc">Works on phones, tablets, and desktops. No app needed — runs in any browser.</p></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ROLES -->
+  <div class="section">
+    <div class="section-label reveal">Access Control</div>
+    <div class="section-title reveal">The right access for every role</div>
+    <p class="section-sub reveal">Keep your team organized with role-based permissions.</p>
+    <div class="roles-grid">
+      <div class="role-card reveal">
+        <div class="role-icon">👑</div>
+        <div class="role-name">Admin</div>
+        <span class="pill pill-admin">Full Access</span>
+        <p class="role-desc">Full control over all branches, users, settings, products, and reports.</p>
       </div>
-      <div class="section-label">Select User</div>
-      <div class="user-selector" id="userSelector"></div>
-      <div class="section-label" style="margin-top:4px;">Enter PIN</div>
-      <div class="pin-display" id="pinDisplay">
-        <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+      <div class="role-card reveal">
+        <div class="role-icon">👨‍💼</div>
+        <div class="role-name">Manager</div>
+        <span class="pill pill-manager">Branch Access</span>
+        <p class="role-desc">Manages their assigned branch — products, staff, and branch-level reports.</p>
       </div>
-      <div class="error-msg" id="errorMessage"></div>
-      <div class="pin-pad">
-        <button class="pin-btn" onclick="enterPin('1')">1</button><button class="pin-btn" onclick="enterPin('2')">2</button><button class="pin-btn" onclick="enterPin('3')">3</button>
-        <button class="pin-btn" onclick="enterPin('4')">4</button><button class="pin-btn" onclick="enterPin('5')">5</button><button class="pin-btn" onclick="enterPin('6')">6</button>
-        <button class="pin-btn" onclick="enterPin('7')">7</button><button class="pin-btn" onclick="enterPin('8')">8</button><button class="pin-btn" onclick="enterPin('9')">9</button>
-        <button class="pin-btn clear" onclick="clearPin()">Clear</button><button class="pin-btn" onclick="enterPin('0')">0</button><button class="pin-btn submit" onclick="submitPin()">→</button>
+      <div class="role-card reveal">
+        <div class="role-icon">👤</div>
+        <div class="role-name">Cashier</div>
+        <span class="pill pill-cashier">POS Only</span>
+        <p class="role-desc">Handles sales transactions, issues receipts, and manages the cart.</p>
       </div>
     </div>
   </div>
 
-  <!-- MAIN APP -->
-  <div id="mainApp">
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-    <div class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <div class="sidebar-logo">🏪</div>
-        <div class="sidebar-header-text"><h3>MLEA POS</h3><p>v3.0 BIR-Ready</p></div>
+  <div class="divider"></div>
+
+  <!-- FAQ -->
+  <div class="section">
+    <div class="section-label reveal">FAQ</div>
+    <div class="section-title reveal">Common questions</div>
+    <p class="section-sub reveal">Got questions? Here are the answers.</p>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">Do I need to install anything? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">No. MLEA POS runs entirely in your browser. Just open the link and you're ready to go — works on any device.</div>
       </div>
-      <div class="sidebar-nav" id="sidebarNav"></div>
-      <div class="sidebar-footer"><button class="sidebar-footer-btn" onclick="logout()">🚪 Sign Out</button></div>
-    </div>
-    <div class="header">
-      <button class="hamburger" onclick="openSidebar()">☰</button>
-      <span class="header-logo" id="headerTitle">MLEA POS</span>
-      <div class="header-right">
-        <span id="headerBranch"></span>
-        <button class="logout-btn" onclick="logout()">Sign Out</button>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">Is this a subscription? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">No subscriptions ever. You pay ₱1,500/$24  once and the system is yours. No monthly fees, no hidden charges.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I use it for multiple branches? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Yes! MLEA POS is built with multi-branch support from the ground up. Each branch has its own data and staff.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">What currencies does it support? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">It supports PHP, USD, EUR, GBP, JPY, INR, CNY, AUD, SGD, MYR, and AED. You can switch currencies anytime from settings.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">How fast will I get access after paying? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Just message Gieo after sending your payment. Once confirmed, the link is sent right away — usually within a few minutes.</div>
       </div>
     </div>
-    <div id="mainContent"></div>
   </div>
-</div>
 
-<div class="modal" id="modal"><div class="modal-content" id="modalContent"></div></div>
+  <div class="divider"></div>
 
-<script>
-// ═══════════════════ LICENSE SYSTEM ═══════════════════
-const LICENSE_SERVER='https://script.google.com/macros/s/AKfycby1QlCg9jzpXmxtE1N-5w7b4CuGa0TT5gcfwYrx-0yetL4iI5s86ZX8NyLhDwo4tLJX/exec';
-const DEMO_KEY='MLEA-DEMO-UNLOCK-KEY1';
-function getDeviceId(){return btoa(navigator.userAgent.slice(-15)+screen.width+'x'+screen.height+new Date().getTimezoneOffset()).replace(/[^a-zA-Z0-9]/g,'').slice(0,16)}
-function formatLicense(input){let v=input.value.replace(/[^a-zA-Z0-9]/g,'').toUpperCase();if(v.length>16)v=v.slice(0,16);let p=[];for(let i=0;i<v.length;i+=4)p.push(v.slice(i,i+4));input.value=p.join('-')}
-function isActivated(){return localStorage.getItem('mlea_pos_activated')==='true'}
-function setActivated(key,licenseInfo){localStorage.setItem('mlea_pos_activated','true');localStorage.setItem('mlea_pos_license',key);if(licenseInfo)localStorage.setItem('mlea_license_info',JSON.stringify(licenseInfo));showLicenseGate()}
-function clearActivation(){localStorage.removeItem('mlea_pos_activated');localStorage.removeItem('mlea_pos_license');localStorage.removeItem('mlea_license_info');currentUser=null;cart=[];showLicenseGate()}
-function getStoredLicense(){return localStorage.getItem('mlea_pos_license')||''}
-function showLicenseGate(){
-  if(isActivated()){
-    document.getElementById('licenseGate').style.display='none';
-    document.getElementById('loginScreen').style.display='flex';
-    document.getElementById('mainApp').style.display='none';
-    document.getElementById('licenseInput').value=getStoredLicense();
-    document.getElementById('activateBtn').style.display='none';
-    document.getElementById('deactivateBtn').style.display='block';
-    document.getElementById('validateBtn').style.display='block';
-    const storedInfo=localStorage.getItem('mlea_license_info');
-    let infoText='✓ System Activated';
-    if(storedInfo){try{const info=JSON.parse(storedInfo);if(info.deviceCount&&info.maxDevices)infoText='✓ Activated · Device '+info.deviceCount+' of '+info.maxDevices;}catch(e){}}
-    const s=document.getElementById('licenseStatus');s.textContent=infoText;s.className='license-status success';
-    initApp();
-  } else {
-    document.getElementById('licenseGate').style.display='flex';
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('mainApp').style.display='none';
-    document.getElementById('licenseInput').value='';
-    document.getElementById('activateBtn').style.display='block';
-    document.getElementById('deactivateBtn').style.display='none';
-    document.getElementById('licenseStatus').textContent='';
-    document.getElementById('licenseStatus').className='license-status';
-    document.getElementById('validateBtn').style.display='none';
-  }
-}
-async function handleActivation(){
-  const input=document.getElementById('licenseInput'),statusEl=document.getElementById('licenseStatus'),btn=document.getElementById('activateBtn'),key=input.value.trim();
-  if(!key){statusEl.textContent='⚠ Enter license key';statusEl.className='license-status error';return;}
-  btn.disabled=true;statusEl.textContent='Verifying…';statusEl.className='license-status';
-  const deviceId=getDeviceId();
-  const url=LICENSE_SERVER+'?action=activate&licenseKey='+encodeURIComponent(key)+'&deviceId='+encodeURIComponent(deviceId);
-  try{
-    const r=await fetch(url);const t=await r.text();let d;
-    try{d=JSON.parse(t);}catch(e){statusEl.textContent='Server error. Try again.';statusEl.className='license-status error';btn.disabled=false;return;}
-    if(d.success){setActivated(key,{deviceCount:d.deviceCount,maxDevices:d.maxDevices,customer:d.customer});}
-    else{statusEl.textContent='✗ '+d.message;statusEl.className='license-status error';}
-  } catch(e){
-    if(key===DEMO_KEY){setActivated(key);statusEl.textContent='✓ Demo activated (offline)';statusEl.className='license-status success';}
-    else{statusEl.textContent='✗ Cannot reach server';statusEl.className='license-status error';}
-  }
-  btn.disabled=false;
-}
-async function handleValidate(){
-  const statusEl=document.getElementById('licenseStatus'),licenseKey=getStoredLicense();
-  if(!licenseKey){statusEl.textContent='No license found';statusEl.className='license-status error';return;}
-  statusEl.textContent='Checking…';statusEl.className='license-status';
-  const url=LICENSE_SERVER+'?action=validate&licenseKey='+encodeURIComponent(licenseKey)+'&deviceId='+encodeURIComponent(getDeviceId());
-  try{
-    const r=await fetch(url);const d=await r.json();
-    if(d.success){statusEl.textContent='✓ Valid · Device '+(d.deviceCount||'?')+' of '+(d.maxDevices||'?');statusEl.className='license-status success';localStorage.setItem('mlea_license_info',JSON.stringify({deviceCount:d.deviceCount,maxDevices:d.maxDevices,customer:d.customer}));}
-    else{statusEl.textContent='✗ '+d.message;statusEl.className='license-status error';}
-  } catch(e){statusEl.textContent='Cannot reach server';statusEl.className='license-status error';}
-}
-async function handleDeactivation(){
-  if(!confirm('Deactivate this license?'))return;
-  try{await fetch(LICENSE_SERVER+'?action=deactivate&licenseKey='+encodeURIComponent(getStoredLicense())+'&deviceId='+encodeURIComponent(getDeviceId()))}catch(e){}
-  clearActivation();
-}
+  <!-- HOW TO BUY -->
+  <div class="section" id="how-to-buy">
+    <div class="section-label reveal">Purchase</div>
+    <div class="section-title reveal">How to buy</div>
+    <p class="section-sub reveal">Simple steps, no accounts needed. Pay and get access fast.</p>
+    <div class="steps">
 
-// ═══════════════════ DATABASE ═══════════════════
-const DB={
-  stores:['products','sales','users','settings','branches','activityLogs','suppliers','purchaseOrders','voidedSales'],
-  init(){this.stores.forEach(s=>{if(!localStorage.getItem('mlea_'+s))localStorage.setItem('mlea_'+s,'[]')})},
-  getAll(k){return JSON.parse(localStorage.getItem('mlea_'+k)||'[]')},
-  set(k,d){localStorage.setItem('mlea_'+k,JSON.stringify(d))},
-  add(k,item){const items=this.getAll(k);item.id=items.length>0?Math.max(...items.map(i=>i.id))+1:1;item.createdAt=new Date().toISOString();items.push(item);this.set(k,items);return item.id},
-  update(k,item){const items=this.getAll(k);const idx=items.findIndex(i=>i.id===item.id);if(idx!==-1){item.updatedAt=new Date().toISOString();items[idx]=item;this.set(k,items)}},
-  delete(k,id){this.set(k,this.getAll(k).filter(i=>i.id!==id))},
-  getById(k,id){return this.getAll(k).find(i=>i.id===id)},
-  getByBranch(k,bid){return this.getAll(k).filter(i=>i.branchId===bid)}
-};
-DB.init();
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Send ₱1,500/$24  via PayPal or GCash</h3>
+          <p>Choose your preferred payment method and send the exact amount.</p>
+          <div class="payment-methods">
+            <div class="pay-chip chip-paypal" onclick="copyText('ogie613@hotmail.com', 'PayPal email copied!')">📧 ogie613@hotmail.com</div>
+            <div class="pay-chip chip-gcash" onclick="copyText('09350840375', 'GCash number copied!')">📱 09350840375</div>
+            <div class="pay-chip chip-name">👤 R***** TR C*******A</div>
+          </div>
+        </div>
+      </div>
 
-const currencies={
-  PHP:{symbol:'₱',name:'Philippine Peso',flag:'🇵🇭',decimals:2},
-  JPY:{symbol:'¥',name:'Japanese Yen',flag:'🇯🇵',decimals:0},
-  CNY:{symbol:'¥',name:'Chinese Yuan',flag:'🇨🇳',decimals:2},
-  KRW:{symbol:'₩',name:'South Korean Won',flag:'🇰🇷',decimals:0},
-  HKD:{symbol:'HK$',name:'Hong Kong Dollar',flag:'🇭🇰',decimals:2},
-  SGD:{symbol:'S$',name:'Singapore Dollar',flag:'🇸🇬',decimals:2},
-  MYR:{symbol:'RM',name:'Malaysian Ringgit',flag:'🇲🇾',decimals:2},
-  THB:{symbol:'฿',name:'Thai Baht',flag:'🇹🇭',decimals:2},
-  IDR:{symbol:'Rp',name:'Indonesian Rupiah',flag:'🇮🇩',decimals:0},
-  USD:{symbol:'$',name:'US Dollar',flag:'🇺🇸',decimals:2},
-  EUR:{symbol:'€',name:'Euro',flag:'🇪🇺',decimals:2},
-  GBP:{symbol:'£',name:'British Pound',flag:'🇬🇧',decimals:2},
-  AUD:{symbol:'A$',name:'Australian Dollar',flag:'🇦🇺',decimals:2},
-  INR:{symbol:'₹',name:'Indian Rupee',flag:'🇮🇳',decimals:2},
-  AED:{symbol:'د.إ',name:'UAE Dirham',flag:'🇦🇪',decimals:2},
-  SAR:{symbol:'﷼',name:'Saudi Riyal',flag:'🇸🇦',decimals:2},
-  ZAR:{symbol:'R',name:'South African Rand',flag:'🇿🇦',decimals:2},
-};
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Message Gieo with your payment proof</h3>
+          <p>Send a screenshot or confirmation of your payment so Gieo can verify it on his end.</p>
+        </div>
+      </div>
 
-// ═══════════════════ BIR HELPERS ═══════════════════
-function getBIRSettings(){
-  const settings=DB.getAll('settings');
-  const get=k=>settings.find(s=>s.key===k)?.value||'';
-  return{
-    tin:get('bir_tin')||'000-000-000-000',
-    registeredName:get('bir_name')||'MLEA Store',
-    registeredAddress:get('bir_address')||'Registered Address',
-    accreditationNo:get('bir_accreditation')||'FP082010-033-2019-0',
-    accreditationDate:get('bir_accr_date')||'2019-01-01',
-    accreditationExpiry:get('bir_accr_expiry')||'2024-12-31',
-    ptuNo:get('bir_ptu')||'PTU-000000',
-    orSeriesPrefix:get('bir_or_prefix')||'OR',
-    orSeriesFrom:get('bir_or_from')||'0000001',
-    orSeriesTo:get('bir_or_to')||'9999999',
-    vatType:get('bir_vat_type')||'vat', // 'vat' or 'nonvat'
-    siType:get('bir_si_type')||'or', // 'or' = Official Receipt, 'si' = Sales Invoice
-  };
-}
-function getNextORNumber(){
-  const settings=DB.getAll('settings');
-  const e=settings.find(s=>s.key==='bir_or_counter');
-  let counter=e?parseInt(e.value)||0:0;
-  counter++;
-  if(e){e.value=counter.toString();DB.update('settings',e);}
-  else{DB.add('settings',{key:'bir_or_counter',value:counter.toString()});}
-  const bir=getBIRSettings();
-  return bir.orSeriesPrefix+'-'+String(counter).padStart(7,'0');
-}
-function updateGrandAccumulatedTotal(amount){
-  const settings=DB.getAll('settings');
-  const e=settings.find(s=>s.key==='bir_grand_total');
-  const current=e?parseFloat(e.value)||0:0;
-  const newVal=(current+amount).toFixed(2);
-  if(e){e.value=newVal;DB.update('settings',e);}
-  else{DB.add('settings',{key:'bir_grand_total',value:newVal});}
-  return parseFloat(newVal);
-}
-function getGrandAccumulatedTotal(){
-  return parseFloat(DB.getAll('settings').find(s=>s.key==='bir_grand_total')?.value||'0');
-}
-function getDailyAccumulatedTotal(){
-  const today=new Date().toISOString().split('T')[0];
-  return DB.getAll('sales').filter(s=>s.date===today&&!s.voided).reduce((a,s)=>a+s.total,0);
-}
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Get your live access link</h3>
+          <p>Once payment is confirmed, Gieo sends you the MLEA POS link. You're ready to start running your business.</p>
+        </div>
+      </div>
 
-// ─── VAT Computation (BIR-compliant) ───
-function computeVAT(total,vatType,taxRate){
-  if(vatType==='vat'){
-    const vatableSales=total/(1+taxRate); // back-compute from VAT-inclusive total
-    const vatAmount=total-vatableSales;
-    return{vatableSales,vatAmount,vatExempt:0,zeroRated:0,grandTotal:total};
-  } else {
-    return{vatableSales:0,vatAmount:0,vatExempt:total,zeroRated:0,grandTotal:total};
-  }
-}
+    </div>
+  </div>
 
-let currentUser=null,currentView='dashboard',currentCurrency='PHP',taxRate=0.12,lowStockThreshold=10,defaultPrintMode='ask',cart=[],selectedUserId=null,pinEntry='',users=[],branches=[],products=[],downloadPath='MLEA_Backups';
-let lastSaleData=null;
-let discountAmount=0,discountType='none'; // 'none','sc','pwd','promo'
+  <!-- BOTTOM CTA -->
+  <div class="bottom-cta">
+    <div class="bottom-cta-glow"></div>
+    <h2 class="reveal">Ready to level up<br>your business?</h2>
+    <p class="reveal">One payment. Lifetime access. No strings attached.</p>
+    <a href="#how-to-buy" class="btn-primary reveal" style="display:inline-flex;">🛒 Get MLEA POS — ₱1,500/$24 </a>
+  </div>
 
-function fc(a){const c=currencies[currentCurrency]||currencies['PHP'];return c.symbol+(c.decimals===0?Math.round(a).toLocaleString():parseFloat(a).toFixed(2))}
-function formatCurrency(a){return fc(a)}
+  <footer>
+    Made by <em>Gieo</em> · MLEA POS Multi-Branch System v2.2 · All rights reserved
+  </footer>
 
-function getMyData(key){
-  const all=DB.getAll(key);
-  if(!currentUser)return all;
-  if(currentUser.role==='admin')return all;
-  if(currentUser.branchId){return all.filter(i=>i.branchId===currentUser.branchId||!i.branchId);}
-  return all;
-}
-function logActivity(action,details){if(!currentUser)return;DB.add('activityLogs',{userId:currentUser.id,userName:currentUser.name,userRole:currentUser.role,branchId:currentUser.branchId,action,details,timestamp:new Date().toISOString()})}
+  <div class="toast" id="toast">Copied!</div>
 
-function initApp(){
-  users=DB.getAll('users');branches=DB.getAll('branches');products=DB.getAll('products');
-  if(branches.length===0){DB.add('branches',{name:'Main Branch',address:'Head Office',phone:'555-0000'});branches=DB.getAll('branches')}
-  if(users.length===0){DB.add('users',{name:'Admin',role:'admin',active:true,pin:'1234',branchId:null});users=DB.getAll('users')}
-  if(products.length===0){DB.add('products',{sku:'SKU001',name:'Sample Product',price:99.99,cost:50,stock:50,category:'General',active:true,barcode:'123456789',branchId:null,supplierId:null,vatExempt:false,zeroRated:false});products=DB.getAll('products')}
-  if(DB.getAll('suppliers').length===0){DB.add('suppliers',{name:'Sample Supplier',contact:'John Doe',phone:'555-0001',email:'supplier@email.com',address:'123 Supplier St'})}
-  DB.getAll('settings').forEach(s=>{
-    if(s.key==='currency')currentCurrency=s.value;
-    if(s.key==='taxRate')taxRate=parseFloat(s.value)||0.12;
-    if(s.key==='downloadPath')downloadPath=s.value;
-    if(s.key==='lowStockThreshold')lowStockThreshold=parseInt(s.value)||10;
-    if(s.key==='defaultPrintMode')defaultPrintMode=s.value||'ask';
-  });
-  renderLoginScreen();
-}
-
-// ═══════════════════ DISCOUNT HELPERS ═══════════════════
-function getQuickCashAmounts(total){
-  const amounts=[];const steps=[50,100,200,500,1000];
-  steps.forEach(s=>{if(s>=total)amounts.push(s)});
-  if(amounts.length===0)amounts.push(Math.ceil(total/100)*100);
-  return amounts.slice(0,4);
-}
-function updateChange(total){
-  const cash=parseFloat(document.getElementById('cashTendered')?.value)||0;
-  const cd=document.getElementById('changeDisplay'),ca=document.getElementById('changeAmount'),im=document.getElementById('insufficientMsg');
-  if(!cd)return;
-  if(cash>=total){cd.style.display='block';ca.textContent=fc(cash-total);im&&(im.style.display='none');}
-  else{cd.style.display='none';im&&(im.style.display='block');}
-}
-function applyDiscount(type){
-  const subtotal=cart.reduce((s,i)=>s+(i.price*i.quantity),0);
-  if(type==='sc'||type==='pwd'){discountType=type;discountAmount=subtotal*0.20;}
-  else if(type==='promo'){const pct=parseFloat(prompt('Enter promo discount %:'))||0;discountType='promo';discountAmount=subtotal*(pct/100);}
-  else{discountType='none';discountAmount=0;}
-  switchView('pos');
-}
-
-// ═══════════════════ LOGIN ═══════════════════
-function renderLoginScreen(){
-  document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('mainApp').style.display='none';
-  users=DB.getAll('users');
-  document.getElementById('userSelector').innerHTML=users.filter(u=>u.active).map(u=>`<div class="user-card ${selectedUserId===u.id?'selected':''}" onclick="selectUser(${u.id})"><span class="avatar">${u.role==='admin'?'👑':u.role==='manager'?'🎯':'👤'}</span><div class="name">${u.name}</div><span class="role-badge ${u.role}-badge">${u.role}</span></div>`).join('');
-  pinEntry='';updatePinDisplay();document.getElementById('errorMessage').textContent='';
-}
-function selectUser(id){selectedUserId=id;pinEntry='';updatePinDisplay();renderLoginScreen()}
-function enterPin(d){if(!selectedUserId){document.getElementById('errorMessage').textContent='Select a user first';return}if(pinEntry.length<4){pinEntry+=d;updatePinDisplay();if(pinEntry.length===4)setTimeout(submitPin,180)}}
-function clearPin(){pinEntry='';updatePinDisplay();document.getElementById('errorMessage').textContent=''}
-function updatePinDisplay(){document.querySelectorAll('.pin-dot').forEach((d,i)=>{d.classList.toggle('filled',i<pinEntry.length);d.classList.remove('error')})}
-function submitPin(){
-  if(!selectedUserId)return;users=DB.getAll('users');const user=users.find(u=>u.id===selectedUserId);
-  if(!user||!user.active){document.getElementById('errorMessage').textContent=!user?'User not found':'Account deactivated';pinEntry='';updatePinDisplay();return}
-  if(user.pin===pinEntry){
-    currentUser=user;
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('mainApp').style.display='block';
-    const b=user.branchId?DB.getById('branches',user.branchId):null;
-    document.getElementById('headerBranch').innerHTML=user.branchId?`<span class="branch-indicator">🏢 ${b?b.name:'Branch'}</span>`:`<span class="admin-indicator">👑 Admin</span>`;
-    document.getElementById('headerTitle').textContent=user.branchId?(b?b.name:'Branch')+' POS':'MLEA Headquarters';
-    renderSidebar();pinEntry='';selectedUserId=null;updatePinDisplay();document.getElementById('errorMessage').textContent='';
-    switchView('dashboard');
-    setTimeout(showLowStockToast,600);
-  } else {
-    document.getElementById('errorMessage').textContent='Incorrect PIN';pinEntry='';updatePinDisplay();
-    document.querySelectorAll('.pin-dot').forEach(d=>d.classList.add('error'));
-    setTimeout(()=>document.querySelectorAll('.pin-dot').forEach(d=>d.classList.remove('error')),500);
-  }
-}
-
-// ═══════════════════ SIDEBAR ═══════════════════
-function renderSidebar(){
-  const nav=document.getElementById('sidebarNav');if(!currentUser)return;
-  const low=getMyData('products').filter(p=>p.active&&p.stock<=lowStockThreshold).length;
-  if(currentUser.role==='admin'){
-    nav.innerHTML=`<div class="sidebar-section-title">Main</div>
-    <div class="sidebar-nav-item" onclick="switchView('dashboard')"><span class="sidebar-nav-icon">📊</span>Dashboard</div>
-    <div class="sidebar-section-title">Management</div>
-    <div class="sidebar-nav-item" onclick="switchView('branches')"><span class="sidebar-nav-icon">🏢</span>Branches</div>
-    <div class="sidebar-nav-item" onclick="switchView('suppliers')"><span class="sidebar-nav-icon">🚚</span>Suppliers</div>
-    <div class="sidebar-nav-item" onclick="switchView('allProducts')"><span class="sidebar-nav-icon">📦</span>Products${low>0?` <span style="color:var(--accent-rose);font-size:.75em;">(${low})</span>`:''}</div>
-    <div class="sidebar-nav-item" onclick="switchView('purchaseOrders')"><span class="sidebar-nav-icon">📋</span>Purchase Orders</div>
-    <div class="sidebar-nav-item" onclick="switchView('allUsers')"><span class="sidebar-nav-icon">👥</span>Users</div>
-    <div class="sidebar-nav-item" onclick="switchView('allSales')"><span class="sidebar-nav-icon">💰</span>Sales</div>
-    <div class="sidebar-nav-item" onclick="switchView('voidedSales')"><span class="sidebar-nav-icon">🚫</span>Voided Transactions</div>
-    <div class="sidebar-section-title">BIR Compliance</div>
-    <div class="sidebar-nav-item" onclick="switchView('xReading')"><span class="sidebar-nav-icon">📑</span>X-Reading</div>
-    <div class="sidebar-nav-item" onclick="switchView('zReading')"><span class="sidebar-nav-icon">📋</span>Z-Reading</div>
-    <div class="sidebar-nav-item" onclick="switchView('birSettings')"><span class="sidebar-nav-icon">🏛️</span>BIR Setup</div>
-    <div class="sidebar-section-title">Reports</div>
-    <div class="sidebar-nav-item" onclick="switchView('reports')"><span class="sidebar-nav-icon">📈</span>Reports</div>
-    <div class="sidebar-nav-item" onclick="switchView('downloadManager')"><span class="sidebar-nav-icon">📁</span>Backup & Sync</div>
-    <div class="sidebar-section-title">Settings</div>
-    <div class="sidebar-nav-item" onclick="switchView('settings')"><span class="sidebar-nav-icon">⚙️</span>Settings</div>`;
-  } else if(currentUser.role==='manager'){
-    nav.innerHTML=`<div class="sidebar-section-title">Main</div>
-    <div class="sidebar-nav-item" onclick="switchView('dashboard')"><span class="sidebar-nav-icon">📊</span>Dashboard</div>
-    <div class="sidebar-nav-item" onclick="switchView('pos')"><span class="sidebar-nav-icon">💳</span>POS Terminal</div>
-    <div class="sidebar-section-title">Management</div>
-    <div class="sidebar-nav-item" onclick="switchView('inventory')"><span class="sidebar-nav-icon">📦</span>Products${low>0?` <span style="color:var(--accent-rose);font-size:.75em;">(${low} low)</span>`:''}</div>
-    <div class="sidebar-nav-item" onclick="switchView('suppliers')"><span class="sidebar-nav-icon">🚚</span>Suppliers</div>
-    <div class="sidebar-nav-item" onclick="switchView('purchaseOrders')"><span class="sidebar-nav-icon">📋</span>Purchase Orders</div>
-    <div class="sidebar-nav-item" onclick="switchView('myUsers')"><span class="sidebar-nav-icon">👥</span>Cashiers</div>
-    <div class="sidebar-nav-item" onclick="switchView('branchSales')"><span class="sidebar-nav-icon">💰</span>Sales</div>
-    <div class="sidebar-section-title">BIR Compliance</div>
-    <div class="sidebar-nav-item" onclick="switchView('xReading')"><span class="sidebar-nav-icon">📑</span>X-Reading</div>
-    <div class="sidebar-nav-item" onclick="switchView('zReading')"><span class="sidebar-nav-icon">📋</span>Z-Reading</div>
-    <div class="sidebar-section-title">Reports</div>
-    <div class="sidebar-nav-item" onclick="switchView('reports')"><span class="sidebar-nav-icon">📈</span>Reports</div>
-    <div class="sidebar-nav-item" onclick="switchView('downloadManager')"><span class="sidebar-nav-icon">📁</span>Backup & Sync</div>
-    <div class="sidebar-section-title">Settings</div>
-    <div class="sidebar-nav-item" onclick="switchView('settings')"><span class="sidebar-nav-icon">⚙️</span>Settings</div>`;
-  } else {
-    nav.innerHTML=`<div class="sidebar-section-title">Main</div>
-    <div class="sidebar-nav-item" onclick="switchView('dashboard')"><span class="sidebar-nav-icon">📊</span>Dashboard</div>
-    <div class="sidebar-nav-item" onclick="switchView('pos')"><span class="sidebar-nav-icon">💳</span>POS Terminal</div>`;
-  }
-}
-function logout(){currentUser=null;cart=[];discountAmount=0;discountType='none';document.getElementById('mainApp').style.display='none';closeSidebar();renderLoginScreen()}
-function openSidebar(){document.getElementById('sidebar').classList.add('active');document.getElementById('sidebarOverlay').classList.add('active')}
-function closeSidebar(){document.getElementById('sidebar').classList.remove('active');document.getElementById('sidebarOverlay').classList.remove('active')}
-
-// ═══════════════════ VIEW SWITCHER ═══════════════════
-function switchView(view){
-  currentView=view;closeSidebar();
-  const el=document.getElementById('mainContent');
-  el.style.opacity='0';el.style.transform='translateY(8px)';
-  setTimeout(()=>{
-    switch(view){
-      case 'dashboard':renderDashboard(el);break;
-      case 'pos':renderPOS(el);break;
-      case 'branches':renderBranches(el);break;
-      case 'suppliers':renderSuppliers(el);break;
-      case 'purchaseOrders':renderPurchaseOrders(el);break;
-      case 'allProducts':case 'inventory':renderProducts(el);break;
-      case 'allUsers':case 'myUsers':renderUsers(el);break;
-      case 'allSales':case 'branchSales':renderSales(el);break;
-      case 'voidedSales':renderVoidedSales(el);break;
-      case 'settings':renderSettings(el);break;
-      case 'reports':renderReports(el);break;
-      case 'downloadManager':renderDownloadManager(el);break;
-      case 'xReading':renderXReading(el);break;
-      case 'zReading':renderZReading(el);break;
-      case 'birSettings':renderBIRSettings(el);break;
-      default:renderDashboard(el);
+  <script>
+    function copyText(text, msg) {
+      navigator.clipboard.writeText(text).then(() => {
+        const t = document.getElementById('toast');
+        t.textContent = '✅ ' + msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+      });
     }
-    el.style.transition='all .25s ease';el.style.opacity='1';el.style.transform='translateY(0)';
-  },80);
-}
 
-// ═══════════════════ DASHBOARD ═══════════════════
-function renderDashboard(el){
-  const today=new Date().toISOString().split('T')[0],thisMonth=today.substring(0,7);
-  const mySales=getMyData('sales').filter(s=>!s.voided);
-  const myProducts=getMyData('products');
-  const todaySales=mySales.filter(s=>s.date===today).reduce((s,i)=>s+i.total,0);
-  const todayCount=mySales.filter(s=>s.date===today).length;
-  const monthSales=mySales.filter(s=>s.date.startsWith(thisMonth)).reduce((s,i)=>s+i.total,0);
-  const totalCost=myProducts.reduce((s,p)=>s+(p.cost||0)*p.stock,0);
-  const totalValue=myProducts.reduce((s,p)=>s+p.price*p.stock,0);
-  const hour=new Date().getHours(),greeting=hour<12?'Good morning':hour<17?'Good afternoon':'Good evening';
-  const roleColor=currentUser.role==='admin'?'var(--accent-gold)':currentUser.role==='manager'?'var(--accent-emerald)':'var(--accent-blue)';
-  const lowItems=getLowStockItems();
-  const gat=getGrandAccumulatedTotal();
-  const bir=getBIRSettings();
+    function toggleFaq(el) {
+      const item = el.parentElement;
+      item.classList.toggle('open');
+    }
 
-  el.innerHTML=`
-    <div class="welcome-card">
-      <p style="color:var(--text-muted);font-size:.75em;margin-bottom:4px;font-family:var(--font-display);letter-spacing:.06em;text-transform:uppercase;">${greeting}</p>
-      <h3>${currentUser.name}</h3>
-      <p style="color:var(--text-secondary);font-size:.82em;">${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
-        <span class="role-chip" style="background:rgba(0,0,0,0.3);color:${roleColor};border:1px solid ${roleColor}30;">${currentUser.role==='admin'?'👑 Administrator':currentUser.role==='manager'?'🎯 Manager':'👤 Cashier'}</span>
-        <span class="bir-badge">🏛️ BIR Ready</span>
-      </div>
-    </div>
-    <div class="metrics">
-      <div class="metric-card"><div class="metric-value">${formatCurrency(todaySales)}</div><div class="metric-label">Today's Sales</div></div>
-      <div class="metric-card"><div class="metric-value">${todayCount}</div><div class="metric-label">Transactions</div></div>
-    </div>
-    <div class="metrics" style="margin-top:8px;">
-      <div class="metric-card"><div class="metric-value">${formatCurrency(monthSales)}</div><div class="metric-label">Monthly Revenue</div></div>
-      <div class="metric-card"><div class="metric-value">${myProducts.filter(p=>p.active).length}</div><div class="metric-label">Active Products</div></div>
-    </div>
-    <div class="metrics" style="margin-top:8px;">
-      <div class="metric-card"><div class="metric-value" style="color:var(--accent-rose);">${formatCurrency(totalCost)}</div><div class="metric-label">Inventory Cost</div></div>
-      <div class="metric-card"><div class="metric-value" style="color:var(--accent-emerald);">${formatCurrency(totalValue-totalCost)}</div><div class="metric-label">Potential Profit</div></div>
-    </div>
-    <div class="card" style="border-left:3px solid var(--accent-gold);margin-top:12px;">
-      <h5 style="color:var(--accent-gold);">🏛️ BIR Status</h5>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.78em;"><span style="color:var(--text-muted);">TIN</span><span style="font-family:var(--font-mono);">${bir.tin}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.78em;"><span style="color:var(--text-muted);">PTU No.</span><span style="font-family:var(--font-mono);">${bir.ptuNo}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.78em;"><span style="color:var(--text-muted);">Grand Accum. Total</span><span style="font-family:var(--font-display);color:var(--accent-gold);font-weight:700;">${formatCurrency(gat)}</span></div>
-      <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.78em;"><span style="color:var(--text-muted);">VAT Type</span><span style="color:var(--accent-emerald);font-weight:600;">${bir.vatType==='vat'?'VAT-Registered (12%)':'Non-VAT'}</span></div>
-    </div>
-    ${lowItems.length>0?`<div class="card" style="border-left:3px solid var(--accent-rose);margin-top:12px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><h5 style="margin-bottom:0;color:var(--accent-rose);">⚠️ Low Stock</h5>${currentUser.role!=='cashier'?`<button class="btn btn-danger btn-xs" onclick="switchView('${currentUser.role==='admin'?'allProducts':'inventory'}')">View All</button>`:''}</div>${lowItems.slice(0,4).map(p=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="font-size:.78em;">${p.name}</span><span style="font-family:var(--font-mono);font-size:.75em;color:${p.stock===0?'var(--accent-rose)':'#fbb923'};font-weight:700;">${p.stock===0?'OUT':p.stock}</span></div>`).join('')}${lowItems.length>4?`<p style="font-size:.7em;color:var(--text-muted);margin-top:6px;text-align:center;">+${lowItems.length-4} more</p>`:''}</div>`:''}
-    <div style="margin-top:14px;">
-      <button class="btn btn-primary btn-block" onclick="switchView('pos')" style="font-size:1em;padding:16px;letter-spacing:.05em;">💳 Start New Sale</button>
-      ${currentUser.role!=='cashier'?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button class="btn btn-success" onclick="switchView('xReading')">📑 X-Reading</button><button class="btn btn-warning" onclick="switchView('zReading')">📋 Z-Reading</button></div>`:''}
-    </div>`;
-}
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
 
-// ═══════════════════ POS ═══════════════════
-function renderPOS(el){
-  const myProducts=getMyData('products').filter(p=>p.active);
-  const subtotalBeforeDiscount=cart.reduce((s,i)=>s+(i.price*i.quantity),0);
-  const effectiveDiscount=Math.min(discountAmount,subtotalBeforeDiscount);
-  const subtotal=subtotalBeforeDiscount-effectiveDiscount;
-  const bir=getBIRSettings();
-  const vatData=computeVAT(subtotal+subtotal*taxRate,bir.vatType,taxRate);
-  const total=vatData.grandTotal;
-
-  el.innerHTML=`
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-      <h4 style="margin:0;">POS Terminal</h4>
-      <span class="bir-badge">🏛️ ${bir.vatType==='vat'?'VAT':'Non-VAT'} · ${bir.siType==='si'?'Sales Invoice':'Official Receipt'}</span>
-    </div>
-    <div class="scan-input-wrap"><input type="text" id="scanInput" placeholder="Scan barcode or enter SKU…" onkeypress="if(event.key==='Enter'){addToCart(event.target.value);event.target.value='';}"></div>
-    <div class="scan-hint">⚡ Scanner Ready — Point & Scan</div>
-    <div class="product-grid" style="margin-top:12px;">${myProducts.slice(0,8).map(p=>`<div class="product-card" onclick="addToCart('${p.sku}')"><strong>${p.name}</strong><div class="price">${formatCurrency(p.price)}</div><small>Stock: ${p.stock}${p.barcode?' 📷':''}${p.vatExempt?' · VAT-Exempt':''}${p.zeroRated?' · 0-Rated':''}</small></div>`).join('')}</div>
-    <div class="card" style="margin-top:4px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-        <h4 style="margin-bottom:0;">Cart</h4>
-        <span style="font-size:.75em;color:var(--text-muted);">${cart.length} item${cart.length!==1?'s':''}</span>
-      </div>
-      ${cart.map((item,i)=>`<div class="cart-item"><div style="flex:1;min-width:0;"><div style="font-size:.85em;font-weight:500;">${item.name}${item.vatExempt?'<span style="font-size:.65em;color:var(--accent-blue);margin-left:5px;">VAT-Ex</span>':''}${item.zeroRated?'<span style="font-size:.65em;color:var(--accent-emerald);margin-left:5px;">0%</span>':''}</div><div style="font-size:.72em;color:var(--text-muted);">×${item.quantity} @ ${formatCurrency(item.price)}</div></div><div style="font-family:var(--font-display);color:var(--accent-gold);font-weight:700;font-size:.9em;">${formatCurrency(item.price*item.quantity)}</div><button class="btn btn-danger btn-xs" onclick="removeFromCart(${i})" style="margin-left:8px;">✕</button></div>`).join('')||'<div class="empty-state" style="padding:25px 10px;"><div class="empty-icon">🛒</div><p>Cart is empty</p></div>'}
-      ${cart.length>0?`
-        <!-- DISCOUNT SECTION -->
-        <div class="divider"></div>
-        <div style="margin-bottom:10px;">
-          <div style="font-size:.68em;color:var(--text-muted);font-family:var(--font-display);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">BIR Discount</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;">
-            <button onclick="applyDiscount('sc')" style="padding:5px 10px;border-radius:8px;border:1px solid ${discountType==='sc'?'var(--accent-gold)':'var(--border)'};background:${discountType==='sc'?'var(--accent-gold-soft)':'var(--bg-glass)'};color:${discountType==='sc'?'var(--accent-gold)':'var(--text-secondary)'};cursor:pointer;font-size:.7em;font-weight:600;font-family:var(--font-display);">👴 SC (20%)</button>
-            <button onclick="applyDiscount('pwd')" style="padding:5px 10px;border-radius:8px;border:1px solid ${discountType==='pwd'?'var(--accent-gold)':'var(--border)'};background:${discountType==='pwd'?'var(--accent-gold-soft)':'var(--bg-glass)'};color:${discountType==='pwd'?'var(--accent-gold)':'var(--text-secondary)'};cursor:pointer;font-size:.7em;font-weight:600;font-family:var(--font-display);">♿ PWD (20%)</button>
-            <button onclick="applyDiscount('promo')" style="padding:5px 10px;border-radius:8px;border:1px solid ${discountType==='promo'?'var(--accent-blue)':'var(--border)'};background:${discountType==='promo'?'var(--accent-blue-soft)':'var(--bg-glass)'};color:${discountType==='promo'?'var(--accent-blue)':'var(--text-secondary)'};cursor:pointer;font-size:.7em;font-weight:600;font-family:var(--font-display);">🏷️ Promo</button>
-            ${discountType!=='none'?`<button onclick="applyDiscount('none')" style="padding:5px 10px;border-radius:8px;border:1px solid var(--accent-rose);background:var(--accent-rose-soft);color:var(--accent-rose);cursor:pointer;font-size:.7em;font-weight:600;font-family:var(--font-display);">✕ Remove</button>`:''}
-          </div>
-        </div>
-        <div class="divider"></div>
-        <!-- TOTALS -->
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;"><span style="color:var(--text-muted);font-size:.82em;">Subtotal</span><span style="font-size:.9em;">${formatCurrency(subtotalBeforeDiscount)}</span></div>
-        ${effectiveDiscount>0?`<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;"><span style="color:var(--accent-emerald);font-size:.82em;">${discountType==='sc'?'👴 SC Discount':discountType==='pwd'?'♿ PWD Discount':'🏷️ Promo Discount'}</span><span style="font-size:.9em;color:var(--accent-emerald);">- ${formatCurrency(effectiveDiscount)}</span></div>`:''}
-        ${bir.vatType==='vat'?`
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;"><span style="color:var(--text-muted);font-size:.82em;">VATable Sales</span><span style="font-size:.82em;">${formatCurrency(vatData.vatableSales)}</span></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;"><span style="color:var(--text-muted);font-size:.82em;">VAT (12%)</span><span style="font-size:.82em;">${formatCurrency(vatData.vatAmount)}</span></div>
-        `:`<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;"><span style="color:var(--text-muted);font-size:.82em;">VAT-Exempt Sales</span><span style="font-size:.82em;">${formatCurrency(subtotal)}</span></div>`}
-        <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-top:1px solid var(--border);margin-top:6px;padding-top:10px;"><span style="font-family:var(--font-display);font-weight:700;">TOTAL</span><span style="font-family:var(--font-display);font-size:1.35em;font-weight:800;color:var(--accent-gold);">${formatCurrency(total)}</span></div>
-        <!-- CASH TENDERED -->
-        <div style="margin-bottom:12px;">
-          <div style="font-size:.72em;color:var(--text-muted);font-family:var(--font-display);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;">Cash Tendered</div>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <input type="number" id="cashTendered" placeholder="0.00" step="0.01" min="0" style="margin-bottom:0;font-family:var(--font-mono);font-size:1.05em;text-align:right;border-color:var(--accent-emerald);" oninput="updateChange(${total})" onkeypress="if(event.key==='Enter')processPayment('cash')">
-            <button class="btn btn-success btn-sm" style="white-space:nowrap;flex-shrink:0;" onclick="document.getElementById('cashTendered').value=${total.toFixed(2)};updateChange(${total})">Exact</button>
-          </div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:7px;">
-            ${getQuickCashAmounts(total).map(a=>`<button onclick="document.getElementById('cashTendered').value=${a};updateChange(${total})" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:8px;padding:5px 10px;cursor:pointer;color:var(--text-primary);font-family:var(--font-mono);font-size:.75em;transition:all .15s;" onmouseover="this.style.borderColor='var(--accent-emerald)'" onmouseout="this.style.borderColor='var(--border)'">${fc(a)}</button>`).join('')}
-          </div>
-          <div id="changeDisplay" style="margin-top:10px;padding:10px 14px;border-radius:var(--radius-md);background:var(--bg-elevated);border:1px solid var(--border);display:none;">
-            <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:.78em;color:var(--text-muted);">Change</span><span id="changeAmount" style="font-family:var(--font-display);font-size:1.3em;font-weight:800;color:var(--accent-emerald);">0.00</span></div>
-          </div>
-          <div id="insufficientMsg" style="margin-top:6px;font-size:.75em;color:var(--accent-rose);font-weight:600;display:none;">⚠ Insufficient amount</div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <button class="btn btn-success" onclick="processPayment('cash')">💵 Cash</button>
-          <button class="btn btn-primary" onclick="processPayment('card')">💳 Card</button>
-        </div>
-        <button class="btn btn-danger btn-block" style="margin-top:8px;" onclick="voidCurrentCart()">🚫 Void Cart</button>
-      `:''}
-    </div>`;
-  setTimeout(()=>{const si=document.getElementById('scanInput');if(si)si.focus()},100);
-}
-function addToCart(sku){
-  const p=getMyData('products').find(p=>(p.sku===sku||p.barcode===sku)&&p.active);
-  if(p&&p.stock>0){const e=cart.find(i=>i.sku===p.sku);e?e.quantity++:cart.push({...p,quantity:1});switchView('pos');}
-  else{alert('Product not found or out of stock!')}
-}
-function removeFromCart(i){cart.splice(i,1);if(cart.length===0){discountAmount=0;discountType='none';}switchView('pos')}
-function voidCurrentCart(){if(cart.length===0)return;if(!confirm('Void entire cart?'))return;cart=[];discountAmount=0;discountType='none';switchView('pos');}
-
-function processPayment(method){
-  if(cart.length===0){alert('Cart is empty!');return}
-  const bir=getBIRSettings();
-  const subtotalBeforeDiscount=cart.reduce((s,i)=>s+(i.price*i.quantity),0);
-  const effectiveDiscount=Math.min(discountAmount,subtotalBeforeDiscount);
-  const subtotal=subtotalBeforeDiscount-effectiveDiscount;
-  const vatData=computeVAT(subtotal+subtotal*taxRate,bir.vatType,taxRate);
-  const total=vatData.grandTotal;
-
-  // Capture cash tendered & change (cash only; card = exact)
-  let cashTendered=0,changeGiven=0;
-  if(method==='cash'){
-    const inputEl=document.getElementById('cashTendered');
-    cashTendered=parseFloat(inputEl?inputEl.value:0)||0;
-    if(cashTendered<=0){alert('Please enter the cash amount tendered.');return;}
-    if(cashTendered<total){alert('Cash tendered ('+fc(cashTendered)+') is less than total ('+fc(total)+').');return;}
-    changeGiven=cashTendered-total;
-  } else {
-    cashTendered=total;changeGiven=0;
-  }
-
-  const orNumber=getNextORNumber();
-  const branchObj=currentUser.branchId?DB.getById('branches',currentUser.branchId):null;
-  const gat=updateGrandAccumulatedTotal(total);
-
-  const sale={
-    date:new Date().toISOString().split('T')[0],
-    timestamp:new Date().toISOString(),
-    total,subtotal,
-    subtotalBeforeDiscount,
-    discountAmount:effectiveDiscount,
-    discountType,
-    tax:vatData.vatAmount,
-    vatableSales:vatData.vatableSales,
-    vatExemptSales:vatData.vatExempt,
-    zeroRatedSales:vatData.zeroRated,
-    paymentMethod:method,
-    cashTendered,changeGiven,
-    cashierId:currentUser.id,cashierName:currentUser.name,
-    branchId:currentUser.branchId,branchName:branchObj?branchObj.name:'HQ',
-    currency:currentCurrency,
-    orNumber,
-    vatType:bir.vatType,
-    siType:bir.siType,
-    grandAccumulatedTotal:gat,
-    voided:false,
-    items:cart.map(i=>({productId:i.id,name:i.name,quantity:i.quantity,price:i.price,cost:i.cost,vatExempt:i.vatExempt||false,zeroRated:i.zeroRated||false}))
-  };
-  const saleId=DB.add('sales',sale);
-  cart.forEach(item=>{const p=DB.getById('products',item.id);if(p){p.stock-=item.quantity;DB.update('products',p)}});
-  logActivity('Sale',orNumber+': '+formatCurrency(total));
-  lastSaleData={...sale,id:saleId};
-  discountAmount=0;discountType='none';
-  showSaleCompleteModal(saleId,total,method,orNumber,cashTendered,changeGiven);
-  cart=[];
-}
-
-// ═══════════════════ VOID TRANSACTION ═══════════════════
-function voidSale(id){
-  const sale=DB.getById('sales',id);
-  if(!sale){alert('Sale not found');return;}
-  if(sale.voided){alert('Already voided');return;}
-  const reason=prompt('Reason for void (required):');
-  if(!reason||reason.trim()===''){alert('Void reason is required for BIR compliance.');return;}
-  if(!confirm(`Void ${sale.orNumber||'#'+id} for ${formatCurrency(sale.total)}?\n\nThis will be logged for BIR audit.`))return;
-  // Restore stock
-  (sale.items||[]).forEach(item=>{const p=DB.getById('products',item.productId);if(p){p.stock+=item.quantity;DB.update('products',p);}});
-  // Mark voided (never delete)
-  sale.voided=true;sale.voidReason=reason;sale.voidedBy=currentUser.name;sale.voidedAt=new Date().toISOString();
-  DB.update('sales',sale);
-  // Adjust GAT
-  const settings=DB.getAll('settings');const e=settings.find(s=>s.key==='bir_grand_total');
-  if(e){e.value=(Math.max(0,parseFloat(e.value)-sale.total)).toFixed(2);DB.update('settings',e);}
-  // Log void
-  DB.add('voidedSales',{originalSaleId:id,orNumber:sale.orNumber,amount:sale.total,reason,voidedBy:currentUser.name,timestamp:new Date().toISOString()});
-  logActivity('VOID',`${sale.orNumber||'#'+id}: ${formatCurrency(sale.total)} — ${reason}`);
-  alert('✓ Transaction voided and logged for BIR audit trail.');
-  switchView(currentView);
-}
-
-function renderVoidedSales(el){
-  const voided=DB.getAll('sales').filter(s=>s.voided);
-  el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-    <h4 style="margin:0;">🚫 Voided Transactions</h4>
-    <span class="bir-badge">BIR Audit Trail</span>
-  </div>
-  <div class="card" style="border:1px solid rgba(240,101,119,0.25);margin-bottom:12px;">
-    <p style="font-size:.78em;color:var(--text-muted);line-height:1.6;">Voided transactions are kept permanently for BIR compliance. They cannot be deleted.</p>
-  </div>
-  ${voided.length===0?'<div class="empty-state"><div class="empty-icon">✅</div><p>No voided transactions</p></div>':
-  `<div style="overflow-x:auto;"><table><thead><tr><th>OR #</th><th>Date</th><th>Amount</th><th>Voided By</th><th>Reason</th></tr></thead><tbody>
-  ${voided.map(s=>`<tr>
-    <td style="font-family:var(--font-mono);font-size:.72em;">${s.orNumber||'#'+s.id}</td>
-    <td>${s.date}</td>
-    <td style="color:var(--accent-rose);font-family:var(--font-mono);">${formatCurrency(s.total)}</td>
-    <td>${s.voidedBy||'—'}</td>
-    <td style="font-size:.75em;max-width:120px;">${s.voidReason||'—'}</td>
-  </tr>`).join('')}
-  </tbody></table></div>`}`;
-}
-
-// ═══════════════════ SALE COMPLETE + PRINT MODAL ═══════════════════
-function showSaleCompleteModal(saleId,total,method,orNumber,cashTendered,changeGiven){
-  cashTendered=cashTendered||total;changeGiven=changeGiven||0;
-  if(defaultPrintMode==='thermal'){showSaleCompleteToast(saleId,total,method,orNumber,cashTendered,changeGiven);setTimeout(()=>printReceipt('thermal'),300);setTimeout(()=>switchView('dashboard'),800);return;}
-  if(defaultPrintMode==='a4'){showSaleCompleteToast(saleId,total,method,orNumber,cashTendered,changeGiven);setTimeout(()=>printReceipt('a4'),300);setTimeout(()=>switchView('dashboard'),800);return;}
-  if(defaultPrintMode==='none'){showSaleCompleteToast(saleId,total,method,orNumber,cashTendered,changeGiven);setTimeout(()=>switchView('dashboard'),2200);return;}
-  document.getElementById('modalContent').innerHTML=`
-    <div class="sale-complete">
-      <div class="check-circle">✓</div>
-      <h3>Sale Complete</h3>
-      <div class="amount">${formatCurrency(total)}</div>
-      <small>${orNumber} · ${method.toUpperCase()}</small>
-    </div>
-    ${method==='cash'?`
-    <div style="margin:16px 0;background:var(--bg-elevated);border-radius:var(--radius-md);overflow:hidden;">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06);">
-        <span style="font-size:.82em;color:var(--text-muted);">Total Due</span>
-        <span style="font-family:var(--font-mono);font-weight:600;">${formatCurrency(total)}</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06);">
-        <span style="font-size:.82em;color:var(--text-muted);">Cash Tendered</span>
-        <span style="font-family:var(--font-mono);font-weight:600;color:var(--accent-gold);">${formatCurrency(cashTendered)}</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;">
-        <span style="font-family:var(--font-display);font-weight:700;">Change</span>
-        <span style="font-family:var(--font-display);font-size:1.5em;font-weight:800;color:var(--accent-emerald);">${formatCurrency(changeGiven)}</span>
-      </div>
-    </div>`:'<div style="height:8px;"></div>'}
-    <div>
-      <p style="text-align:center;font-size:.78em;color:var(--text-muted);margin-bottom:14px;font-family:var(--font-display);letter-spacing:.04em;text-transform:uppercase;">Print Receipt</p>
-      <div class="print-option-grid">
-        <button class="print-option-btn" onclick="printReceipt('thermal');closeModal();switchView('dashboard');"><span class="pob-icon">🧾</span>Thermal<br><span style="font-size:.72em;color:var(--text-muted);font-family:var(--font-mono);">58/80mm</span></button>
-        <button class="print-option-btn" onclick="printReceipt('a4');closeModal();switchView('dashboard');"><span class="pob-icon">📄</span>A4<br><span style="font-size:.72em;color:var(--text-muted);font-family:var(--font-mono);">Full page</span></button>
-        <button class="print-option-btn" onclick="closeModal();switchView('dashboard');" style="border-color:rgba(240,101,119,0.25);color:var(--accent-rose);"><span class="pob-icon">✕</span>No Print<br><span style="font-size:.72em;color:var(--text-muted);font-family:var(--font-mono);">Continue</span></button>
-      </div>
-    </div>`;
-  document.getElementById('modal').classList.add('active');
-}
-function showSaleCompleteToast(saleId,total,method,orNumber,cashTendered,changeGiven){
-  cashTendered=cashTendered||total;changeGiven=changeGiven||0;
-  const existing=document.getElementById('saleToast');if(existing)existing.remove();
-  const toast=document.createElement('div');toast.id='saleToast';
-  toast.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--bg-elevated);border:2px solid var(--accent-emerald);border-radius:var(--radius-xl);padding:28px 32px;z-index:9999;text-align:center;box-shadow:0 12px 50px rgba(0,0,0,0.6);animation:popIn .35s cubic-bezier(0.22,1,0.36,1);min-width:240px;';
-  toast.innerHTML=`
-    <div style="width:56px;height:56px;background:var(--accent-emerald-soft);border:2px solid var(--accent-emerald);border-radius:50%;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:24px;">✓</div>
-    <div style="font-family:var(--font-display);color:var(--accent-emerald);font-size:1em;font-weight:700;margin-bottom:4px;">Sale Complete</div>
-    <div style="font-family:var(--font-display);font-size:1.6em;font-weight:800;color:var(--text-primary);letter-spacing:-0.03em;">${formatCurrency(total)}</div>
-    <div style="font-size:.72em;color:var(--text-muted);margin-top:4px;">${orNumber||'#'+saleId} · ${method.toUpperCase()}</div>
-    ${method==='cash'?`
-    <div style="margin-top:14px;border-top:1px solid rgba(255,255,255,0.08);padding-top:12px;">
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-        <span style="font-size:.78em;color:var(--text-muted);">Cash</span>
-        <span style="font-family:var(--font-mono);font-size:.82em;color:var(--accent-gold);">${formatCurrency(cashTendered)}</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;">
-        <span style="font-family:var(--font-display);font-weight:700;font-size:.9em;">Change</span>
-        <span style="font-family:var(--font-display);font-size:1.3em;font-weight:800;color:var(--accent-emerald);">${formatCurrency(changeGiven)}</span>
-      </div>
-    </div>`:''}`;
-  document.body.appendChild(toast);
-  setTimeout(()=>{if(toast.parentElement){toast.style.opacity='0';toast.style.transition='opacity .4s';setTimeout(()=>toast.remove(),400)}},3000);
-}
-
-// ═══════════════════ BIR-COMPLIANT RECEIPT PRINTING ═══════════════════
-function printReceipt(type){
-  if(!lastSaleData){alert('No sale data found.');return;}
-  const sale=lastSaleData;
-  const bir=getBIRSettings();
-  const storeName=bir.registeredName||'MLEA Store';
-  const address=bir.registeredAddress||'Registered Address';
-  const tin=bir.tin||'000-000-000-000';
-  const accNo=bir.accreditationNo||'FP082010-033-2019-0';
-  const accDate=bir.accreditationDate||'N/A';
-  const accExp=bir.accreditationExpiry||'N/A';
-  const ptuNo=bir.ptuNo||'PTU-000000';
-  const orLabel=bir.siType==='si'?'SALES INVOICE':'OFFICIAL RECEIPT';
-  const date=new Date().toLocaleString('en-PH');
-  const orNum=sale.orNumber||('#'+sale.id);
-
-  let html='';
-
-  if(type==='thermal'){
-    html=`<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <style>
-      @page{margin:0;size:80mm auto}
-      *{margin:0;padding:0;box-sizing:border-box}
-      body{font-family:'Courier New',Courier,monospace;font-size:11px;width:76mm;padding:4mm 2mm;color:#000;background:#fff}
-      .center{text-align:center}.right{text-align:right}.bold{font-weight:bold}
-      .lg{font-size:13px}.xl{font-size:16px;font-weight:bold}
-      .divider{border:none;border-top:1px dashed #000;margin:5px 0}
-      .row{display:flex;justify-content:space-between;margin:2px 0}
-      .row-3{display:flex;justify-content:space-between;margin:2px 0}
-      .row-3 span:first-child{flex:1}
-      .row-3 span:nth-child(2){width:30px;text-align:center}
-      .row-3 span:last-child{width:55px;text-align:right}
-      .total-row{font-size:13px;font-weight:bold}
-      .bir-footer{font-size:8px;text-align:center;margin-top:4px;line-height:1.5}
-    </style></head><body>
-    <div class="center bold xl">${storeName}</div>
-    <div class="center">${address}</div>
-    <div class="center">TIN: ${tin}</div>
-    <hr class="divider">
-    <div class="center bold">${orLabel}</div>
-    <div class="center" style="font-size:9px;">${date}</div>
-    <hr class="divider">
-    <div class="row"><span class="bold">OR/SI No.:</span><span>${orNum}</span></div>
-    <div class="row"><span class="bold">Branch</span><span>${sale.branchName||'Main'}</span></div>
-    <div class="row"><span class="bold">Cashier</span><span>${sale.cashierName}</span></div>
-    <div class="row"><span class="bold">Payment</span><span>${sale.paymentMethod.toUpperCase()}</span></div>
-    <hr class="divider">
-    <div class="row-3"><span class="bold">ITEM</span><span class="bold">QTY</span><span class="bold">AMT</span></div>
-    <hr class="divider">
-    ${(sale.items||[]).map(it=>`<div class="row-3"><span>${it.name.substring(0,16)}${it.vatExempt?' *VE':''}${it.zeroRated?' *ZR':''}</span><span>${it.quantity}</span><span>${fc(it.price*it.quantity)}</span></div><div style="font-size:9px;color:#555;padding-left:2px;">@ ${fc(it.price)} each</div>`).join('')}
-    <hr class="divider">
-    ${(sale.discountAmount||0)>0?`<div class="row"><span>Subtotal</span><span>${fc(sale.subtotalBeforeDiscount||sale.subtotal)}</span></div><div class="row"><span>${sale.discountType==='sc'?'SC Discount':sale.discountType==='pwd'?'PWD Discount':'Promo Discount'} (20%)</span><span>-${fc(sale.discountAmount)}</span></div>`:''}
-    ${sale.vatType==='vat'?`
-    <div class="row"><span>VATable Sales</span><span>${fc(sale.vatableSales||0)}</span></div>
-    <div class="row"><span>VAT Amount (12%)</span><span>${fc(sale.tax||0)}</span></div>
-    <div class="row"><span>VAT-Exempt Sales</span><span>${fc(0)}</span></div>
-    <div class="row"><span>Zero-Rated Sales</span><span>${fc(0)}</span></div>
-    `:`<div class="row"><span>VAT-Exempt Sales</span><span>${fc(sale.subtotal||0)}</span></div>`}
-    <hr class="divider">
-    <div class="row total-row"><span>TOTAL AMOUNT DUE</span><span>${fc(sale.total)}</span></div>
-    ${sale.paymentMethod==='cash'?`
-    <hr class="divider">
-    <div class="row"><span>Cash Tendered</span><span>${fc(sale.cashTendered||sale.total)}</span></div>
-    <div class="row bold" style="font-size:13px;"><span>Change</span><span>${fc(sale.changeGiven||0)}</span></div>`:''}
-    <hr class="divider">
-    <div class="center" style="margin-top:6px;font-size:9px;">Thank you for your purchase!</div>
-    ${!sale.vatType||sale.vatType==='nonvat'?'<div class="bir-footer">This document is NOT valid<br>for claiming input taxes.</div>':''}
-    <div class="bir-footer">
-      BIR Accreditation No.: ${accNo}<br>
-      Date Issued: ${accDate} · Expiry: ${accExp}<br>
-      PTU No.: ${ptuNo}<br>
-      Powered by MLEA POS v3.0
-    </div>
-    <div style="height:10mm;"></div>
-    </body></html>`;
-
-  } else if(type==='a4'){
-    const itemsHtml=(sale.items||[]).map((it,idx)=>`
-      <tr style="background:${idx%2===0?'#f9f9f9':'#fff'};">
-        <td style="padding:10px 14px;">${idx+1}</td>
-        <td style="padding:10px 14px;">${it.name}${it.vatExempt?' <span style="font-size:.75em;color:#666;">[VAT-Exempt]</span>':''}${it.zeroRated?' <span style="font-size:.75em;color:#666;">[0-Rated]</span>':''}</td>
-        <td style="padding:10px 14px;text-align:center;">${it.quantity}</td>
-        <td style="padding:10px 14px;text-align:right;">${fc(it.price)}</td>
-        <td style="padding:10px 14px;text-align:right;font-weight:600;">${fc(it.price*it.quantity)}</td>
-      </tr>`).join('');
-
-    html=`<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <style>
-      @page{margin:15mm 12mm;size:A4}
-      *{margin:0;padding:0;box-sizing:border-box}
-      body{font-family:'Segoe UI',Arial,sans-serif;font-size:12px;color:#222;background:#fff}
-      .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:3px solid #222}
-      .store-name{font-size:22px;font-weight:800;letter-spacing:-0.5px}
-      .store-sub{font-size:11px;color:#666;margin-top:3px}
-      .receipt-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#999}
-      .receipt-num{font-size:24px;font-weight:800;color:#222;letter-spacing:-1px}
-      .meta-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;padding:14px;background:#f5f5f5;border-radius:8px}
-      .meta-item label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#999;display:block;margin-bottom:3px}
-      .meta-item span{font-size:12px;font-weight:600}
-      table{width:100%;border-collapse:collapse;margin-bottom:20px}
-      thead tr{background:#222;color:#fff}
-      thead th{padding:10px 12px;text-align:left;font-size:10px;letter-spacing:.5px;text-transform:uppercase}
-      thead th:nth-child(3),thead th:nth-child(4),thead th:nth-child(5){text-align:right}
-      thead th:nth-child(3){text-align:center}
-      tbody tr:last-child td{border-bottom:2px solid #222}
-      .totals{margin-left:auto;width:300px}
-      .totals-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee;font-size:12px}
-      .totals-row.grand{font-size:16px;font-weight:800;border-bottom:2px solid #222;padding-top:10px}
-      .totals-row.discount{color:#e74c3c}
-      .footer{margin-top:24px;padding-top:12px;border-top:1px solid #ddd}
-      .bir-info{background:#fffbf0;border:1px solid #e8c96a;border-radius:6px;padding:12px 16px;margin-top:14px;font-size:10px;line-height:1.8;color:#555}
-      .bir-info strong{color:#333;display:block;margin-bottom:4px;font-size:11px}
-      .paid-stamp{display:inline-block;border:3px solid #2dd4a0;color:#2dd4a0;padding:5px 16px;border-radius:6px;font-size:20px;font-weight:900;letter-spacing:4px;transform:rotate(-8deg);margin-top:6px}
-      .nonvat-note{font-size:9px;color:#666;text-align:center;margin-top:10px;padding:8px;border:1px dashed #ccc;border-radius:4px}
-    </style></head><body>
-    <div class="header">
-      <div>
-        <div class="store-name">${storeName}</div>
-        <div class="store-sub">${address}</div>
-        <div class="store-sub">TIN: ${tin}</div>
-        <div class="store-sub" style="margin-top:2px;">${date}</div>
-      </div>
-      <div style="text-align:right;">
-        <div class="receipt-label">${orLabel}</div>
-        <div class="receipt-num">${orNum}</div>
-        <div class="paid-stamp">PAID</div>
-      </div>
-    </div>
-
-    <div class="meta-grid">
-      <div class="meta-item"><label>Cashier</label><span>${sale.cashierName}</span></div>
-      <div class="meta-item"><label>Payment</label><span>${sale.paymentMethod.toUpperCase()}</span></div>
-      <div class="meta-item"><label>Branch</label><span>${sale.branchName||'HQ'}</span></div>
-    </div>
-
-    <table>
-      <thead><tr><th>#</th><th>Item Description</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Unit Price</th><th style="text-align:right;">Amount</th></tr></thead>
-      <tbody>${itemsHtml}</tbody>
-    </table>
-
-    <div class="totals">
-      ${(sale.discountAmount||0)>0?`<div class="totals-row"><span>Subtotal</span><span>${fc(sale.subtotalBeforeDiscount||sale.subtotal)}</span></div><div class="totals-row discount"><span>${sale.discountType==='sc'?'Senior Citizen Discount':sale.discountType==='pwd'?'PWD Discount':'Promotional Discount'}</span><span>- ${fc(sale.discountAmount)}</span></div>`:''}
-      ${sale.vatType==='vat'?`
-      <div class="totals-row"><span>VATable Sales</span><span>${fc(sale.vatableSales||0)}</span></div>
-      <div class="totals-row"><span>VAT Amount (12%)</span><span>${fc(sale.tax||0)}</span></div>
-      <div class="totals-row"><span>VAT-Exempt Sales</span><span>${fc(sale.vatExemptSales||0)}</span></div>
-      <div class="totals-row"><span>Zero-Rated Sales</span><span>${fc(sale.zeroRatedSales||0)}</span></div>
-      `:`<div class="totals-row"><span>Amount (Non-VAT)</span><span>${fc(sale.subtotal||0)}</span></div>`}
-      <div class="totals-row grand"><span>TOTAL AMOUNT DUE</span><span>${fc(sale.total)}</span></div>
-      ${sale.paymentMethod==='cash'?`
-      <div class="totals-row" style="margin-top:6px;"><span>Cash Tendered</span><span style="color:#d4a853;">${fc(sale.cashTendered||sale.total)}</span></div>
-      <div class="totals-row" style="font-weight:800;font-size:15px;color:#2dd4a0;border-bottom:2px solid #2dd4a0;"><span>Change</span><span>${fc(sale.changeGiven||0)}</span></div>`:''}
-    </div>
-
-    ${sale.vatType!=='vat'?`<div class="nonvat-note">This document is NOT valid for claiming input taxes.</div>`:''}
-
-    <div class="bir-info">
-      <strong>BIR Accreditation Details</strong>
-      Accreditation No.: ${accNo} &nbsp;|&nbsp; Date Issued: ${accDate} &nbsp;|&nbsp; Valid Until: ${accExp}<br>
-      PTU (Permit to Use) No.: ${ptuNo}<br>
-      Series: ${bir.orSeriesPrefix}-${bir.orSeriesFrom} to ${bir.orSeriesPrefix}-${bir.orSeriesTo}
-    </div>
-
-    <div class="footer" style="display:flex;justify-content:space-between;align-items:flex-start;font-size:10px;color:#999;">
-      <div>Thank you for your business!<br>Please keep this receipt as proof of purchase.</div>
-      <div style="text-align:right;">MLEA POS v3.0 (BIR-Ready)<br>${orNum} · ${date}</div>
-    </div>
-    </body></html>`;
-  }
-
-  const frame=document.getElementById('printFrame');
-  frame.style.display='none';
-  const doc=frame.contentDocument||frame.contentWindow.document;
-  doc.open();doc.write(html);doc.close();
-  setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print();setTimeout(()=>{},500);},350);
-}
-
-// ═══════════════════ X-READING ═══════════════════
-function renderXReading(el){
-  const today=new Date().toISOString().split('T')[0];
-  const todaySales=DB.getAll('sales').filter(s=>s.date===today&&!s.voided);
-  if(currentUser.branchId){todaySales.filter(s=>s.branchId===currentUser.branchId);}
-  const bir=getBIRSettings();
-  const total=todaySales.reduce((a,s)=>a+s.total,0);
-  const vatAmount=todaySales.reduce((a,s)=>a+(s.tax||0),0);
-  const vatableSales=todaySales.reduce((a,s)=>a+(s.vatableSales||0),0);
-  const vatExempt=todaySales.reduce((a,s)=>a+(s.vatExemptSales||0),0);
-  const zeroRated=todaySales.reduce((a,s)=>a+(s.zeroRatedSales||0),0);
-  const cash=todaySales.filter(s=>s.paymentMethod==='cash').reduce((a,s)=>a+s.total,0);
-  const card=todaySales.filter(s=>s.paymentMethod==='card').reduce((a,s)=>a+s.total,0);
-  const discounts=todaySales.reduce((a,s)=>a+(s.discountAmount||0),0);
-  const sc=todaySales.filter(s=>s.discountType==='sc').reduce((a,s)=>a+(s.discountAmount||0),0);
-  const pwd=todaySales.filter(s=>s.discountType==='pwd').reduce((a,s)=>a+(s.discountAmount||0),0);
-  const voidCount=DB.getAll('sales').filter(s=>s.date===today&&s.voided).length;
-  const gat=getGrandAccumulatedTotal();
-
-  el.innerHTML=`
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <h4 style="margin:0;">📑 X-Reading</h4>
-      <span class="bir-badge">Non-Reset</span>
-    </div>
-    <div class="card" style="border:1px solid rgba(212,168,83,0.3);">
-      <p style="font-size:.75em;color:var(--text-muted);margin-bottom:12px;">X-Reading is a snapshot of sales as of this moment. It does NOT reset counters.</p>
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:.8em;color:var(--text-muted);">Store Name</span><span style="font-size:.8em;font-weight:600;">${bir.registeredName}</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:.8em;color:var(--text-muted);">TIN</span><span style="font-size:.8em;font-family:var(--font-mono);">${bir.tin}</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:.8em;color:var(--text-muted);">Date</span><span style="font-size:.8em;">${today}</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:.8em;color:var(--text-muted);">Time</span><span style="font-size:.8em;">${new Date().toLocaleTimeString('en-PH')}</span></div>
-    </div>
-    <div class="reading-card">
-      <div style="font-family:var(--font-display);font-size:.8em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">Sales Breakdown</div>
-      <div class="reading-row"><span>VATable Sales</span><span style="font-family:var(--font-mono);">${fc(vatableSales)}</span></div>
-      <div class="reading-row"><span>VAT Amount (12%)</span><span style="font-family:var(--font-mono);">${fc(vatAmount)}</span></div>
-      <div class="reading-row"><span>VAT-Exempt Sales</span><span style="font-family:var(--font-mono);">${fc(vatExempt)}</span></div>
-      <div class="reading-row"><span>Zero-Rated Sales</span><span style="font-family:var(--font-mono);">${fc(zeroRated)}</span></div>
-      <div class="reading-row total"><span>GROSS AMOUNT</span><span>${fc(total)}</span></div>
-    </div>
-    <div class="reading-card">
-      <div style="font-family:var(--font-display);font-size:.8em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">Discounts</div>
-      <div class="reading-row"><span>Senior Citizen</span><span style="font-family:var(--font-mono);">${fc(sc)}</span></div>
-      <div class="reading-row"><span>PWD</span><span style="font-family:var(--font-mono);">${fc(pwd)}</span></div>
-      <div class="reading-row"><span>Promotional</span><span style="font-family:var(--font-mono);">${fc(discounts-sc-pwd)}</span></div>
-      <div class="reading-row total"><span>TOTAL DISCOUNTS</span><span>${fc(discounts)}</span></div>
-    </div>
-    <div class="reading-card">
-      <div style="font-family:var(--font-display);font-size:.8em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">Payment Modes</div>
-      <div class="reading-row"><span>💵 Cash</span><span style="font-family:var(--font-mono);">${fc(cash)}</span></div>
-      <div class="reading-row"><span>💳 Card</span><span style="font-family:var(--font-mono);">${fc(card)}</span></div>
-    </div>
-    <div class="reading-card">
-      <div style="font-family:var(--font-display);font-size:.8em;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">Transaction Count</div>
-      <div class="reading-row"><span>Transactions Today</span><span>${todaySales.length}</span></div>
-      <div class="reading-row"><span>Voided Today</span><span style="color:var(--accent-rose);">${voidCount}</span></div>
-      <div class="reading-row"><span>Grand Accum. Total (GAT)</span><span style="font-family:var(--font-mono);color:var(--accent-gold);font-weight:700;">${fc(gat)}</span></div>
-    </div>
-    <button class="btn btn-primary btn-block" onclick="printXReading()">🖨 Print X-Reading</button>`;
-}
-
-function printXReading(){
-  const today=new Date().toISOString().split('T')[0];
-  const todaySales=DB.getAll('sales').filter(s=>s.date===today&&!s.voided);
-  const bir=getBIRSettings();
-  const total=todaySales.reduce((a,s)=>a+s.total,0);
-  const vatAmount=todaySales.reduce((a,s)=>a+(s.tax||0),0);
-  const vatableSales=todaySales.reduce((a,s)=>a+(s.vatableSales||0),0);
-  const vatExempt=todaySales.reduce((a,s)=>a+(s.vatExemptSales||0),0);
-  const zeroRated=todaySales.reduce((a,s)=>a+(s.zeroRatedSales||0),0);
-  const cash=todaySales.filter(s=>s.paymentMethod==='cash').reduce((a,s)=>a+s.total,0);
-  const card=todaySales.filter(s=>s.paymentMethod==='card').reduce((a,s)=>a+s.total,0);
-  const sc=todaySales.filter(s=>s.discountType==='sc').reduce((a,s)=>a+(s.discountAmount||0),0);
-  const pwd=todaySales.filter(s=>s.discountType==='pwd').reduce((a,s)=>a+(s.discountAmount||0),0);
-  const promoDisc=todaySales.reduce((a,s)=>a+(s.discountAmount||0),0)-sc-pwd;
-  const gat=getGrandAccumulatedTotal();
-  const voidCount=DB.getAll('sales').filter(s=>s.date===today&&s.voided).length;
-
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-    @page{margin:8mm;size:80mm auto}*{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Courier New',Courier,monospace;font-size:10px;width:76mm;color:#000;background:#fff}
-    .center{text-align:center}.bold{font-weight:bold}
-    .divider{border:none;border-top:1px dashed #000;margin:4px 0}
-    .row{display:flex;justify-content:space-between;margin:2px 0}
-  </style></head><body>
-  <div class="center bold" style="font-size:13px;">${bir.registeredName}</div>
-  <div class="center">${bir.registeredAddress}</div>
-  <div class="center">TIN: ${bir.tin}</div>
-  <hr class="divider">
-  <div class="center bold" style="font-size:12px;">X - READING REPORT</div>
-  <div class="center">(NON-RESET)</div>
-  <div class="center">${today} ${new Date().toLocaleTimeString('en-PH')}</div>
-  <hr class="divider">
-  <div class="row"><span>Transactions</span><span>${todaySales.length}</span></div>
-  <div class="row"><span>Voided</span><span>${voidCount}</span></div>
-  <hr class="divider">
-  <div class="bold">SALES BREAKDOWN</div>
-  <div class="row"><span>VATable Sales</span><span>${fc(vatableSales)}</span></div>
-  <div class="row"><span>VAT Amount (12%)</span><span>${fc(vatAmount)}</span></div>
-  <div class="row"><span>VAT-Exempt</span><span>${fc(vatExempt)}</span></div>
-  <div class="row"><span>Zero-Rated</span><span>${fc(zeroRated)}</span></div>
-  <hr class="divider">
-  <div class="row bold"><span>GROSS TOTAL</span><span>${fc(total)}</span></div>
-  <hr class="divider">
-  <div class="bold">DISCOUNTS</div>
-  <div class="row"><span>SC Discount</span><span>${fc(sc)}</span></div>
-  <div class="row"><span>PWD Discount</span><span>${fc(pwd)}</span></div>
-  <div class="row"><span>Promotional</span><span>${fc(promoDisc)}</span></div>
-  <hr class="divider">
-  <div class="bold">PAYMENTS</div>
-  <div class="row"><span>Cash</span><span>${fc(cash)}</span></div>
-  <div class="row"><span>Card</span><span>${fc(card)}</span></div>
-  <hr class="divider">
-  <div class="row"><span>Grand Accum. Total</span><span class="bold">${fc(gat)}</span></div>
-  <hr class="divider">
-  <div class="center" style="font-size:8px;margin-top:4px;">PTU No.: ${bir.ptuNo}<br>Accreditation: ${bir.accreditationNo}<br>MLEA POS v3.0 (BIR-Ready)</div>
-  <div style="height:8mm;"></div>
-  </body></html>`;
-
-  const frame=document.getElementById('printFrame');
-  const doc=frame.contentDocument||frame.contentWindow.document;
-  doc.open();doc.write(html);doc.close();
-  setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print();},350);
-}
-
-// ═══════════════════ Z-READING ═══════════════════
-function renderZReading(el){
-  const today=new Date().toISOString().split('T')[0];
-  const todaySales=DB.getAll('sales').filter(s=>s.date===today&&!s.voided);
-  const bir=getBIRSettings();
-  const lastZ=localStorage.getItem('mlea_last_z_date');
-  const alreadyDoneToday=lastZ===today;
-
-  const total=todaySales.reduce((a,s)=>a+s.total,0);
-  const vatAmount=todaySales.reduce((a,s)=>a+(s.tax||0),0);
-  const vatableSales=todaySales.reduce((a,s)=>a+(s.vatableSales||0),0);
-  const gat=getGrandAccumulatedTotal();
-  const voidCount=DB.getAll('sales').filter(s=>s.date===today&&s.voided).length;
-
-  el.innerHTML=`
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <h4 style="margin:0;">📋 Z-Reading</h4>
-      <span class="bir-badge" style="${alreadyDoneToday?'background:rgba(240,101,119,0.15);border-color:rgba(240,101,119,0.4);color:var(--accent-rose);':''}">End of Day</span>
-    </div>
-    ${alreadyDoneToday?`<div class="card" style="border:1px solid rgba(240,101,119,0.3);"><p style="font-size:.82em;color:var(--accent-rose);">⚠️ Z-Reading was already performed today (${today}). A new Z-Reading resets the daily accumulation. Only proceed if you are closing for the day.</p></div>`:''}
-    <div class="card" style="border:1px solid rgba(212,168,83,0.3);">
-      <p style="font-size:.75em;color:var(--text-muted);margin-bottom:12px;line-height:1.5;">Z-Reading closes the business day and resets the daily sales counter. The Grand Accumulated Total (GAT) is NOT reset.</p>
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:.8em;color:var(--text-muted);">Date</span><span style="font-size:.8em;font-weight:600;">${today}</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:6px;"><span style="font-size:.8em;color:var(--text-muted);">TIN</span><span style="font-size:.8em;font-family:var(--font-mono);">${bir.tin}</span></div>
-    </div>
-    <div class="reading-card">
-      <div class="reading-row"><span>Total Transactions</span><span>${todaySales.length}</span></div>
-      <div class="reading-row"><span>Voided</span><span style="color:var(--accent-rose);">${voidCount}</span></div>
-      <div class="reading-row"><span>VATable Sales</span><span style="font-family:var(--font-mono);">${fc(vatableSales)}</span></div>
-      <div class="reading-row"><span>VAT Amount (12%)</span><span style="font-family:var(--font-mono);">${fc(vatAmount)}</span></div>
-      <div class="reading-row total"><span>GROSS TOTAL</span><span>${fc(total)}</span></div>
-      <div class="reading-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);"><span style="color:var(--accent-gold);">Grand Accum. Total</span><span style="font-family:var(--font-mono);color:var(--accent-gold);font-weight:700;">${fc(gat)}</span></div>
-    </div>
-    <button class="btn btn-primary btn-block" onclick="performZReading()">📋 Perform Z-Reading & Print</button>
-    <p style="font-size:.7em;color:var(--text-muted);text-align:center;margin-top:8px;">This action is logged for BIR audit.</p>`;
-}
-
-function performZReading(){
-  const today=new Date().toISOString().split('T')[0];
-  if(!confirm('Perform Z-Reading for '+today+'?\n\nThis marks the end of your business day and logs to audit trail.'))return;
-  localStorage.setItem('mlea_last_z_date',today);
-  logActivity('Z-Reading','End of day: '+today+' | GAT: '+fc(getGrandAccumulatedTotal()));
-  printZReading();
-  alert('✓ Z-Reading complete. Have a good day!');
-}
-
-function printZReading(){
-  const today=new Date().toISOString().split('T')[0];
-  const todaySales=DB.getAll('sales').filter(s=>s.date===today&&!s.voided);
-  const bir=getBIRSettings();
-  const total=todaySales.reduce((a,s)=>a+s.total,0);
-  const vatAmount=todaySales.reduce((a,s)=>a+(s.tax||0),0);
-  const vatableSales=todaySales.reduce((a,s)=>a+(s.vatableSales||0),0);
-  const vatExempt=todaySales.reduce((a,s)=>a+(s.vatExemptSales||0),0);
-  const cash=todaySales.filter(s=>s.paymentMethod==='cash').reduce((a,s)=>a+s.total,0);
-  const card=todaySales.filter(s=>s.paymentMethod==='card').reduce((a,s)=>a+s.total,0);
-  const sc=todaySales.filter(s=>s.discountType==='sc').reduce((a,s)=>a+(s.discountAmount||0),0);
-  const pwd=todaySales.filter(s=>s.discountType==='pwd').reduce((a,s)=>a+(s.discountAmount||0),0);
-  const promoDisc=todaySales.reduce((a,s)=>a+(s.discountAmount||0),0)-sc-pwd;
-  const gat=getGrandAccumulatedTotal();
-  const voidCount=DB.getAll('sales').filter(s=>s.date===today&&s.voided).length;
-  const firstOR=todaySales.length>0?todaySales[0].orNumber:'—';
-  const lastOR=todaySales.length>0?todaySales[todaySales.length-1].orNumber:'—';
-
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-    @page{margin:8mm;size:80mm auto}*{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Courier New',Courier,monospace;font-size:10px;width:76mm;color:#000;background:#fff}
-    .center{text-align:center}.bold{font-weight:bold}
-    .divider{border:none;border-top:1px dashed #000;margin:4px 0}
-    .row{display:flex;justify-content:space-between;margin:2px 0}
-  </style></head><body>
-  <div class="center bold" style="font-size:13px;">${bir.registeredName}</div>
-  <div class="center">${bir.registeredAddress}</div>
-  <div class="center">TIN: ${bir.tin}</div>
-  <hr class="divider">
-  <div class="center bold" style="font-size:12px;">Z - READING REPORT</div>
-  <div class="center">(END OF DAY)</div>
-  <div class="center">${today} ${new Date().toLocaleTimeString('en-PH')}</div>
-  <hr class="divider">
-  <div class="row"><span>Beginning OR No.</span><span>${firstOR}</span></div>
-  <div class="row"><span>Ending OR No.</span><span>${lastOR}</span></div>
-  <div class="row"><span>Transactions</span><span>${todaySales.length}</span></div>
-  <div class="row"><span>Voided</span><span>${voidCount}</span></div>
-  <hr class="divider">
-  <div class="bold">SALES SUMMARY</div>
-  <div class="row"><span>VATable Sales</span><span>${fc(vatableSales)}</span></div>
-  <div class="row"><span>VAT Amount (12%)</span><span>${fc(vatAmount)}</span></div>
-  <div class="row"><span>VAT-Exempt Sales</span><span>${fc(vatExempt)}</span></div>
-  <hr class="divider">
-  <div class="row bold"><span>GROSS TOTAL</span><span>${fc(total)}</span></div>
-  <hr class="divider">
-  <div class="bold">DISCOUNTS</div>
-  <div class="row"><span>SC Discount</span><span>${fc(sc)}</span></div>
-  <div class="row"><span>PWD Discount</span><span>${fc(pwd)}</span></div>
-  <div class="row"><span>Promotional</span><span>${fc(promoDisc)}</span></div>
-  <hr class="divider">
-  <div class="bold">PAYMENTS</div>
-  <div class="row"><span>Cash</span><span>${fc(cash)}</span></div>
-  <div class="row"><span>Card</span><span>${fc(card)}</span></div>
-  <hr class="divider">
-  <div class="row bold"><span>GRAND ACCUM. TOTAL</span><span>${fc(gat)}</span></div>
-  <hr class="divider">
-  <div class="center" style="font-size:8px;margin-top:4px;">PTU No.: ${bir.ptuNo}<br>Accreditation: ${bir.accreditationNo}<br>MLEA POS v3.0 (BIR-Ready)</div>
-  <div style="height:8mm;"></div>
-  </body></html>`;
-
-  const frame=document.getElementById('printFrame');
-  const doc=frame.contentDocument||frame.contentWindow.document;
-  doc.open();doc.write(html);doc.close();
-  setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print();},350);
-}
-
-// ═══════════════════ BIR SETTINGS ═══════════════════
-function renderBIRSettings(el){
-  if(currentUser.role!=='admin'){el.innerHTML='<div class="empty-state"><div class="empty-icon">🔒</div><p>Admin access only</p></div>';return;}
-  const bir=getBIRSettings();
-  el.innerHTML=`
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-      <h4 style="margin:0;">🏛️ BIR Setup</h4>
-      <span class="bir-badge">Compliance Config</span>
-    </div>
-    <div class="card" style="border:1px solid rgba(212,168,83,0.3);">
-      <p style="font-size:.78em;color:var(--text-muted);line-height:1.6;">Fill in all BIR registration details. These appear on every official receipt and are required for BIR compliance.</p>
-    </div>
-
-    <div class="card">
-      <h5>🏢 Business Registration</h5>
-      <label style="font-size:.7em;color:var(--text-muted);display:block;margin-bottom:4px;">Registered Business Name</label>
-      <input type="text" id="bir_name" value="${bir.registeredName}" placeholder="e.g. MLEA Trading Corporation">
-      <label style="font-size:.7em;color:var(--text-muted);display:block;margin-bottom:4px;">Registered Address</label>
-      <input type="text" id="bir_address" value="${bir.registeredAddress}" placeholder="e.g. 123 Main St, Cebu City">
-      <label style="font-size:.7em;color:var(--text-muted);display:block;margin-bottom:4px;">TIN (Tax Identification Number)</label>
-      <input type="text" id="bir_tin" value="${bir.tin}" placeholder="000-000-000-000">
-    </div>
-
-    <div class="card">
-      <h5>📋 BIR Accreditation</h5>
-      <label style="font-size:.7em;color:var(--text-muted);display:block;margin-bottom:4px;">Accreditation Number</label>
-      <input type="text" id="bir_accreditation" value="${bir.accreditationNo}" placeholder="e.g. FP082010-033-2019-0">
-      <label style="font-size:.7em;color:var(--text-muted);display:block;margin-bottom:4px;">Date Issued</label>
-      <input type="text" id="bir_accr_date" value="${bir.accreditationDate}" placeholder="e.g. 2019-01-15">
-      <label style="font-size:.7em;color:var(--text-muted);display:block;margin-bottom:4px;">Expiry Date</label>
-      <input type="text" id="bir_accr_expiry" value="${bir.accreditationExpiry}" placeholder="e.g. 2024-01-15">
-      <label style="font-size:.7em;color:var(--text-muted);display:block;margin-bottom:4px;">PTU (Permit to Use) Number</label>
-      <input type="text" id="bir_ptu" value="${bir.ptuNo}" placeholder="e.g. PTU-123456">
-    </div>
-
-    <div class="card">
-      <h5>🧾 OR/SI Series</h5>
-      <label style="font-size:.7em;color:var(--text-muted);display:block;margin-bottom:4px;">Document Type</label>
-      <select id="bir_si_type">
-        <option value="or" ${bir.siType==='or'?'selected':''}>Official Receipt (OR) — for Services</option>
-        <option value="si" ${bir.siType==='si'?'selected':''}>Sales Invoice (SI) — for Goods</option>
-      </select>
-      <label style="font-size:.7em;color:var(--text-muted);display:block;margin-bottom:4px;">Series Prefix</label>
-      <input type="text" id="bir_or_prefix" value="${bir.orSeriesPrefix}" placeholder="e.g. OR or SI">
-      <label style="font-size:.7em;color:var(--text-muted);display:block;margin-bottom:4px;">Series From</label>
-      <input type="text" id="bir_or_from" value="${bir.orSeriesFrom}" placeholder="e.g. 0000001">
-      <label style="font-size:.7em;color:var(--text-muted);display:block;margin-bottom:4px;">Series To</label>
-      <input type="text" id="bir_or_to" value="${bir.orSeriesTo}" placeholder="e.g. 9999999">
-    </div>
-
-    <div class="card">
-      <h5>💰 VAT Classification</h5>
-      <select id="bir_vat_type">
-        <option value="vat" ${bir.vatType==='vat'?'selected':''}>VAT-Registered (12%)</option>
-        <option value="nonvat" ${bir.vatType==='nonvat'?'selected':''}>Non-VAT</option>
-      </select>
-      <p style="font-size:.72em;color:var(--text-muted);margin-top:4px;">VAT-Registered: receipts show VATable Sales, VAT Amount, VAT-Exempt, Zero-Rated breakdowns.</p>
-    </div>
-
-    <div class="card">
-      <h5>📊 Grand Accumulated Total (GAT)</h5>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">
-        <span style="font-size:.82em;color:var(--text-muted);">Current GAT</span>
-        <span style="font-family:var(--font-display);font-size:1.2em;font-weight:700;color:var(--accent-gold);">${fc(getGrandAccumulatedTotal())}</span>
-      </div>
-      <p style="font-size:.72em;color:var(--text-muted);">GAT is a running total of all sales processed. It is never reset unless you reset the entire system.</p>
-      ${currentUser.role==='admin'?`<button class="btn btn-danger btn-sm" style="margin-top:8px;" onclick="if(confirm('⚠️ RESET GAT? This is an irreversible BIR audit action. Only do this if instructed by BIR.')){saveSetting('bir_grand_total','0');saveSetting('bir_or_counter','0');alert('GAT and OR counter reset.');switchView('birSettings');}">⚠️ Reset GAT (BIR Order Only)</button>`:''}
-    </div>
-
-    <button class="btn btn-primary btn-block" onclick="saveBIRSettings()">💾 Save BIR Settings</button>`;
-}
-
-function saveBIRSettings(){
-  const fields=['bir_name','bir_address','bir_tin','bir_accreditation','bir_accr_date','bir_accr_expiry','bir_ptu','bir_si_type','bir_or_prefix','bir_or_from','bir_or_to','bir_vat_type'];
-  fields.forEach(f=>{const el=document.getElementById(f);if(el)saveSetting(f,el.value);});
-  alert('✓ BIR settings saved!');
-  switchView('birSettings');
-}
-
-// ═══════════════════ BRANCHES ═══════════════════
-function renderBranches(el){
-  if(currentUser.role!=='admin'){el.innerHTML='<div class="empty-state"><div class="empty-icon">🔒</div><p>Admin access only</p></div>';return}
-  branches=DB.getAll('branches');
-  el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h4 style="margin:0;">Branches</h4><button class="btn btn-primary btn-sm" onclick="showModal('addBranch')">+ Add Branch</button></div>
-  ${branches.map(b=>{const bUsers=DB.getByBranch('users',b.id);return`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><strong style="font-family:var(--font-display);">${b.name}</strong><p style="color:var(--text-muted);font-size:.78em;margin-top:4px;">${b.address||'No address'}</p><p style="color:var(--text-muted);font-size:.75em;">${b.phone||'No phone'} · ${bUsers.length} user${bUsers.length!==1?'s':''}</p></div><div style="display:flex;gap:6px;flex-shrink:0;"><button class="btn btn-success btn-xs" onclick="addBranchUser(${b.id})">+ User</button><button class="btn btn-danger btn-xs" onclick="if(confirm('Delete branch?')){DB.delete('branches',${b.id});switchView('branches')}">🗑</button></div></div></div>`;}).join('')}`;
-}
-function addBranch(){const name=document.getElementById('modalInput1').value;if(name){DB.add('branches',{name,address:document.getElementById('modalInput2').value||'',phone:document.getElementById('modalInput3').value||''});closeModal();switchView('branches')}}
-function addBranchUser(bid){const name=prompt('User name:');if(name){const pin=prompt('4-digit PIN:');if(pin&&pin.length===4){const role=prompt('Role (manager/cashier):')||'cashier';DB.add('users',{name,role,active:true,pin,branchId:bid});branches=DB.getAll('branches');users=DB.getAll('users');switchView('branches');renderLoginScreen()}}}
-
-// ═══════════════════ PRODUCTS ═══════════════════
-function renderProducts(el){
-  const prods=currentView==='allProducts'?DB.getAll('products'):getMyData('products');
-  const suppliers=DB.getAll('suppliers');
-  const lowItems=getLowStockItems();
-  let html=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h4 style="margin:0;">Products</h4><button class="btn btn-primary btn-sm" onclick="showModal('addProduct')">+ Add</button></div>`;
-  if(lowItems.length>0){
-    html+=`<div style="background:rgba(240,101,119,0.08);border:1px solid rgba(240,101,119,0.25);border-radius:var(--radius-md);padding:12px 16px;margin-bottom:12px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-family:var(--font-display);font-weight:700;font-size:.85em;color:var(--accent-rose);">⚠️ ${lowItems.length} Item${lowItems.length>1?'s':''} Low on Stock</span><span style="font-size:.68em;color:var(--text-muted);">Threshold: ≤${lowStockThreshold}</span></div>
-      <div style="display:flex;flex-direction:column;gap:5px;">${lowItems.map(p=>`<div style="display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.2);border-radius:8px;padding:7px 10px;"><span style="font-size:.78em;color:var(--text-primary);">${p.name}</span><span style="font-family:var(--font-mono);font-size:.75em;color:${p.stock===0?'var(--accent-rose)':'#fbb923'};font-weight:700;">${p.stock===0?'OUT OF STOCK':p.stock+' left'}</span></div>`).join('')}</div>
-    </div>`;
-  }
-  html+=`<div style="overflow-x:auto;"><table><thead><tr><th>Name</th><th>Price</th><th>Cost</th><th>Stock</th><th>Cat.</th><th>Barcode</th><th>VAT</th>${currentUser.role==='admin'?'<th>Branch</th>':''}<th></th></tr></thead><tbody>
-  ${prods.map(p=>{
-    const s=p.supplierId?suppliers.find(sp=>sp.id===p.supplierId):null;
-    const branchName=p.branchId?(DB.getById('branches',p.branchId)||{name:'?'}).name:'🌐 Global';
-    const vatLabel=p.vatExempt?'<span style="color:var(--accent-blue);font-size:.75em;">VE</span>':p.zeroRated?'<span style="color:var(--accent-emerald);font-size:.75em;">0%</span>':'<span style="color:var(--text-muted);font-size:.75em;">VAT</span>';
-    return`<tr><td><strong style="color:var(--text-primary);">${p.name}</strong></td><td style="color:var(--accent-gold);font-family:var(--font-mono);">${formatCurrency(p.price)}</td><td style="font-family:var(--font-mono);">${formatCurrency(p.cost||0)}</td><td class="${p.stock<=lowStockThreshold?'stock-low':''}">${p.stock}</td><td>${p.category||'—'}</td><td style="font-family:var(--font-mono);font-size:.7em;">${p.barcode||'—'}</td><td>${vatLabel}</td>${currentUser.role==='admin'?`<td style="font-size:.72em;">${branchName}</td>`:''}<td style="white-space:nowrap;"><button class="btn btn-success btn-xs" onclick="adjustStock(${p.id})">+</button> <button class="btn btn-warning btn-xs" onclick="showModal('editProduct',${p.id})">✎</button> <button class="btn btn-danger btn-xs" onclick="if(confirm('Delete?')){DB.delete('products',${p.id});switchView(currentView)}">🗑</button></td></tr>`;
-  }).join('')}
-  </tbody></table></div>
-  ${prods.length===0?'<div class="empty-state"><div class="empty-icon">📦</div><p>No products yet</p></div>':''}`;
-  el.innerHTML=html;
-}
-function addProduct(){
-  const name=document.getElementById('modalInput1').value,price=parseFloat(document.getElementById('modalInput2').value);
-  if(!name||isNaN(price)){alert('Name and price required');return}
-  const branchSelEl=document.getElementById('modalBranchSelect');
-  const branchId=branchSelEl?(branchSelEl.value?parseInt(branchSelEl.value):null):currentUser.branchId;
-  const vatType=document.getElementById('modalVatType')?.value||'vat';
-  DB.add('products',{sku:'SKU'+Date.now(),name,price,cost:parseFloat(document.getElementById('modalInput3').value)||0,stock:parseInt(document.getElementById('modalInput4').value)||0,category:document.getElementById('modalInput5').value||'General',active:true,barcode:document.getElementById('modalInput6').value||'',branchId,supplierId:document.getElementById('modalSelect').value?parseInt(document.getElementById('modalSelect').value):null,vatExempt:vatType==='exempt',zeroRated:vatType==='zero'});
-  closeModal();switchView(currentView);
-}
-function editProduct(id){
-  const p=DB.getById('products',id);if(!p)return;
-  p.name=document.getElementById('modalInput1').value;p.price=parseFloat(document.getElementById('modalInput2').value);p.cost=parseFloat(document.getElementById('modalInput3').value)||0;p.stock=parseInt(document.getElementById('modalInput4').value);p.category=document.getElementById('modalInput5').value;p.barcode=document.getElementById('modalInput6').value||'';p.supplierId=document.getElementById('modalSelect').value?parseInt(document.getElementById('modalSelect').value):null;
-  const vatType=document.getElementById('modalVatType')?.value||'vat';p.vatExempt=vatType==='exempt';p.zeroRated=vatType==='zero';
-  DB.update('products',p);closeModal();switchView(currentView);
-}
-function adjustStock(id){const p=DB.getById('products',id),qty=parseInt(prompt(`Stock for "${p.name}"\nCurrent: ${p.stock}`));if(!isNaN(qty)){p.stock=qty;DB.update('products',p);switchView(currentView)}}
-
-// ═══════════════════ SUPPLIERS ═══════════════════
-function renderSuppliers(el){
-  const suppliers=DB.getAll('suppliers');
-  el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h4 style="margin:0;">Suppliers</h4><button class="btn btn-primary btn-sm" onclick="showModal('addSupplier')">+ Add</button></div>
-  ${suppliers.map(s=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><strong style="font-family:var(--font-display);">${s.name}</strong>${s.contact?`<p style="font-size:.78em;color:var(--text-muted);margin-top:3px;">👤 ${s.contact}</p>`:''}${s.phone?`<p style="font-size:.75em;color:var(--text-muted);">📞 ${s.phone}</p>`:''}${s.email?`<p style="font-size:.72em;color:var(--text-muted);">✉ ${s.email}</p>`:''}</div><div style="display:flex;gap:6px;"><button class="btn btn-warning btn-xs" onclick="showModal('editSupplier',${s.id})">✎</button><button class="btn btn-danger btn-xs" onclick="if(confirm('Delete?')){DB.delete('suppliers',${s.id});switchView('suppliers')}">🗑</button></div></div></div>`).join('')}
-  ${suppliers.length===0?'<div class="empty-state"><div class="empty-icon">🚚</div><p>No suppliers yet</p></div>':''}`;
-}
-function addSupplier(){const name=document.getElementById('modalInput1').value;if(!name){alert('Name required');return}DB.add('suppliers',{name,contact:document.getElementById('modalInput2').value||'',phone:document.getElementById('modalInput3').value||'',email:document.getElementById('modalInput4').value||'',address:document.getElementById('modalInput5').value||''});closeModal();switchView('suppliers')}
-function editSupplier(id){const s=DB.getById('suppliers',id);if(!s)return;s.name=document.getElementById('modalInput1').value;s.contact=document.getElementById('modalInput2').value;s.phone=document.getElementById('modalInput3').value;s.email=document.getElementById('modalInput4').value;s.address=document.getElementById('modalInput5').value;DB.update('suppliers',s);closeModal();switchView('suppliers')}
-
-// ═══════════════════ PURCHASE ORDERS ═══════════════════
-function renderPurchaseOrders(el){
-  const pos=currentUser.role==='admin'?DB.getAll('purchaseOrders'):getMyData('purchaseOrders');
-  const suppliers=DB.getAll('suppliers');
-  const statusColor={draft:'var(--text-muted)',ordered:'var(--accent-gold)',received:'var(--accent-emerald)'};
-  el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h4 style="margin:0;">Purchase Orders</h4><button class="btn btn-primary btn-sm" onclick="showModal('addPO')">+ New PO</button></div>
-  ${pos.slice().reverse().map(po=>{const s=suppliers.find(sp=>sp.id===po.supplierId);const items=po.items||[];return`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><strong style="font-family:var(--font-display);">PO #${po.id}</strong><p style="font-size:.76em;color:var(--text-muted);margin-top:3px;">${s?s.name:'N/A'} · ${po.date||po.createdAt?.split('T')[0]}</p><p style="font-size:.72em;margin-top:2px;">${items.length} items</p></div><div style="text-align:right;"><div style="font-family:var(--font-display);color:var(--accent-gold);font-weight:700;">${formatCurrency(po.total||0)}</div><div style="font-size:.7em;color:${statusColor[po.status]||'var(--text-muted)'};font-weight:600;margin-top:4px;font-family:var(--font-display);text-transform:uppercase;letter-spacing:.05em;">${po.status||'draft'}</div></div></div><div style="margin-top:10px;display:flex;gap:6px;">${po.status!=='received'?`<button class="btn btn-success btn-xs" onclick="receivePO(${po.id})">✓ Receive</button>`:''}<button class="btn btn-danger btn-xs" onclick="if(confirm('Delete?')){DB.delete('purchaseOrders',${po.id});switchView('purchaseOrders')}">🗑</button></div></div>`;}).join('')}
-  ${pos.length===0?'<div class="empty-state"><div class="empty-icon">📋</div><p>No purchase orders</p></div>':''}`;
-}
-function addPO(){const supplierId=parseInt(document.getElementById('modalSelect').value),items=[],itemName=document.getElementById('modalInput1').value,itemQty=parseInt(document.getElementById('modalInput2').value)||0,itemCost=parseFloat(document.getElementById('modalInput3').value)||0;if(itemName&&itemQty>0){items.push({name:itemName,quantity:itemQty,cost:itemCost,total:itemQty*itemCost})}const total=items.reduce((s,i)=>s+i.total,0);DB.add('purchaseOrders',{supplierId,items,total,status:'ordered',date:new Date().toISOString().split('T')[0],branchId:currentUser.branchId});closeModal();switchView('purchaseOrders')}
-function receivePO(id){const po=DB.getById('purchaseOrders',id);if(!po)return;po.status='received';DB.update('purchaseOrders',po);(po.items||[]).forEach(item=>{const product=getMyData('products').find(p=>p.name.toLowerCase()===item.name.toLowerCase());if(product){product.stock+=item.quantity;product.cost=item.cost;DB.update('products',product)}});logActivity('PO Received','#'+id);switchView('purchaseOrders')}
-
-// ═══════════════════ USERS ═══════════════════
-function renderUsers(el){
-  const usrs=currentView==='allUsers'?DB.getAll('users'):getMyData('users');
-  el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h4 style="margin:0;">Users</h4><button class="btn btn-primary btn-sm" onclick="addUser()">+ Add</button></div>
-  ${usrs.map(u=>{let canDelete=false;if(currentUser.role==='admin')canDelete=u.id!==currentUser.id;else if(currentUser.role==='manager')canDelete=u.role==='cashier'&&u.branchId===currentUser.branchId;
-  return`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;"><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:1.4em;">${u.role==='admin'?'👑':u.role==='manager'?'🎯':'👤'}</span><div><strong style="font-family:var(--font-display);">${u.name}</strong><div style="margin-top:3px;display:flex;gap:6px;"><span class="role-badge ${u.role}-badge">${u.role}</span>${u.active?'<span style="font-size:.65em;color:var(--accent-emerald);">● Active</span>':'<span style="font-size:.65em;color:var(--accent-rose);">● Inactive</span>'}</div></div></div><div style="display:flex;gap:6px;">${currentUser.role==='admin'||(currentUser.role==='manager'&&u.role==='cashier')?`<button class="btn btn-warning btn-xs" onclick="toggleUser(${u.id})">${u.active?'Deact.':'Activate'}</button>`:''}${canDelete?`<button class="btn btn-danger btn-xs" onclick="deleteUserSafe(${u.id},'${u.name}','${u.role}')">🗑</button>`:''}</div></div></div>`;}).join('')}`;
-}
-function deleteUserSafe(id,name,role){if(currentUser.role==='cashier'){alert('❌ Cashiers cannot delete users.');return;}if(currentUser.role==='manager'){const t=DB.getById('users',id);if(!t)return;if(t.role==='admin'){alert('❌ Cannot delete Admin.');return;}if(t.role==='manager'){alert('❌ Cannot delete Manager.');return;}if(t.branchId!==currentUser.branchId){alert('❌ Different branch user.');return;}if(t.id===currentUser.id){alert('❌ Cannot delete yourself.');return;}}if(currentUser.role==='admin'&&id===currentUser.id){alert('❌ Cannot delete own admin account.');return;}if(!confirm(`⚠️ Delete "${name}" (${role})?`))return;DB.delete('users',id);switchView(currentView);renderLoginScreen();alert('✅ User deleted.');}
-function addUser(){const name=prompt('User name:');if(!name)return;const pin=prompt('4-digit PIN:');if(!pin||pin.length!==4){alert('PIN must be 4 digits!');return;}let role='cashier';if(currentUser.role==='admin'){const chosen=prompt('Select role:\n1=Cashier\n2=Manager\n3=Admin\n\nEnter number:');if(chosen==='2')role='manager';else if(chosen==='3')role='admin';else role='cashier';}DB.add('users',{name,role,active:true,pin,branchId:currentUser.branchId});switchView(currentView);renderLoginScreen();alert('✅ '+name+' created as '+role.toUpperCase()+'\nPIN: '+pin);}
-function toggleUser(id){const u=DB.getById('users',id);if(!u)return;if(u.id===currentUser.id){alert('❌ Cannot deactivate yourself.');return;}if(currentUser.role==='manager'&&u.role!=='cashier'){alert('❌ Can only manage cashier accounts.');return;}if(currentUser.role==='manager'&&u.branchId!==currentUser.branchId){alert('❌ Different branch user.');return;}u.active=!u.active;DB.update('users',u);switchView(currentView);renderLoginScreen();}
-
-// ═══════════════════ SALES ═══════════════════
-function renderSales(el){
-  const sales=(currentView==='allSales'?DB.getAll('sales'):getMyData('sales')).filter(s=>!s.voided).slice(-50).reverse();
-  el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><h4 style="margin:0;">Sales History</h4><button class="btn btn-danger btn-sm" onclick="switchView('voidedSales')">🚫 Voided</button></div>
-  ${sales.length===0?'<div class="empty-state"><div class="empty-icon">💰</div><p>No sales yet</p></div>':`
-  <div style="overflow-x:auto;"><table><thead><tr><th>OR/SI No.</th><th>Date</th><th>Total</th><th>VAT</th><th>Method</th><th>Cashier</th><th></th></tr></thead>
-  <tbody>${sales.map(s=>`<tr>
-    <td style="font-family:var(--font-mono);font-size:.72em;">${s.orNumber||('#'+s.id)}</td>
-    <td>${s.date}</td>
-    <td style="font-family:var(--font-display);color:var(--accent-gold);font-weight:700;">${formatCurrency(s.total)}</td>
-    <td style="font-family:var(--font-mono);font-size:.75em;">${formatCurrency(s.tax||0)}</td>
-    <td><span style="background:${s.paymentMethod==='cash'?'var(--accent-emerald-soft)':'var(--accent-blue-soft)'};color:${s.paymentMethod==='cash'?'var(--accent-emerald)':'var(--accent-blue)'};padding:2px 8px;border-radius:10px;font-size:.7em;font-weight:600;">${s.paymentMethod}</span></td>
-    <td>${s.cashierName||'—'}</td>
-    <td style="white-space:nowrap;">
-      <button class="btn btn-warning btn-xs" onclick="reprintSale(${s.id})">🖨</button>
-      ${currentUser.role!=='cashier'?`<button class="btn btn-danger btn-xs" onclick="voidSale(${s.id})">🚫</button>`:''}
-    </td>
-  </tr>`).join('')}</tbody></table></div>`}`;
-}
-function reprintSale(id){
-  const sale=DB.getById('sales',id);if(!sale){alert('Sale not found');return;}
-  lastSaleData=sale;
-  document.getElementById('modalContent').innerHTML=`<h4 style="margin-bottom:16px;">🖨 Reprint ${sale.orNumber||'#'+id}</h4><div class="print-option-grid"><button class="print-option-btn" onclick="printReceipt('thermal');closeModal();"><span class="pob-icon">🧾</span>Thermal<br><span style="font-size:.72em;color:var(--text-muted);font-family:var(--font-mono);">58/80mm</span></button><button class="print-option-btn" onclick="printReceipt('a4');closeModal();"><span class="pob-icon">📄</span>A4<br><span style="font-size:.72em;color:var(--text-muted);font-family:var(--font-mono);">Full page</span></button><button class="print-option-btn" onclick="closeModal();" style="border-color:rgba(240,101,119,0.25);color:var(--accent-rose);"><span class="pob-icon">✕</span>Cancel<br><span style="font-size:.72em;color:var(--text-muted);font-family:var(--font-mono);">&nbsp;</span></button></div><button class="btn btn-danger btn-block" onclick="closeModal()" style="margin-top:4px;">Close</button>`;
-  document.getElementById('modal').classList.add('active');
-}
-
-// ═══════════════════ REPORTS ═══════════════════
-function renderReports(el){
-  const thisMonth=new Date().toISOString().substring(0,7);
-  const allSales=(currentUser.role==='admin'?DB.getAll('sales'):getMyData('sales')).filter(s=>!s.voided);
-  const monthSales=allSales.filter(s=>s.date.startsWith(thisMonth));
-  const totalRevenue=monthSales.reduce((s,i)=>s+i.total,0);
-  const totalVAT=monthSales.reduce((s,i)=>s+(i.tax||0),0);
-  const vatableSales=monthSales.reduce((s,i)=>s+(i.vatableSales||0),0);
-  const totalCost=monthSales.reduce((s,i)=>s+(i.items||[]).reduce((c,it)=>c+(it.cost||0)*(it.quantity||0),0),0);
-  const scDiscounts=monthSales.filter(s=>s.discountType==='sc').reduce((s,i)=>s+(i.discountAmount||0),0);
-  const pwdDiscounts=monthSales.filter(s=>s.discountType==='pwd').reduce((s,i)=>s+(i.discountAmount||0),0);
-  const cashSales=monthSales.filter(s=>s.paymentMethod==='cash').length;
-  const cardSales=monthSales.filter(s=>s.paymentMethod==='card').length;
-  const avgTransaction=monthSales.length>0?totalRevenue/monthSales.length:0;
-  const voidedMonth=DB.getAll('sales').filter(s=>s.date.startsWith(thisMonth)&&s.voided);
-
-  el.innerHTML=`
-    <h4>Reports — ${new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'})}</h4>
-    <div class="card" style="border-left:3px solid var(--accent-gold);">
-      <h5>Revenue Summary</h5>
-      <div class="metrics">
-        <div class="metric-card"><div class="metric-value">${formatCurrency(totalRevenue)}</div><div class="metric-label">Gross Revenue</div></div>
-        <div class="metric-card"><div class="metric-value" style="color:var(--accent-rose);">${formatCurrency(totalVAT)}</div><div class="metric-label">VAT Collected</div></div>
-      </div>
-      <div class="metrics" style="margin-top:8px;">
-        <div class="metric-card"><div class="metric-value">${formatCurrency(vatableSales)}</div><div class="metric-label">VATable Sales</div></div>
-        <div class="metric-card"><div class="metric-value" style="color:${totalRevenue-totalCost>=0?'var(--accent-emerald)':'var(--accent-rose)'};">${formatCurrency(totalRevenue-totalCost)}</div><div class="metric-label">Gross Profit</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <h5>BIR Discounts (Month)</h5>
-      <div class="metrics">
-        <div class="metric-card"><div class="metric-value" style="color:var(--accent-blue);">${formatCurrency(scDiscounts)}</div><div class="metric-label">Senior Citizen</div></div>
-        <div class="metric-card"><div class="metric-value" style="color:var(--accent-blue);">${formatCurrency(pwdDiscounts)}</div><div class="metric-label">PWD</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <h5>Transactions</h5>
-      <div class="metrics">
-        <div class="metric-card"><div class="metric-value">${monthSales.length}</div><div class="metric-label">Total</div></div>
-        <div class="metric-card"><div class="metric-value" style="color:var(--accent-rose);">${voidedMonth.length}</div><div class="metric-label">Voided</div></div>
-        <div class="metric-card"><div class="metric-value" style="color:var(--accent-emerald);">${cashSales}</div><div class="metric-label">💵 Cash</div></div>
-        <div class="metric-card"><div class="metric-value" style="color:var(--accent-blue);">${cardSales}</div><div class="metric-label">💳 Card</div></div>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-      <button class="btn btn-primary" onclick="exportCSV('sales')">📥 Sales CSV</button>
-      <button class="btn btn-success" onclick="exportCSV('inventory')">📥 Inventory CSV</button>
-      <button class="btn btn-warning" onclick="exportBIRReport()">🏛️ BIR Report</button>
-      <button class="btn btn-danger" onclick="downloadFullBackup()">💾 Full Backup</button>
-    </div>`;
-}
-
-function exportBIRReport(){
-  const thisMonth=new Date().toISOString().substring(0,7);
-  const allSales=DB.getAll('sales').filter(s=>s.date.startsWith(thisMonth)&&!s.voided);
-  const bir=getBIRSettings();
-  let csv='BIR SALES JOURNAL\n';
-  csv+=`Business Name: ${bir.registeredName}\n`;
-  csv+=`TIN: ${bir.tin}\n`;
-  csv+=`Period: ${thisMonth}\n`;
-  csv+=`PTU No.: ${bir.ptuNo}\n\n`;
-  csv+='OR/SI No.,Date,Cashier,Branch,VATable Sales,VAT Amount,VAT-Exempt,Zero-Rated,Total,Discount Type,Discount Amount,Payment Method\n';
-  allSales.forEach(s=>{
-    csv+=`${s.orNumber||s.id},${s.date},${s.cashierName||''},${s.branchName||''},${(s.vatableSales||0).toFixed(2)},${(s.tax||0).toFixed(2)},${(s.vatExemptSales||0).toFixed(2)},${(s.zeroRatedSales||0).toFixed(2)},${s.total.toFixed(2)},${s.discountType||'none'},${(s.discountAmount||0).toFixed(2)},${s.paymentMethod}\n`;
-  });
-  csv+=`\nVoided Transactions\n`;
-  csv+='OR/SI No.,Date,Amount,Reason,Voided By\n';
-  DB.getAll('sales').filter(s=>s.date.startsWith(thisMonth)&&s.voided).forEach(s=>{
-    csv+=`${s.orNumber||s.id},${s.date},${s.total.toFixed(2)},${s.voidReason||''},${s.voidedBy||''}\n`;
-  });
-  const blob=new Blob([csv],{type:'text/csv'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`BIR_Report_${thisMonth}.csv`;a.click();
-}
-function exportCSV(type){
-  let csv='';const d=new Date().toISOString().split('T')[0];
-  if(type==='sales'){
-    csv='OR No.,Date,Total,VAT,VATable Sales,Payment,Cashier,Branch,Discount Type,Discount Amount\n';
-    getMyData('sales').filter(s=>!s.voided).forEach(s=>csv+=`${s.orNumber||s.id},${s.date},${s.total},${s.tax||0},${s.vatableSales||0},${s.paymentMethod},${s.cashierName||''},${s.branchName||''},${s.discountType||'none'},${s.discountAmount||0}\n`);
-  } else {
-    csv='SKU,Name,Price,Cost,Stock,Category,Barcode,VAT Status,Branch,Supplier\n';
-    const suppliers=DB.getAll('suppliers');
-    getMyData('products').forEach(p=>{const s=p.supplierId?suppliers.find(sp=>sp.id===p.supplierId):null;const b=p.branchId?DB.getById('branches',p.branchId):null;csv+=`${p.sku},${p.name},${p.price},${p.cost||0},${p.stock},${p.category||''},${p.barcode||''},${p.vatExempt?'VAT-Exempt':p.zeroRated?'Zero-Rated':'VAT'},${b?b.name:'Global'},${s?s.name:''}\n`;});
-  }
-  const blob=new Blob([csv],{type:'text/csv'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${type}_${d}.csv`;a.click();
-}
-function downloadFullBackup(){
-  const data={};DB.stores.forEach(s=>data[s]=DB.getAll(s));data.backupDate=new Date().toISOString();data.bir=getBIRSettings();data.gat=getGrandAccumulatedTotal();
-  const b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`mlea_bir_backup_${new Date().toISOString().split('T')[0]}.json`;a.click();
-  alert('✓ Full backup downloaded!');
-}
-
-// ═══════════════════ DOWNLOAD MANAGER ═══════════════════
-function renderDownloadManager(el){
-  el.innerHTML=`
-    <div class="card" style="border-left:3px solid var(--accent-gold);"><h4>Backup & Sync Manager</h4><p style="color:var(--text-muted);font-size:.8em;">Download exports for cloud sync or local backup.</p></div>
-    <div class="card"><h5>📂 Download Folder Path</h5><input type="text" id="downloadPathInput" value="${downloadPath}" placeholder="e.g., MLEA_Backups"><button class="btn btn-primary btn-sm" onclick="saveDownloadPath()">Save Path</button></div>
-    <div class="card"><h5>📥 Export Data</h5>
-      <button class="btn btn-primary btn-block" onclick="downloadFullBackup()">📦 Full Backup (JSON)</button>
-      <button class="btn btn-success btn-block" onclick="exportCSV('sales')">📊 Sales Report CSV</button>
-      <button class="btn btn-warning btn-block" onclick="exportCSV('inventory')">📋 Inventory CSV</button>
-      <button class="btn btn-primary btn-block" style="background:linear-gradient(135deg,var(--accent-blue),#5a90d9);" onclick="exportBIRReport()">🏛️ BIR Monthly Report</button>
-    </div>
-    <div class="card"><h5>☁️ Cloud Sync Guide</h5><p style="font-size:.78em;color:var(--text-muted);line-height:1.6;"><strong style="color:var(--text-secondary);">Google Drive:</strong> Download → save to synced Drive folder<br><strong style="color:var(--text-secondary);">MEGA:</strong> Download → upload to MEGA folder<br><strong style="color:var(--text-secondary);">Tip:</strong> Set browser download path to your cloud folder for automatic sync.</p></div>
-    <div class="card" style="border:1px solid rgba(240,101,119,0.25);">
-      <h5 style="color:var(--accent-rose);">⚠ Restore from Backup</h5>
-      <input type="file" id="restoreFile" accept=".json">
-      <button class="btn btn-danger btn-block" onclick="restoreBackup()">🔄 Restore Data</button>
-    </div>`;
-}
-function saveDownloadPath(){downloadPath=document.getElementById('downloadPathInput').value||'MLEA_Backups';const all=DB.getAll('settings'),e=all.find(s=>s.key==='downloadPath');if(e){e.value=downloadPath;DB.update('settings',e)}else{DB.add('settings',{key:'downloadPath',value:downloadPath})}alert('✓ Saved!')}
-function restoreBackup(){const file=document.getElementById('restoreFile').files[0];if(!file){alert('Select a file');return}if(!confirm('This will replace all current data. Continue?'))return;const r=new FileReader();r.onload=function(e){try{const d=JSON.parse(e.target.result);DB.stores.forEach(s=>{if(d[s])DB.set(s,d[s])});alert('✓ Restored!');location.reload()}catch(err){alert('✗ Invalid backup file')}};r.readAsText(file)}
-
-// ═══════════════════ SETTINGS ═══════════════════
-function renderSettings(el){
-  el.innerHTML=`
-    <h4>Settings</h4>
-    <div class="card"><h5>💱 Currency</h5>
-      <input type="text" id="currencySearch" placeholder="🔍 Search currency…" oninput="filterCurrencies(this.value)" style="margin-bottom:8px;">
-      <select id="currencySelect" size="5" onchange="currentCurrency=this.value;saveSetting('currency',this.value);switchView('settings')" style="height:140px;border-radius:var(--radius-md);padding:4px;">
-        ${Object.entries(currencies).map(([c,v])=>`<option value="${c}" ${currentCurrency===c?'selected':''}>${v.flag} ${v.name} (${v.symbol})</option>`).join('')}
-      </select>
-      <p style="font-size:.72em;color:var(--accent-gold);margin-top:6px;font-weight:600;">Selected: ${currencies[currentCurrency]?.flag||'🏳'} ${currencies[currentCurrency]?.name||currentCurrency} (${currencies[currentCurrency]?.symbol||'?'})</p>
-    </div>
-    <div class="card"><h5>💰 Tax / VAT Rate</h5>
-      <div style="display:flex;gap:10px;align-items:center;">
-        <input type="number" id="taxInput" value="${taxRate*100}" step="0.1" style="margin-bottom:0;">
-        <button class="btn btn-primary btn-sm" onclick="taxRate=(parseFloat(document.getElementById('taxInput').value)||0)/100;saveSetting('taxRate',taxRate.toString());alert('✓ Saved!')">Save</button>
-      </div>
-    </div>
-    <div class="card"><h5>📦 Low Stock Threshold</h5>
-      <div style="display:flex;gap:10px;align-items:center;">
-        <input type="number" id="lowStockInput" value="${lowStockThreshold}" min="1" max="999" style="margin-bottom:0;">
-        <button class="btn btn-primary btn-sm" onclick="lowStockThreshold=parseInt(document.getElementById('lowStockInput').value)||10;saveSetting('lowStockThreshold',lowStockThreshold.toString());alert('✓ Saved!')">Save</button>
-      </div>
-    </div>
-    <div class="card"><h5>🖨 Default Print Mode</h5>
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px;">
-        <button onclick="setPrintMode('ask')" style="padding:12px 8px;border-radius:var(--radius-md);border:2px solid ${defaultPrintMode==='ask'?'var(--accent-gold)':'var(--border)'};background:${defaultPrintMode==='ask'?'var(--accent-gold-soft)':'var(--bg-glass)'};color:${defaultPrintMode==='ask'?'var(--accent-gold)':'var(--text-secondary)'};cursor:pointer;font-family:var(--font-display);font-size:.8em;font-weight:700;transition:all .2s;">❓ Ask Every Time</button>
-        <button onclick="setPrintMode('thermal')" style="padding:12px 8px;border-radius:var(--radius-md);border:2px solid ${defaultPrintMode==='thermal'?'var(--accent-emerald)':'var(--border)'};background:${defaultPrintMode==='thermal'?'var(--accent-emerald-soft)':'var(--bg-glass)'};color:${defaultPrintMode==='thermal'?'var(--accent-emerald)':'var(--text-secondary)'};cursor:pointer;font-family:var(--font-display);font-size:.8em;font-weight:700;transition:all .2s;">🧾 Auto Thermal</button>
-        <button onclick="setPrintMode('a4')" style="padding:12px 8px;border-radius:var(--radius-md);border:2px solid ${defaultPrintMode==='a4'?'var(--accent-blue)':'var(--border)'};background:${defaultPrintMode==='a4'?'var(--accent-blue-soft)':'var(--bg-glass)'};color:${defaultPrintMode==='a4'?'var(--accent-blue)':'var(--text-secondary)'};cursor:pointer;font-family:var(--font-display);font-size:.8em;font-weight:700;transition:all .2s;">📄 Auto A4</button>
-        <button onclick="setPrintMode('none')" style="padding:12px 8px;border-radius:var(--radius-md);border:2px solid ${defaultPrintMode==='none'?'var(--accent-rose)':'var(--border)'};background:${defaultPrintMode==='none'?'var(--accent-rose-soft)':'var(--bg-glass)'};color:${defaultPrintMode==='none'?'var(--accent-rose)':'var(--text-secondary)'};cursor:pointer;font-family:var(--font-display);font-size:.8em;font-weight:700;transition:all .2s;">✕ No Print</button>
-      </div>
-      <p style="font-size:.7em;color:var(--accent-gold);font-weight:600;">Currently: ${defaultPrintMode==='ask'?'❓ Ask Every Time':defaultPrintMode==='thermal'?'🧾 Auto Thermal':defaultPrintMode==='a4'?'📄 Auto A4':'✕ No Print'}</p>
-    </div>
-    <div class="card" style="border:1px solid rgba(212,168,83,0.3);">
-      <h5 style="color:var(--accent-gold);">🏛️ BIR Configuration</h5>
-      <p style="font-size:.78em;color:var(--text-muted);margin-bottom:10px;">Configure TIN, accreditation, PTU, and VAT settings.</p>
-      <button class="btn btn-primary btn-block" onclick="switchView('birSettings')">Go to BIR Setup →</button>
-    </div>`;
-}
-function saveSetting(k,v){const all=DB.getAll('settings'),e=all.find(s=>s.key===k);if(e){e.value=v;DB.update('settings',e)}else{DB.add('settings',{key:k,value:v})}}
-function setPrintMode(mode){defaultPrintMode=mode;saveSetting('defaultPrintMode',mode);switchView('settings')}
-function filterCurrencies(query){
-  const sel=document.getElementById('currencySelect');if(!sel)return;
-  const q=query.toLowerCase();
-  sel.innerHTML=Object.entries(currencies).filter(([c,v])=>v.name.toLowerCase().includes(q)||c.toLowerCase().includes(q)||v.symbol.toLowerCase().includes(q)).map(([c,v])=>`<option value="${c}" ${currentCurrency===c?'selected':''}>${v.flag} ${v.name} (${v.symbol})</option>`).join('');
-}
-
-// ═══════════════════ LOW STOCK ═══════════════════
-function getLowStockItems(){return getMyData('products').filter(p=>p.active&&p.stock<=lowStockThreshold);}
-function showLowStockToast(){
-  const low=getLowStockItems();if(low.length===0)return;
-  const existing=document.getElementById('lowStockToast');if(existing)existing.remove();
-  const toast=document.createElement('div');toast.id='lowStockToast';
-  toast.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg-elevated);border:1px solid rgba(240,101,119,0.4);border-radius:var(--radius-md);padding:14px 18px;z-index:9999;display:flex;align-items:center;gap:12px;box-shadow:0 8px 30px rgba(0,0,0,0.5);animation:slideUp .4s cubic-bezier(0.22,1,0.36,1);max-width:320px;width:90%;';
-  toast.innerHTML=`<span style="font-size:1.4em;">⚠️</span><div style="flex:1;"><div style="font-family:var(--font-display);font-weight:700;font-size:.88em;color:var(--accent-rose);">${low.length} Low Stock Item${low.length>1?'s':''}</div><div style="font-size:.72em;color:var(--text-muted);margin-top:2px;">${low.slice(0,2).map(p=>`${p.name} (${p.stock} left)`).join(', ')}${low.length>2?` +${low.length-2} more`:''}</div></div><button onclick="this.parentElement.remove();switchView(currentUser.role==='cashier'?'dashboard':'${currentUser&&currentUser.role==='admin'?'allProducts':'inventory'}');" style="background:var(--accent-rose-soft);border:1px solid rgba(240,101,119,0.3);color:var(--accent-rose);border-radius:var(--radius-sm);padding:6px 10px;cursor:pointer;font-size:.7em;font-weight:700;font-family:var(--font-display);white-space:nowrap;">View →</button><button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1em;padding:2px 4px;">✕</button>`;
-  document.body.appendChild(toast);
-  setTimeout(()=>{if(toast.parentElement){toast.style.opacity='0';toast.style.transition='opacity .4s';setTimeout(()=>toast.remove(),400)}},7000);
-}
-
-// ═══════════════════ MODAL SYSTEM ═══════════════════
-function showModal(type,id){
-  const suppliers=DB.getAll('suppliers');
-  let html='',sup=`<select id="modalSelect"><option value="">No Supplier</option>${suppliers.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select>`;
-  const vatTypeSelect=`<select id="modalVatType"><option value="vat">VAT (Standard 12%)</option><option value="exempt">VAT-Exempt</option><option value="zero">Zero-Rated</option></select>`;
-  switch(type){
-    case 'addBranch':
-      html=`<h4>Add Branch</h4><input type="text" id="modalInput1" placeholder="Branch Name *"><input type="text" id="modalInput2" placeholder="Address"><input type="tel" id="modalInput3" placeholder="Phone"><button class="btn btn-primary btn-block" onclick="addBranch()">Create Branch</button>`;
-      break;
-    case 'addSupplier':
-      html=`<h4>Add Supplier</h4><input type="text" id="modalInput1" placeholder="Supplier Name *"><input type="text" id="modalInput2" placeholder="Contact Person"><input type="tel" id="modalInput3" placeholder="Phone"><input type="email" id="modalInput4" placeholder="Email"><input type="text" id="modalInput5" placeholder="Address"><button class="btn btn-primary btn-block" onclick="addSupplier()">Save Supplier</button>`;
-      break;
-    case 'editSupplier':{const sp=DB.getById('suppliers',id);html=`<h4>Edit Supplier</h4><input type="text" id="modalInput1" value="${sp.name}" placeholder="Name *"><input type="text" id="modalInput2" value="${sp.contact||''}" placeholder="Contact"><input type="tel" id="modalInput3" value="${sp.phone||''}" placeholder="Phone"><input type="email" id="modalInput4" value="${sp.email||''}" placeholder="Email"><input type="text" id="modalInput5" value="${sp.address||''}" placeholder="Address"><button class="btn btn-primary btn-block" onclick="editSupplier(${id})">Save Changes</button>`;break;}
-    case 'addProduct':{
-      const branchSel=currentUser.role==='admin'?`<select id="modalBranchSelect"><option value="">🌐 All Branches (Global)</option>${DB.getAll('branches').map(b=>`<option value="${b.id}">${b.name}</option>`).join('')}</select>`:'';
-      html=`<h4>Add Product</h4><input type="text" id="modalInput1" placeholder="Product Name *"><input type="number" id="modalInput2" placeholder="Selling Price *" step="0.01"><input type="number" id="modalInput3" placeholder="Cost Price" step="0.01"><input type="number" id="modalInput4" placeholder="Stock Quantity" value="0"><input type="text" id="modalInput5" placeholder="Category" value="General"><input type="text" id="modalInput6" placeholder="Barcode (for scanner)">${branchSel}${vatTypeSelect}${sup}<button class="btn btn-primary btn-block" onclick="addProduct()">Save Product</button>`;
-      break;}
-    case 'editProduct':{const p=DB.getById('products',id);const currentVat=p.vatExempt?'exempt':p.zeroRated?'zero':'vat';html=`<h4>Edit Product</h4><input type="text" id="modalInput1" value="${p.name}" placeholder="Name *"><input type="number" id="modalInput2" value="${p.price}" placeholder="Price *" step="0.01"><input type="number" id="modalInput3" value="${p.cost||0}" placeholder="Cost" step="0.01"><input type="number" id="modalInput4" value="${p.stock}" placeholder="Stock"><input type="text" id="modalInput5" value="${p.category||''}" placeholder="Category"><input type="text" id="modalInput6" value="${p.barcode||''}" placeholder="Barcode"><select id="modalVatType"><option value="vat" ${currentVat==='vat'?'selected':''}>VAT (12%)</option><option value="exempt" ${currentVat==='exempt'?'selected':''}>VAT-Exempt</option><option value="zero" ${currentVat==='zero'?'selected':''}>Zero-Rated</option></select><select id="modalSelect"><option value="">No Supplier</option>${suppliers.map(s=>`<option value="${s.id}" ${p.supplierId===s.id?'selected':''}>${s.name}</option>`).join('')}</select><button class="btn btn-primary btn-block" onclick="editProduct(${id})">Save Changes</button>`;break;}
-    case 'addPO':
-      html=`<h4>New Purchase Order</h4><select id="modalSelect"><option value="">Select Supplier *</option>${suppliers.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select><input type="text" id="modalInput1" placeholder="Item Name"><input type="number" id="modalInput2" placeholder="Quantity" value="1"><input type="number" id="modalInput3" placeholder="Cost per Unit" step="0.01"><button class="btn btn-primary btn-block" onclick="addPO()">Create Order</button>`;
-      break;
-  }
-  document.getElementById('modalContent').innerHTML=html+'<button class="btn btn-danger btn-block" onclick="closeModal()" style="margin-top:8px;">Cancel</button>';
-  document.getElementById('modal').classList.add('active');
-}
-function closeModal(){document.getElementById('modal').classList.remove('active')}
-document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeModal()});
-document.addEventListener('keydown',function(e){
-  if(document.getElementById('loginScreen').style.display!=='none'){
-    if(e.key>='0'&&e.key<='9')enterPin(e.key);
-    else if(e.key==='Enter')submitPin();
-    else if(e.key==='Backspace'){pinEntry=pinEntry.slice(0,-1);updatePinDisplay();}
-  }
-  if(e.key==='Escape')closeModal();
-});
-
-showLicenseGate();
-</script>
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
