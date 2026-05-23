@@ -184,11 +184,12 @@
     .step p { font-size: 0.78em; color: var(--muted); font-family: var(--mono); line-height: 1.65; }
 
     .payment-methods { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-    .pay-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 10px; font-size: 0.75em; font-family: var(--mono); cursor: pointer; user-select: all; transition: opacity 0.2s; }
+    .pay-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 10px; font-size: 0.75em; font-family: var(--mono); cursor: pointer; user-select: all; transition: opacity 0.2s; text-decoration: none; }
     .pay-chip:hover { opacity: 0.8; }
     .chip-paypal { background: rgba(0,112,243,0.12); border: 1px solid rgba(0,112,243,0.25); color: #6ab0ff; }
     .chip-gcash { background: rgba(0,163,255,0.12); border: 1px solid rgba(0,163,255,0.25); color: #4dc8ff; }
     .chip-name { background: rgba(56,217,192,0.1); border: 1px solid rgba(56,217,192,0.2); color: var(--teal); cursor: default; }
+    .chip-facebook { background: rgba(24,119,242,0.12); border: 1px solid rgba(24,119,242,0.3); color: #1877F2; cursor: pointer; }
 
     .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); max-width: 920px; margin: 0 auto; position: relative; z-index: 1; }
 
@@ -232,7 +233,7 @@
     </div>
   </div>
 
-  <!-- ACTIVATION SECTION (inserted right after hero) -->
+  <!-- ACTIVATION SECTION -->
   <div class="activation-section" id="activation">
     <div class="activation-card reveal">
       <h3>🔐 Already Purchased?</h3>
@@ -310,9 +311,37 @@
     <div class="section-title reveal">How to buy</div>
     <p class="section-sub reveal">Simple steps, no accounts needed. Pay and get your license key fast.</p>
     <div class="steps">
-      <div class="step reveal"><div class="step-num">1</div><div><h3>Send ₱1,500/$24 Only via PayPal or GCash</h3><p>Choose your preferred payment method and send the exact amount.</p><div class="payment-methods"><div class="pay-chip chip-paypal" onclick="copyText('ogie613@hotmail.com', 'PayPal email copied!')">📧 ogie613@hotmail.com</div><div class="pay-chip chip-gcash" onclick="copyText('09350840375', 'GCash number copied!')">📱 09350840375</div><div class="pay-chip chip-name">👤 R***** TR C*******A</div></div></div></div>
-      <div class="step reveal"><div class="step-num">2</div><div><h3>Message Gieo with your payment proof</h3><p>Send a screenshot or confirmation of your payment so Gieo can verify it and issue your license key.</p></div></div>
-      <div class="step reveal"><div class="step-num">3</div><div><h3>Receive your license key & activate</h3><p>Gieo sends your unique license key. Enter it above to unlock all features. You can then use the POS on multiple devices (up to your plan).</p></div></div>
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Send ₱1,500/$24 Only via PayPal or GCash</h3>
+          <p>Choose your preferred payment method and send the exact amount.</p>
+          <div class="payment-methods">
+            <div class="pay-chip chip-paypal" onclick="copyText('ogie613@hotmail.com', 'PayPal email copied!')">📧 ogie613@hotmail.com</div>
+            <div class="pay-chip chip-gcash" onclick="copyText('09350840375', 'GCash number copied!')">📱 09350840375</div>
+            <div class="pay-chip chip-name">👤 R***** TR C*******A</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Message Gieo with your payment proof</h3>
+          <p>Send a screenshot or confirmation of your payment so Gieo can verify it and issue your license key.</p>
+          <div class="payment-methods">
+            <a href="https://www.facebook.com/profile.php?id=61589919522333" target="_blank" class="pay-chip chip-facebook">💬 Message Gieo on Facebook</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Receive your license key & activate</h3>
+          <p>Gieo sends your unique license key. Enter it above to unlock all features. You can then use the POS on multiple devices (up to your plan).</p>
+        </div>
+      </div>
     </div>
   </div>
 
