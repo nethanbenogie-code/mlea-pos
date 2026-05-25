@@ -361,7 +361,7 @@
 
   <script>
     // ═══════════════════════════════════════════
-    // LICENSE ACTIVATION (Multi-Device Support)
+    // LICENSE ACTIVATION (Multi-Device Support) – CORRECTED
     // ═══════════════════════════════════════════
     const LICENSE_SERVER = 'https://script.google.com/macros/s/AKfycby1QlCg9jzpXmxtE1N-5w7b4CuGa0TT5gcfwYrx-0yetL4iI5s86ZX8NyLhDwo4tLJX/exec';
     const DEMO_KEY = 'MLEA-DEMO-UNLOCK-KEY1';
@@ -418,7 +418,6 @@
         input.disabled = true;
         btn.style.display = 'none';
         deactBtn.style.display = 'inline-flex';
-        // Show stored device info
         const storedInfo = localStorage.getItem('mlea_license_info');
         let msg = '✅ System Activated';
         if (storedInfo) {
@@ -441,56 +440,57 @@
       }
     }
 
+    // ✅ CORRECTED handleActivation (no duplicate declarations, proper redirect)
     async function handleActivation() {
-  const input = document.getElementById('licenseInput');
-  const statusEl = document.getElementById('activationStatus');
-  const btn = document.getElementById('activateBtn');
-  const key = input.value.trim();
+      const input = document.getElementById('licenseInput');
+      const statusEl = document.getElementById('activationStatus');
+      const btn = document.getElementById('activateBtn');
+      const key = input.value.trim();
 
-  if (!key) {
-    statusEl.textContent = '⚠️ Please enter your license key';
-    statusEl.className = 'activation-status error';
-    return;
-  }
+      if (!key) {
+        statusEl.textContent = '⚠️ Please enter your license key';
+        statusEl.className = 'activation-status error';
+        return;
+      }
 
-  btn.disabled = true;
-  statusEl.textContent = '⏳ Verifying with license server...';
-  statusEl.className = 'activation-status loading';
+      btn.disabled = true;
+      statusEl.textContent = '⏳ Verifying with license server...';
+      statusEl.className = 'activation-status loading';
 
-  const deviceId = getDeviceId();
-  const url = LICENSE_SERVER + '?action=activate&licenseKey=' + encodeURIComponent(key) + '&deviceId=' + encodeURIComponent(deviceId);
+      const deviceId = getDeviceId();
+      const url = LICENSE_SERVER + '?action=activate&licenseKey=' + encodeURIComponent(key) + '&deviceId=' + encodeURIComponent(deviceId);
 
-  try {
-    const response = await fetch(url);
-    const text = await response.text();
-    let result;
-    try { result = JSON.parse(text); } catch (e) {
-      statusEl.textContent = '❌ Invalid server response';
-      statusEl.className = 'activation-status error';
+      try {
+        const response = await fetch(url);
+        const text = await response.text();
+        let result;
+        try { result = JSON.parse(text); } catch (e) {
+          statusEl.textContent = '❌ Invalid server response';
+          statusEl.className = 'activation-status error';
+          btn.disabled = false;
+          return;
+        }
+
+        if (result.success) {
+          setActivated(key, { deviceCount: result.deviceCount, maxDevices: result.maxDevices, customer: result.customer });
+          // ✅ Redirect to POS system
+          window.location.href = 'https://nethanbenogie-code.github.io/mleapropos/';
+        } else {
+          statusEl.textContent = '❌ ' + result.message;
+          statusEl.className = 'activation-status error';
+        }
+      } catch (error) {
+        if (key === DEMO_KEY) {
+          setActivated(key, { deviceCount: 1, maxDevices: 1 });
+          // ✅ Also redirect for demo key
+          window.location.href = 'https://nethanbenogie-code.github.io/mleapropos/';
+        } else {
+          statusEl.textContent = '❌ Cannot reach license server. Check your internet.';
+          statusEl.className = 'activation-status error';
+        }
+      }
       btn.disabled = false;
-      return;
     }
-
-    if (result.success) {
-      setActivated(key, { deviceCount: result.deviceCount, maxDevices: result.maxDevices, customer: result.customer });
-      // ✅ Redirect to POS system
-      window.location.href = 'https://nethanbenogie-code.github.io/mleapropos/';
-    } else {
-      statusEl.textContent = '❌ ' + result.message;
-      statusEl.className = 'activation-status error';
-    }
-  } catch (error) {
-    if (key === DEMO_KEY) {
-      setActivated(key, { deviceCount: 1, maxDevices: 1 });
-      // ✅ Also redirect for demo key
-      window.location.href = 'https://nethanbenogie-code.github.io/mleapropos/';
-    } else {
-      statusEl.textContent = '❌ Cannot reach license server. Check your internet.';
-      statusEl.className = 'activation-status error';
-    }
-  }
-  btn.disabled = false;
-}
 
     async function handleDeactivation() {
       if (!confirm('Deactivate license? All premium features will be locked.')) return;
@@ -550,7 +550,7 @@
     updateUIForActivation();
     updatePriceFromRate();
 
-    console.log('🔐 MLEA POS Sales Page – Dynamic USD Equivalent');
+    console.log('🔐 MLEA POS Sales Page – Corrected activation handler');
   </script>
 </body>
 </html>
