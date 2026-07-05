@@ -1,396 +1,450 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MLEA POS – Lifetime License ($24 USD fixed / PHP dynamic)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0b0e1a;
-      --surface: #11152a;
-      --card: #161c32;
-      --border: #1e2640;
-      --purple: #8876ff;
-      --purple-light: #a899ff;
-      --teal: #38d9c0;
-      --amber: #f5a623;
-      --red: #ff5e6d;
-      --text: #dde1f5;
-      --muted: #5c6280;
-      --font: 'Plus Jakarta Sans', sans-serif;
-      --mono: 'JetBrains Mono', monospace;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MLEA POS — BIR-Ready Point of Sale for Filipino Businesses</title>
+<meta name="description" content="Stop losing money to manual sales tracking. MLEA POS is an offline-ready, BIR-compliant point of sale system built for Philippine small businesses. Works on any device, no monthly fees.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#16130d;          /* near-black warm ink */
+  --ink-soft:#2a2419;
+  --paper:#f7f3ea;        /* warm receipt paper */
+  --paper-dim:#ece5d6;
+  --gold:#c8962e;         /* MLEA gold, deepened for contrast on paper */
+  --gold-bright:#e3b34c;
+  --emerald:#1f7a5c;
+  --rose:#c0445a;
+  --line:rgba(22,19,13,.12);
+  --line-strong:rgba(22,19,13,.25);
+  --ff-display:'Fraunces',Georgia,serif;
+  --ff-body:'Inter',system-ui,sans-serif;
+  --ff-mono:'Space Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--ff-body);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+a{color:inherit}
+img{max-width:100%}
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+/* ── perforated receipt edge helper ── */
+.perf{
+  position:relative;
+}
+.perf::after{
+  content:'';position:absolute;left:0;right:0;bottom:-9px;height:9px;
+  background:
+    radial-gradient(circle at 9px 0, transparent 7px, var(--paper) 7.5px) repeat-x;
+  background-size:18px 9px;
+}
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font);
-      overflow-x: hidden;
-    }
+/* ── NAV ── */
+header.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(247,243,234,.86);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav-in{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;max-width:1180px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--ff-display);font-weight:900;font-size:1.15rem;letter-spacing:-.01em}
+.brand .mark{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--gold-bright));display:grid;place-items:center;font-size:18px;box-shadow:0 2px 10px rgba(200,150,46,.4)}
+.nav-links{display:flex;gap:26px;align-items:center;font-size:.92rem;font-weight:500}
+.nav-links a{text-decoration:none;color:var(--ink-soft);transition:color .15s}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{background:var(--ink);color:var(--paper);padding:9px 18px;border-radius:999px;font-weight:600;text-decoration:none;font-size:.9rem;transition:transform .15s,background .15s}
+.nav-cta:hover{background:var(--gold);color:var(--ink);transform:translateY(-1px)}
+@media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
 
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(136,118,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(136,118,255,0.03) 1px, transparent 1px);
-      background-size: 48px 48px;
-      pointer-events: none;
-      z-index: 0;
-    }
+/* ── HERO ── */
+.hero{padding:72px 0 60px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:54px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--ff-mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:22px}
+.eyebrow::before{content:'';width:26px;height:1px;background:var(--gold)}
+.hero h1{
+  font-family:var(--ff-display);
+  font-weight:900;
+  font-size:clamp(2.5rem,5.4vw,4.1rem);
+  line-height:1.02;
+  letter-spacing:-.025em;
+  margin-bottom:22px;
+}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero .sub{font-size:1.18rem;color:var(--ink-soft);max-width:30ch;margin-bottom:32px}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.btn-primary{
+  background:var(--ink);color:var(--paper);
+  padding:15px 28px;border-radius:999px;font-weight:600;font-size:1rem;
+  text-decoration:none;display:inline-flex;align-items:center;gap:9px;
+  transition:transform .15s,box-shadow .15s;
+  box-shadow:0 6px 20px rgba(22,19,13,.2);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(22,19,13,.28)}
+.btn-ghost{
+  padding:15px 24px;border-radius:999px;font-weight:600;font-size:1rem;
+  text-decoration:none;border:1.5px solid var(--line-strong);
+  transition:border-color .15s,color .15s;
+}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.hero-trust{margin-top:26px;display:flex;gap:22px;flex-wrap:wrap;font-size:.86rem;color:var(--ink-soft)}
+.hero-trust span{display:flex;align-items:center;gap:7px}
+.hero-trust b{color:var(--emerald)}
 
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 32px;
-      background: rgba(11,14,26,0.75);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
+/* ── RECEIPT (hero signature) ── */
+.receipt{
+  background:#fffdf8;
+  border-radius:4px;
+  padding:30px 26px 38px;
+  font-family:var(--ff-mono);
+  font-size:.82rem;
+  color:var(--ink);
+  box-shadow:0 24px 60px rgba(22,19,13,.22),0 4px 14px rgba(22,19,13,.1);
+  position:relative;
+  transform:rotate(1.4deg);
+  max-width:340px;
+  margin:0 auto;
+}
+.receipt::before,.receipt::after{
+  content:'';position:absolute;left:0;right:0;height:8px;
+  background:radial-gradient(circle at 8px 4px,transparent 6px,#fffdf8 6.5px) repeat-x;
+  background-size:16px 8px;
+}
+.receipt::before{top:-7px;transform:rotate(180deg)}
+.receipt::after{bottom:-7px}
+.r-center{text-align:center}
+.r-logo{font-family:var(--ff-display);font-weight:900;font-size:1.3rem;letter-spacing:-.01em}
+.r-dim{color:#8a8273;font-size:.72rem}
+.r-hr{border:none;border-top:1px dashed var(--line-strong);margin:12px 0}
+.r-row{display:flex;justify-content:space-between;padding:3px 0}
+.r-total{display:flex;justify-content:space-between;font-weight:700;font-size:1rem;padding-top:8px}
+.r-total .amt{color:var(--gold)}
+.r-stamp{
+  display:inline-block;border:2px solid var(--emerald);color:var(--emerald);
+  padding:3px 14px;border-radius:5px;font-weight:700;letter-spacing:.18em;
+  transform:rotate(-6deg);margin-top:14px;font-size:.86rem;
+}
+.r-barcode{margin-top:16px;height:34px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 9px);opacity:.85}
+.r-bir{font-size:.62rem;color:#8a8273;margin-top:12px;line-height:1.7}
 
-    .nav-logo { font-size: 1.1em; font-weight: 800; color: var(--purple-light); letter-spacing: -0.5px; }
-    .nav-cta { background: var(--purple); color: #fff; padding: 8px 20px; border-radius: 999px; font-size: 0.82em; font-weight: 700; text-decoration: none; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 5px; }
-    .nav-cta:hover { opacity: 0.85; }
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:44px}
+  .receipt{transform:rotate(0);margin-top:8px}
+  .hero .sub{max-width:none}
+}
 
-    .hero {
-      position: relative; z-index: 1; min-height: 100vh;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 120px 24px 80px; text-align: center; overflow: hidden;
-    }
+/* ── PROBLEM SECTION ── */
+.section{padding:84px 0}
+.sec-head{max-width:640px;margin-bottom:48px}
+.sec-eyebrow{font-family:var(--ff-mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:14px}
+.sec-head h2{font-family:var(--ff-display);font-weight:700;font-size:clamp(1.9rem,3.6vw,2.8rem);line-height:1.08;letter-spacing:-.02em}
+.sec-head h2 em{font-style:italic;color:var(--gold)}
+.sec-head p{font-size:1.1rem;color:var(--ink-soft);margin-top:16px}
 
-    .hero-orb { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(80px); }
-    .orb1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(136,118,255,0.14), transparent 70%); top: -100px; left: 50%; transform: translateX(-50%); animation: drift 8s ease-in-out infinite; }
-    .orb2 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(56,217,192,0.08), transparent 70%); bottom: 0; right: -80px; animation: drift 10s ease-in-out infinite reverse; }
-    @keyframes drift { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-20px); } }
+.problems{background:var(--ink);color:var(--paper);border-radius:24px;padding:56px 48px}
+.problems .sec-eyebrow{color:var(--gold-bright)}
+.problems h2{color:var(--paper)}
+.prob-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;margin-top:42px}
+.prob{display:flex;gap:16px;align-items:flex-start}
+.prob .x{flex-shrink:0;width:30px;height:30px;border-radius:8px;background:rgba(192,68,90,.18);color:#ff8497;display:grid;place-items:center;font-weight:700;font-size:1rem}
+.prob h3{font-family:var(--ff-display);font-weight:600;font-size:1.12rem;margin-bottom:5px}
+.prob p{color:rgba(247,243,234,.62);font-size:.95rem}
+@media(max-width:680px){.prob-grid{grid-template-columns:1fr}.problems{padding:40px 26px}}
 
-    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(136,118,255,0.1); border: 1px solid rgba(136,118,255,0.25); color: var(--purple-light); padding: 7px 18px; border-radius: 999px; font-size: 0.7em; font-family: var(--mono); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 30px; animation: fadeUp 0.6s ease both; }
-    .pulse-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(56,217,192,0.4); } 50% { box-shadow: 0 0 0 6px rgba(56,217,192,0); } }
+/* ── SOLUTION / FEATURES ── */
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:8px}
+.feat{
+  background:#fffdf8;border:1px solid var(--line);border-radius:18px;padding:30px 26px;
+  transition:transform .18s,box-shadow .18s,border-color .18s;
+}
+.feat:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(22,19,13,.1);border-color:var(--gold)}
+.feat .ic{width:50px;height:50px;border-radius:13px;background:linear-gradient(135deg,rgba(200,150,46,.16),rgba(200,150,46,.06));display:grid;place-items:center;font-size:24px;margin-bottom:18px}
+.feat h3{font-family:var(--ff-display);font-weight:600;font-size:1.22rem;margin-bottom:9px;letter-spacing:-.01em}
+.feat p{color:var(--ink-soft);font-size:.96rem}
+@media(max-width:860px){.features{grid-template-columns:1fr}}
 
-    h1 { font-size: clamp(2.4em, 8vw, 5em); font-weight: 800; line-height: 1.08; letter-spacing: -1.5px; max-width: 720px; animation: fadeUp 0.7s 0.1s ease both; }
-    h1 em { font-style: normal; background: linear-gradient(120deg, var(--purple-light) 0%, var(--teal) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+/* ── HOW (sequence — genuinely ordered) ── */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:8px;counter-reset:step}
+.step{position:relative;padding-top:18px;border-top:2px solid var(--ink)}
+.step .n{font-family:var(--ff-mono);font-size:.8rem;font-weight:700;color:var(--gold);letter-spacing:.1em}
+.step h3{font-family:var(--ff-display);font-weight:600;font-size:1.3rem;margin:10px 0 8px;letter-spacing:-.01em}
+.step p{color:var(--ink-soft);font-size:.98rem}
+@media(max-width:760px){.steps{grid-template-columns:1fr;gap:22px}}
 
-    .hero-desc { margin-top: 22px; color: var(--muted); font-size: clamp(0.88em, 2vw, 1.05em); max-width: 500px; line-height: 1.75; animation: fadeUp 0.7s 0.2s ease both; }
+/* ── BUILT FOR (verticals) ── */
+.verticals{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.vert{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--paper-dim);border:1px solid var(--line);
+  padding:11px 18px;border-radius:999px;font-weight:500;font-size:.95rem;
+}
+.vert .e{font-size:1.15rem}
 
-    .price-block { margin-top: 40px; animation: fadeUp 0.7s 0.3s ease both; }
-    .price-amount { font-size: clamp(3em, 11vw, 5.5em); font-weight: 800; color: var(--teal); letter-spacing: -2px; line-height: 1; }
-    .price-sub { color: var(--muted); font-size: 0.78em; font-family: var(--mono); margin-top: 8px; }
-    .price-note { font-size: 0.6em; color: var(--amber); margin-top: 4px; font-family: var(--mono); }
+/* ── PRICING ── */
+.pricing-wrap{background:var(--paper-dim);border-radius:24px;padding:56px 0}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:46px}
+.plan{
+  background:#fffdf8;border:1px solid var(--line);border-radius:20px;padding:34px 30px;
+  display:flex;flex-direction:column;position:relative;
+}
+.plan.featured{border:2px solid var(--gold);box-shadow:0 18px 50px rgba(200,150,46,.22)}
+.plan .badge{position:absolute;top:-13px;left:30px;background:var(--gold);color:var(--ink);font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 14px;border-radius:999px;font-family:var(--ff-mono)}
+.plan h3{font-family:var(--ff-display);font-weight:700;font-size:1.4rem;margin-bottom:6px}
+.plan .ptag{color:var(--ink-soft);font-size:.9rem;margin-bottom:20px;min-height:40px}
+.plan .price{font-family:var(--ff-display);font-weight:900;font-size:2.6rem;letter-spacing:-.02em;line-height:1}
+.plan .price small{font-size:.95rem;font-weight:500;color:var(--ink-soft);font-family:var(--ff-body)}
+.plan .once{font-family:var(--ff-mono);font-size:.72rem;color:var(--emerald);font-weight:700;letter-spacing:.06em;margin-top:6px;text-transform:uppercase}
+.plan ul{list-style:none;margin:24px 0 28px;display:flex;flex-direction:column;gap:11px}
+.plan li{display:flex;gap:10px;align-items:flex-start;font-size:.95rem;color:var(--ink-soft)}
+.plan li .ck{color:var(--emerald);font-weight:700;flex-shrink:0}
+.plan .buy{margin-top:auto;text-align:center;padding:14px;border-radius:12px;font-weight:600;text-decoration:none;font-size:1rem;transition:transform .15s,background .15s}
+.plan .buy.dark{background:var(--ink);color:var(--paper)}
+.plan .buy.dark:hover{background:var(--gold);color:var(--ink);transform:translateY(-2px)}
+.plan .buy.gold{background:var(--gold);color:var(--ink)}
+.plan .buy.gold:hover{background:var(--gold-bright);transform:translateY(-2px)}
+.price-note{text-align:center;margin-top:30px;font-size:.9rem;color:var(--ink-soft)}
+@media(max-width:860px){.price-grid{grid-template-columns:1fr;max-width:420px;margin:46px auto 0}}
 
-    .hero-btns { margin-top: 38px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; animation: fadeUp 0.7s 0.4s ease both; }
+/* ── TRIAL CTA ── */
+.trial{background:var(--ink);color:var(--paper);border-radius:24px;padding:60px 48px;text-align:center;position:relative;overflow:hidden}
+.trial::before{content:'';position:absolute;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(200,150,46,.18),transparent 70%);top:-160px;right:-100px}
+.trial h2{font-family:var(--ff-display);font-weight:700;font-size:clamp(1.8rem,3.4vw,2.6rem);letter-spacing:-.02em;position:relative}
+.trial p{color:rgba(247,243,234,.7);max-width:48ch;margin:16px auto 30px;font-size:1.08rem;position:relative}
+.trial .btn-primary{background:var(--gold);color:var(--ink);position:relative}
+.trial .btn-primary:hover{background:var(--gold-bright)}
 
-    .btn-primary { background: linear-gradient(135deg, var(--purple), #6a5be8); color: #fff; padding: 15px 34px; border-radius: 14px; font-size: 0.95em; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 6px 28px rgba(136,118,255,0.3); transition: transform 0.2s, box-shadow 0.2s; border: none; cursor: pointer; font-family: var(--font); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(136,118,255,0.45); }
+/* ── FAQ ── */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 40px;margin-top:8px}
+.faq h3{font-family:var(--ff-display);font-weight:600;font-size:1.12rem;margin-bottom:7px}
+.faq p{color:var(--ink-soft);font-size:.96rem}
+@media(max-width:760px){.faq-grid{grid-template-columns:1fr}}
 
-    .btn-outline { background: transparent; color: var(--text); padding: 15px 28px; border-radius: 14px; font-size: 0.95em; font-weight: 600; text-decoration: none; border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 8px; transition: border-color 0.2s, background 0.2s; cursor: pointer; font-family: var(--font); }
-    .btn-outline:hover { border-color: var(--purple); background: rgba(136,118,255,0.06); }
+/* ── BUY / CONTACT ── */
+.buybox{background:#fffdf8;border:2px solid var(--gold);border-radius:22px;padding:44px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.buybox h2{font-family:var(--ff-display);font-weight:700;font-size:1.9rem;letter-spacing:-.02em;margin-bottom:12px}
+.buybox p{color:var(--ink-soft);margin-bottom:18px}
+.pay-row{display:flex;align-items:center;gap:14px;background:var(--paper-dim);border-radius:14px;padding:16px 20px;margin-bottom:14px}
+.pay-row .pi{font-size:1.6rem}
+.pay-row .pl{font-family:var(--ff-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft)}
+.pay-row .pv{font-weight:700;font-size:1.05rem}
+.paypal-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#003087;color:#fff;padding:15px;border-radius:12px;font-weight:700;text-decoration:none;font-size:1.05rem;transition:transform .15s,filter .15s}
+.paypal-btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.paypal-btn .pp-i{font-style:italic;font-weight:900;font-family:var(--ff-display)}
+.buybox .steps-mini{font-size:.9rem;color:var(--ink-soft);margin-top:16px;line-height:1.8}
+.buybox .steps-mini b{color:var(--ink)}
+@media(max-width:760px){.buybox{grid-template-columns:1fr;padding:32px 26px}}
 
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--line);padding:46px 0 60px;margin-top:20px}
+.foot-in{display:flex;justify-content:space-between;align-items:flex-start;gap:30px;flex-wrap:wrap}
+.foot-brand{max-width:320px}
+.foot-brand .brand{margin-bottom:12px}
+.foot-brand p{color:var(--ink-soft);font-size:.92rem}
+.foot-col h4{font-family:var(--ff-mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-soft);margin-bottom:14px}
+.foot-col a{display:block;text-decoration:none;color:var(--ink);font-size:.95rem;margin-bottom:9px;transition:color .15s}
+.foot-col a:hover{color:var(--gold)}
+.foot-bottom{margin-top:40px;padding-top:22px;border-top:1px solid var(--line);font-size:.84rem;color:var(--ink-soft);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 
-    .trust-bar { position: relative; z-index: 1; display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; padding: 28px 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); }
-    .trust-item { display: flex; align-items: center; gap: 8px; font-size: 0.82em; color: var(--muted); font-family: var(--mono); }
-    .trust-item span:first-child { font-size: 1.2em; }
+/* reveal on scroll */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.receipt{transform:none}}
 
-    .activation-section { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; padding: 32px 24px; }
-    .activation-card { background: var(--card); border: 2px solid var(--purple); border-radius: 20px; padding: 32px; text-align: center; }
-    .activation-card h3 { font-size: 1.3em; font-weight: 700; margin-bottom: 8px; color: var(--purple-light); }
-    .activation-card p { color: var(--muted); font-size: 0.82em; margin-bottom: 20px; font-family: var(--mono); }
-    .license-input-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    .license-input { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 14px 18px; border-radius: 12px; font-family: var(--mono); font-size: 0.9em; letter-spacing: 2px; text-align: center; width: 280px; transition: border-color 0.3s; }
-    .license-input:focus { outline: none; border-color: var(--purple); box-shadow: 0 0 0 3px rgba(136,118,255,0.1); }
-    .license-input::placeholder { color: var(--muted); letter-spacing: 1px; }
-    .license-input:disabled { opacity: 0.7; cursor: not-allowed; }
-    .btn-activate { background: var(--teal); color: #0b1a18; padding: 14px 24px; border-radius: 12px; font-weight: 700; font-size: 0.9em; cursor: pointer; border: none; font-family: var(--font); transition: transform 0.2s, box-shadow 0.2s; }
-    .btn-activate:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56,217,192,0.3); }
-    .btn-activate:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-    .activation-status { margin-top: 16px; font-family: var(--mono); font-size: 0.78em; min-height: 20px; transition: all 0.3s; }
-    .activation-status.success { color: var(--teal); }
-    .activation-status.error { color: var(--red); }
-    .activation-status.loading { color: var(--amber); }
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:4px}
 
-    .feature-lock { position: relative; }
-    .feature-lock::before { content: '🔒'; position: absolute; top: 12px; right: 12px; font-size: 1.2em; opacity: 0.6; z-index: 2; }
-    .feature-lock.unlocked::before { content: '🔓'; }
-
-    .section { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; padding: 90px 24px; }
-    .section-label { font-family: var(--mono); font-size: 0.7em; color: var(--teal); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-    .section-title { font-size: clamp(1.7em, 5vw, 2.6em); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
-    .section-sub { color: var(--muted); font-size: 0.88em; margin-bottom: 44px; line-height: 1.7; }
-
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
-    .feat { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 26px; position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.2s; }
-    .feat::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top left, rgba(136,118,255,0.06), transparent 60%); opacity: 0; transition: opacity 0.3s; }
-    .feat:hover { border-color: rgba(136,118,255,0.35); transform: translateY(-3px); }
-    .feat:hover::after { opacity: 1; }
-    .feat-icon { font-size: 2em; margin-bottom: 14px; }
-    .feat-title { font-size: 0.95em; font-weight: 700; margin-bottom: 8px; }
-    .feat-desc { font-size: 0.78em; color: var(--muted); line-height: 1.65; font-family: var(--mono); }
-
-    .roles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
-    .role-card { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 28px 22px; text-align: center; transition: transform 0.2s; position: relative; }
-    .role-card:hover { transform: translateY(-3px); }
-    .role-icon { font-size: 2.6em; margin-bottom: 12px; }
-    .role-name { font-weight: 800; font-size: 1em; margin-bottom: 8px; }
-    .pill { display: inline-block; padding: 3px 14px; border-radius: 999px; font-size: 0.65em; font-family: var(--mono); margin-bottom: 12px; }
-    .pill-admin { background: rgba(136,118,255,0.15); color: var(--purple-light); }
-    .pill-manager { background: rgba(56,217,192,0.15); color: var(--teal); }
-    .pill-cashier { background: rgba(245,166,35,0.15); color: var(--amber); }
-    .role-desc { font-size: 0.78em; color: var(--muted); line-height: 1.6; font-family: var(--mono); }
-
-    .faq-list { display: flex; flex-direction: column; gap: 12px; }
-    .faq-item { background: var(--card); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
-    .faq-q { padding: 18px 22px; font-weight: 700; font-size: 0.9em; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; transition: color 0.2s; }
-    .faq-q:hover { color: var(--purple-light); }
-    .faq-arrow { font-size: 0.8em; transition: transform 0.3s; color: var(--muted); }
-    .faq-item.open .faq-arrow { transform: rotate(180deg); }
-    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.35s; font-size: 0.82em; color: var(--muted); font-family: var(--mono); line-height: 1.7; padding: 0 22px; }
-    .faq-item.open .faq-a { max-height: 200px; padding: 0 22px 18px; }
-
-    .steps { display: flex; flex-direction: column; gap: 14px; }
-    .step { display: flex; align-items: flex-start; gap: 20px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 22px 26px; transition: border-color 0.3s; }
-    .step:hover { border-color: rgba(136,118,255,0.3); }
-    .step-num { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, var(--purple), #6a5be8); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1em; flex-shrink: 0; box-shadow: 0 4px 16px rgba(136,118,255,0.3); }
-    .step h3 { font-size: 0.95em; font-weight: 700; margin-bottom: 5px; }
-    .step p { font-size: 0.78em; color: var(--muted); font-family: var(--mono); line-height: 1.65; }
-
-    .payment-methods { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
-    .pay-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 10px; font-size: 0.75em; font-family: var(--mono); cursor: pointer; user-select: all; transition: opacity 0.2s; text-decoration: none; }
-    .pay-chip:hover { opacity: 0.8; }
-    .chip-paypal { background: rgba(0,112,243,0.12); border: 1px solid rgba(0,112,243,0.25); color: #6ab0ff; }
-    .chip-gcash { background: rgba(0,163,255,0.12); border: 1px solid rgba(0,163,255,0.25); color: #4dc8ff; }
-    .chip-name { background: rgba(56,217,192,0.1); border: 1px solid rgba(56,217,192,0.2); color: var(--teal); cursor: default; }
-    .chip-facebook { background: rgba(24,119,242,0.12); border: 1px solid rgba(24,119,242,0.3); color: #1877F2; cursor: pointer; }
-
-    .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); max-width: 920px; margin: 0 auto; position: relative; z-index: 1; }
-
-    .bottom-cta { position: relative; z-index: 1; text-align: center; padding: 90px 24px 110px; overflow: hidden; }
-    .bottom-cta-glow { position: absolute; width: 500px; height: 300px; background: radial-gradient(ellipse, rgba(136,118,255,0.1), transparent 70%); left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none; }
-    .bottom-cta h2 { font-size: clamp(1.8em, 6vw, 3.2em); font-weight: 800; letter-spacing: -1px; margin-bottom: 14px; }
-    .bottom-cta p { color: var(--muted); font-family: var(--mono); font-size: 0.84em; margin-bottom: 36px; }
-
-    footer { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 26px 24px; text-align: center; font-size: 0.74em; color: var(--muted); font-family: var(--mono); }
-    footer em { color: var(--purple-light); font-style: normal; }
-
-    .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--teal); color: #0b1a18; padding: 11px 26px; border-radius: 999px; font-size: 0.85em; font-weight: 700; z-index: 9999; transition: transform 0.3s cubic-bezier(.34,1.56,.64,1); pointer-events: none; }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-
-    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-  </style>
+.hide{display:none !important}
+.admin-dot{position:fixed;bottom:14px;right:16px;font-size:.7rem;color:var(--ink-soft);text-decoration:none;opacity:.45;font-family:var(--ff-mono)}
+.admin-dot:hover{opacity:1;color:var(--gold)}
+</style>
 </head>
 <body>
 
-  <nav>
-    <div class="nav-logo">🏪 MLEA POS</div>
-    <a href="#how-to-buy" class="nav-cta" id="navCta">💵 Buy Now — $24 USD</a>
-  </nav>
-
-  <div class="hero">
-    <div class="hero-orb orb1"></div>
-    <div class="hero-orb orb2"></div>
-    <div class="hero-badge"><span class="pulse-dot"></span> Multi-Branch System v2.2</div>
-    <h1>The POS System Your<br>Business <em>Actually Needs</em></h1>
-    <p class="hero-desc">Manage sales, inventory, staff, and multiple branches — all from your browser. No subscriptions, no complicated setup.</p>
-
-    <div class="price-block">
-      <div class="price-amount" id="priceAmount">⏳ Loading exchange rate...</div>
-      <div class="price-sub">✅ one-time · lifetime license · instant activation</div>
-      <div class="price-note" id="priceNote">💰 USD fixed at $24 — PHP updates automatically with live FX rate</div>
-    </div>
-
-    <div class="hero-btns">
-      <a href="#how-to-buy" class="btn-primary" id="heroBuyBtn">🛒 Buy Now — $24 USD</a>
-      <button class="btn-outline" onclick="document.getElementById('activation').scrollIntoView({behavior:'smooth'})">🔑 Activate License</button>
-    </div>
+<header class="nav">
+  <div class="nav-in">
+    <div class="brand"><span class="mark" data-c="brand.icon">🏪</span> <span data-c="brand.name">MLEA&nbsp;POS</span></div>
+    <nav class="nav-links" id="navLinks"><!-- rendered --></nav>
   </div>
+</header>
 
-  <div class="activation-section" id="activation">
-    <div class="activation-card reveal">
-      <h3>🔐 Already Purchased?</h3>
-      <p>Enter your license key to unlock all features.</p>
-      <div class="license-input-group">
-        <input type="text" class="license-input" id="licenseInput" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" oninput="formatLicense(this)">
-        <button class="btn-activate" id="activateBtn" onclick="handleActivation()">Activate</button>
-      </div>
-      <div class="activation-status" id="activationStatus"></div>
-      <button id="deactivateBtn" class="btn-outline" style="display:none;margin-top:12px;color:var(--red);border-color:var(--red);" onclick="handleDeactivation()">Deactivate License</button>
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow" data-c="hero.eyebrow"></span>
+      <h1 data-c="hero.title" data-html="1"></h1>
+      <p class="sub" data-c="hero.subtitle"></p>
+      <div class="hero-cta" id="heroCta"><!-- rendered --></div>
+      <div class="hero-trust" id="heroTrust"><!-- rendered --></div>
     </div>
-  </div>
-
-  <div class="trust-bar">
-    <div class="trust-item"><span>✅</span> One-time payment</div>
-    <div class="trust-item"><span>📱</span> Works on any device</div>
-    <div class="trust-item"><span>🏢</span> Multi-branch ready</div>
-    <div class="trust-item"><span>🔐</span> PIN-based login</div>
-    <div class="trust-item"><span>💱</span> Multi-currency support</div>
-  </div>
-
-  <!-- Features, Roles, FAQ, How to buy (static but dynamic price texts will be replaced) -->
-  <div class="section">
-    <div class="section-label reveal">Features</div>
-    <div class="section-title reveal">Built for real businesses</div>
-    <p class="section-sub reveal">Everything you need to run daily operations, right out of the box. <em style="color: var(--amber);">Locked features require license activation.</em></p>
-    <div class="features-grid">
-      <div class="feat reveal feature-lock" data-feature="multi-branch"><div class="feat-icon">🏢</div><div class="feat-title">Multi-Branch Support</div><p class="feat-desc">Run multiple store locations from one system.</p></div>
-      <div class="feat reveal feature-lock" data-feature="pin-login"><div class="feat-icon">🔐</div><div class="feat-title">PIN-Based Login</div><p class="feat-desc">Fast 4-digit PIN for staff.</p></div>
-      <div class="feat reveal feature-lock" data-feature="inventory"><div class="feat-icon">📦</div><div class="feat-title">Inventory Tracking</div><p class="feat-desc">Real-time stock with low-stock alerts.</p></div>
-      <div class="feat reveal feature-lock" data-feature="sales"><div class="feat-icon">💰</div><div class="feat-title">Sales & Receipts</div><p class="feat-desc">Cart system, discounts, VAT, printable receipts.</p></div>
-      <div class="feat reveal feature-lock" data-feature="reports"><div class="feat-icon">📊</div><div class="feat-title">Reports & Analytics</div><p class="feat-desc">Daily/historical sales & expenses.</p></div>
-      <div class="feat reveal feature-lock" data-feature="currency"><div class="feat-icon">🌍</div><div class="feat-title">Multi-Currency</div><p class="feat-desc">PHP, USD, EUR, GBP, JPY, SGD, AED etc.</p></div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="section">
-    <div class="section-label reveal">Access Control</div>
-    <div class="section-title reveal">The right access for every role</div>
-    <div class="roles-grid">
-      <div class="role-card reveal feature-lock" data-feature="role-admin"><div class="role-icon">👑</div><div class="role-name">Admin</div><span class="pill pill-admin">Full Access</span></div>
-      <div class="role-card reveal feature-lock" data-feature="role-manager"><div class="role-icon">👨‍💼</div><div class="role-name">Manager</div><span class="pill pill-manager">Branch Access</span></div>
-      <div class="role-card reveal feature-lock" data-feature="role-cashier"><div class="role-icon">👤</div><div class="role-name">Cashier</div><span class="pill pill-cashier">POS Only</span></div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="section">
-    <div class="section-label reveal">FAQ</div>
-    <div class="section-title reveal">Common questions</div>
-    <div class="faq-list">
-      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Do I need to install anything? <span class="faq-arrow">▼</span></div><div class="faq-a">No. MLEA POS runs entirely in your browser.</div></div>
-      <div class="faq-item reveal" id="faqSubscriptionItem"><div class="faq-q" onclick="toggleFaq(this)">Is this a subscription? <span class="faq-arrow">▼</span></div><div class="faq-a" id="faqSubscriptionAnswer">No subscriptions ever. You pay once and the system is yours. No monthly fees.</div></div>
-      <div class="faq-item reveal"><div class="faq-q" onclick="toggleFaq(this)">Can I use it for multiple branches? <span class="faq-arrow">▼</span></div><div class="faq-a">Yes! MLEA POS is built with multi-branch support.</div></div>
-    </div>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="section" id="how-to-buy">
-    <div class="section-label reveal">Purchase</div>
-    <div class="section-title reveal">How to buy</div>
-    <p class="section-sub reveal">Simple steps. $24 USD fixed — PHP equivalent updates automatically.</p>
-    <div class="steps">
-      <div class="step reveal">
-        <div class="step-num">1</div>
-        <div>
-          <h3 id="step1Title">Send $24 USD (or equivalent PHP) via PayPal or GCash</h3>
-          <p id="step1Desc">Choose your preferred method. PHP amount is based on live exchange rate.</p>
-          <div class="payment-methods">
-            <div class="pay-chip chip-paypal" onclick="copyText('ogie613@hotmail.com', 'PayPal email copied!')">📧 ogie613@hotmail.com</div>
-            <div class="pay-chip chip-gcash" onclick="copyText('09350840375', 'GCash number copied!')">📱 09350840375</div>
-            <div class="pay-chip chip-name">👤 R*****TER C*******A</div>
-          </div>
+    <div>
+      <div class="receipt" role="img" aria-label="Sample official receipt printed by MLEA POS">
+        <div class="r-center">
+          <div class="r-logo" data-c="hero.receipt.shopName"></div>
+          <div class="r-dim" data-c="hero.receipt.shopSub"></div>
+          <div class="r-dim" data-c="hero.receipt.tin"></div>
+        </div>
+        <hr class="r-hr">
+        <div class="r-center r-dim" style="font-weight:700;letter-spacing:.1em">OFFICIAL RECEIPT</div>
+        <div class="r-center r-dim" data-c="hero.receipt.orNo"></div>
+        <hr class="r-hr">
+        <div id="receiptLines"><!-- rendered --></div>
+        <hr class="r-hr">
+        <div class="r-row r-dim"><span>VATable Sales</span><span data-c="hero.receipt.vatable"></span></div>
+        <div class="r-row r-dim"><span>VAT (12%)</span><span data-c="hero.receipt.vat"></span></div>
+        <div class="r-total"><span>TOTAL</span><span class="amt" data-c="hero.receipt.total"></span></div>
+        <div class="r-row r-dim" style="margin-top:8px"><span>Cash</span><span data-c="hero.receipt.cash"></span></div>
+        <div class="r-row r-dim"><span>Change</span><span data-c="hero.receipt.change"></span></div>
+        <div class="r-center"><span class="r-stamp">PAID</span></div>
+        <div class="r-barcode"></div>
+        <div class="r-center r-bir">
+          <span data-c="hero.receipt.birline"></span><br>
+          <span data-c="hero.receipt.poweredby"></span>
         </div>
       </div>
-      <div class="step reveal">
-        <div class="step-num">2</div>
-        <div><h3>Message Gieo with your payment proof</h3><p>Send a screenshot or confirmation so Gieo can issue your license key.</p><div class="payment-methods"><a href="https://www.facebook.com/profile.php?id=61589919522333" target="_blank" class="pay-chip chip-facebook">💬 Message Gieo on Facebook</a></div></div>
-      </div>
-      <div class="step reveal"><div class="step-num">3</div><div><h3>Receive your license key & activate</h3><p>Gieo sends your unique license key. Activate above to unlock all features.</p></div></div>
     </div>
   </div>
+</section>
 
-  <div class="bottom-cta">
-    <div class="bottom-cta-glow"></div>
-    <h2 class="reveal">Ready to level up your business?</h2>
-    <p class="reveal">One payment. Lifetime access. No strings attached.</p>
-    <a href="#how-to-buy" class="btn-primary reveal" id="bottomCtaBtn">🛒 Get MLEA POS — $24 USD</a>
+<!-- PROBLEMS -->
+<section class="section" id="problems">
+  <div class="wrap">
+    <div class="problems reveal">
+      <div class="sec-eyebrow" data-c="spotlight.eyebrow"></div>
+      <h2 data-c="spotlight.title" data-html="1"></h2>
+      <div class="prob-grid" id="spotGrid"><!-- rendered --></div>
+    </div>
   </div>
-  <footer>Made by <em>Gieo</em> · MLEA POS Multi-Branch System · Fixed $24 USD | PHP dynamic</footer>
-  <div class="toast" id="toast">Copied!</div>
+</section>
 
-  <script>
-    // ═══════════════════════════════════════════
-    // LICENSE & DEVICE ID (unchanged core)
-    // ═══════════════════════════════════════════
-    const LICENSE_SERVER = 'https://script.google.com/macros/s/AKfycby1QlCg9jzpXmxtE1N-5w7b4CuGa0TT5gcfwYrx-0yetL4iI5s86ZX8NyLhDwo4tLJX/exec';
-    const DEMO_KEY = 'MLEA-DEMO-UNLOCK-KEY1';
-    function getDeviceId() { return btoa(navigator.userAgent.replace(/\s/g,'').slice(-20) + screen.width + 'x' + screen.height + new Date().getTimezoneOffset()).replace(/[^a-zA-Z0-9]/g,'').slice(0,16); }
-    function formatLicense(input) { let value = input.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase(); if (value.length > 16) value = value.slice(0,16); const parts = []; for (let i = 0; i < value.length; i += 4) parts.push(value.slice(i, i+4)); input.value = parts.join('-'); }
-    function isActivated() { return localStorage.getItem('mlea_pos_activated') === 'true'; }
-    function getStoredLicense() { return localStorage.getItem('mlea_pos_license') || ''; }
-    function setActivated(licenseKey, info) { localStorage.setItem('mlea_pos_activated', 'true'); localStorage.setItem('mlea_pos_license', licenseKey); if (info) localStorage.setItem('mlea_license_info', JSON.stringify(info)); updateUIForActivation(); }
-    function clearActivation() { localStorage.removeItem('mlea_pos_activated'); localStorage.removeItem('mlea_pos_license'); localStorage.removeItem('mlea_license_info'); updateUIForActivation(); }
-    function updateUIForActivation() { const activated = isActivated(); document.querySelectorAll('.feature-lock').forEach(el => { if (activated) el.classList.add('unlocked'); else el.classList.remove('unlocked'); }); const input = document.getElementById('licenseInput'); const btn = document.getElementById('activateBtn'); const deactBtn = document.getElementById('deactivateBtn'); const statusEl = document.getElementById('activationStatus'); if (activated) { input.value = getStoredLicense(); input.disabled = true; btn.style.display = 'none'; deactBtn.style.display = 'inline-flex'; const storedInfo = localStorage.getItem('mlea_license_info'); let msg = '✅ System Activated'; if (storedInfo) try { const info = JSON.parse(storedInfo); if (info.deviceCount && info.maxDevices) msg = `✅ Activated · Device ${info.deviceCount} of ${info.maxDevices}`; } catch(e){} statusEl.textContent = msg; statusEl.className = 'activation-status success'; } else { input.value = ''; input.disabled = false; btn.style.display = 'inline-flex'; deactBtn.style.display = 'none'; statusEl.textContent = ''; statusEl.className = 'activation-status'; } }
-    async function handleActivation() { const input = document.getElementById('licenseInput'); const statusEl = document.getElementById('activationStatus'); const btn = document.getElementById('activateBtn'); const key = input.value.trim(); if (!key) { statusEl.textContent = '⚠️ Please enter your license key'; statusEl.className = 'activation-status error'; return; } btn.disabled = true; statusEl.textContent = '⏳ Verifying license...'; statusEl.className = 'activation-status loading'; const deviceId = getDeviceId(); const url = LICENSE_SERVER + '?action=activate&licenseKey=' + encodeURIComponent(key) + '&deviceId=' + encodeURIComponent(deviceId); try { const response = await fetch(url); const text = await response.text(); let result; try { result = JSON.parse(text); } catch(e) { statusEl.textContent = '❌ Invalid server response'; statusEl.className = 'activation-status error'; btn.disabled = false; return; } if (result.success) { setActivated(key, { deviceCount: result.deviceCount, maxDevices: result.maxDevices, customer: result.customer }); window.location.href = 'https://nethanbenogie-code.github.io/mleapropos/'; } else { statusEl.textContent = '❌ ' + result.message; statusEl.className = 'activation-status error'; } } catch(error) { if (key === DEMO_KEY) { setActivated(key, { deviceCount: 1, maxDevices: 1 }); window.location.href = 'https://nethanbenogie-code.github.io/mleapropos/'; } else { statusEl.textContent = '❌ Cannot reach license server. Check internet.'; statusEl.className = 'activation-status error'; } } btn.disabled = false; }
-    async function handleDeactivation() { if (!confirm('Deactivate license?')) return; const licenseKey = getStoredLicense(); const deviceId = getDeviceId(); try { await fetch(LICENSE_SERVER + '?action=deactivate&licenseKey=' + encodeURIComponent(licenseKey) + '&deviceId=' + encodeURIComponent(deviceId)); } catch(e) {} clearActivation(); showToast('🔒 License deactivated'); }
-    function copyText(text, msg) { navigator.clipboard.writeText(text).then(() => showToast('✅ ' + msg)); }
-    function showToast(message) { const t = document.getElementById('toast'); t.textContent = message; t.classList.add('show'); clearTimeout(t._timeout); t._timeout = setTimeout(() => t.classList.remove('show'), 2500); }
-    function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
-    const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }); }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-eyebrow" data-c="features.eyebrow"></div>
+      <h2 data-c="features.title" data-html="1"></h2>
+      <p data-c="features.subtitle"></p>
+    </div>
+    <div class="features" id="featGrid"><!-- rendered --></div>
+    <div class="verticals reveal" id="vertList"><!-- rendered --></div>
+  </div>
+</section>
 
-    // ═══════════════════════════════════════════
-    // FIXED USD $24 + DYNAMIC PHP (PESO)
-    // ═══════════════════════════════════════════
-    const FIXED_USD = 24;
+<!-- HOW -->
+<section class="section" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-eyebrow" data-c="steps.eyebrow"></div>
+      <h2 data-c="steps.title" data-html="1"></h2>
+    </div>
+    <div class="steps" id="stepGrid"><!-- rendered --></div>
+  </div>
+</section>
 
-    async function fetchPHPExchangeRate() {
-      try {
-        const response = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
-        const data = await response.json();
-        const rate = data.usd.php;
-        if (rate && typeof rate === 'number') return rate;
-        throw new Error('Invalid rate');
-      } catch (error) {
-        console.warn('FX fallback: using 57.5 PHP/USD estimate');
-        return 57.5;  // realistic fallback
-      }
-    }
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="wrap">
+    <div class="pricing-wrap">
+      <div class="wrap" style="padding:0 48px">
+        <div class="sec-head reveal" style="margin-bottom:8px">
+          <div class="sec-eyebrow" data-c="pricing.eyebrow"></div>
+          <h2 data-c="pricing.title" data-html="1"></h2>
+          <p data-c="pricing.subtitle"></p>
+        </div>
+        <div class="price-grid" id="priceGrid"><!-- rendered --></div>
+        <p class="price-note" data-c="pricing.note"></p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    async function updateAllPrices() {
-      const rate = await fetchPHPExchangeRate();
-      const phpAmount = (FIXED_USD * rate).toFixed(2);
-      const formattedPHP = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', minimumFractionDigits: 2 }).format(phpAmount);
-      const displayString = `$${FIXED_USD} USD / ${formattedPHP}`;
-      const shortDisplay = `$${FIXED_USD} USD / ₱${phpAmount}`;
-      
-      // Main price element
-      const priceEl = document.getElementById('priceAmount');
-      if (priceEl) priceEl.textContent = shortDisplay;
-      
-      // Nav CTA
-      const navCta = document.getElementById('navCta');
-      if (navCta) navCta.innerHTML = `💵 Buy Now — $${FIXED_USD} USD / ${formattedPHP}`;
-      
-      // Hero button
-      const heroBtn = document.getElementById('heroBuyBtn');
-      if (heroBtn) heroBtn.innerHTML = `🛒 Buy Now — $${FIXED_USD} USD`;
-      
-      // Bottom CTA button
-      const bottomBtn = document.getElementById('bottomCtaBtn');
-      if (bottomBtn) bottomBtn.innerHTML = `🛒 Get MLEA POS — $${FIXED_USD} USD / ${formattedPHP}`;
-      
-      // Step 1 title + description dynamic update
-      const stepTitle = document.getElementById('step1Title');
-      if (stepTitle) stepTitle.innerHTML = `Send $${FIXED_USD} USD (≈ ${formattedPHP} PHP) via PayPal or GCash`;
-      const stepDesc = document.getElementById('step1Desc');
-      if (stepDesc) stepDesc.innerHTML = `Choose your preferred method. PHP equivalent ≈ ${formattedPHP} (live rate).`;
-      
-      // FAQ subscription answer update
-      const faqAnswer = document.getElementById('faqSubscriptionAnswer');
-      if (faqAnswer) {
-        faqAnswer.innerHTML = `No subscriptions ever. You pay <strong>$${FIXED_USD} USD (≈ ${formattedPHP} PHP)</strong> once and the system is yours. No monthly fees, no hidden charges.`;
-      }
-      
-      // Price note tooltip
-      const noteEl = document.getElementById('priceNote');
-      if (noteEl) noteEl.textContent = `💱 USD fixed at $${FIXED_USD} — PHP updates live: ₱${phpAmount} (rate: 1 USD = ${rate.toFixed(4)} PHP)`;
-    }
+<!-- TRIAL -->
+<section class="section" id="trial">
+  <div class="wrap">
+    <div class="trial reveal">
+      <h2 data-c="trial.title"></h2>
+      <p data-c="trial.subtitle"></p>
+      <a href="#buy" class="btn-primary" id="trialBtn"></a>
+    </div>
+  </div>
+</section>
 
-    // initial load
-    updateAllPrices();
-    updateUIForActivation();
-  </script>
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-eyebrow" data-c="faq.eyebrow"></div>
+      <h2 data-c="faq.title" data-html="1"></h2>
+    </div>
+    <div class="faq-grid" id="faqGrid"><!-- rendered --></div>
+  </div>
+</section>
+
+<!-- BUY -->
+<section class="section" id="buy">
+  <div class="wrap">
+    <div class="buybox reveal">
+      <div>
+        <h2 data-c="buy.title"></h2>
+        <p data-c="buy.subtitle"></p>
+        <div class="pay-row">
+          <span class="pi" data-c="buy.payIcon">🅿️</span>
+          <div>
+            <div class="pl" data-c="buy.payLabel"></div>
+            <div class="pv" data-c="buy.paypal"></div>
+          </div>
+        </div>
+        <div class="steps-mini" data-c="buy.miniSteps" data-html="1"></div>
+      </div>
+      <div>
+        <a class="paypal-btn" id="paypalBtn" href="#" target="_blank" rel="noopener">
+          <span class="pp-i">Pay</span><span style="font-weight:400;font-style:italic">Pal</span> &nbsp;— <span data-c="buy.btnText"></span>
+        </a>
+        <p style="font-size:.82rem;color:var(--ink-soft);margin-top:14px;text-align:center" data-c="buy.payHint" data-html="1"></p>
+        <a id="msgrLink" href="#" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:14px;font-weight:600;text-decoration:none;color:var(--emerald)" data-c="buy.msgrText"></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-in">
+      <div class="foot-brand">
+        <div class="brand"><span class="mark" data-c="brand.icon">🏪</span> <span data-c="brand.name">MLEA&nbsp;POS</span></div>
+        <p data-c="footer.blurb"></p>
+      </div>
+      <div class="foot-col">
+        <h4 data-c="footer.col1title"></h4>
+        <div id="footCol1"><!-- rendered --></div>
+      </div>
+      <div class="foot-col">
+        <h4 data-c="footer.col2title"></h4>
+        <div id="footCol2"><!-- rendered --></div>
+      </div>
+      <div class="foot-col">
+        <h4 data-c="footer.col3title"></h4>
+        <div id="footCol3"><!-- rendered --></div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span data-c="footer.copyright"></span>
+      <span data-c="footer.location"></span>
+    </div>
+  </div>
+</footer>
+
+<a class="admin-dot" href="admin.html">· manage site</a>
+
+<script src="site-content.js"></script>
+<script src="site-render.js"></script>
 </body>
 </html>
